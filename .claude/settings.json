@@ -1,0 +1,81 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "bash .claude/statusline.sh",
+    "padding": 0
+  },
+  "permissions": {
+    "allow": [
+      "TodoWrite",
+      "TodoRead",
+      "Bash(git status)",
+      "Bash(git diff :*)",
+      "Bash(git add :*)",
+      "Bash(git commit -m :*)",
+      "Bash(git log :*)",
+      "Bash(git log --oneline -1)",
+      "Bash(git config user.name)",
+      "Bash(git config user.email)",
+      "Bash(npm run test :*)",
+      "Bash(npm test :*)",
+      "Bash(npm run lint)",
+      "Bash(npx playwright test :*)",
+      "Bash(npx eslint :*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "commitMessageGuidelines": {
+    "format": "conventional",
+    "types": [
+      {
+        "type": "feat",
+        "desc": "a new feature for the user"
+      },
+      {
+        "type": "fix",
+        "desc": "a bug fix"
+      },
+      {
+        "type": "docs",
+        "desc": "documentation only changes"
+      },
+      {
+        "type": "style",
+        "desc": "formatting, whitespace, no code change"
+      },
+      {
+        "type": "refactor",
+        "desc": "code restructure without changing behavior"
+      },
+      {
+        "type": "perf",
+        "desc": "performance improvements"
+      },
+      {
+        "type": "test",
+        "desc": "adding or updating tests"
+      },
+      {
+        "type": "build",
+        "desc": "build system or dependencies"
+      },
+      {
+        "type": "ci",
+        "desc": "CI/CD configuration changes"
+      },
+      {
+        "type": "chore",
+        "desc": "maintenance tasks, no production code"
+      },
+      {
+        "type": "revert",
+        "desc": "reverting a previous commit"
+      }
+    ],
+    "includeBulletPoints": true
+  },
+  "git": {
+    "addCommitFooter": false
+  }
+}
