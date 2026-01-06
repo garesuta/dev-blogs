@@ -1,0 +1,84 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { getCollection } from "astro:content";
+
+const user = Astro.locals.user;
+const posts = await getCollection("blog");
+
+// Sort by date descending
+posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<AdminLayout title="Content Management">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Blog Posts</h5>
+      <span class="badge bg-secondary">{posts.length} posts</span>
+    </div>
+    <div class="card-body p-0">
+      {posts.length === 0 ? (
+        <div class="text-center py-5 text-muted">
+          No blog posts found
+        </div>
+      ) : (
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Published</th>
+                <th>Updated</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {posts.map((post) => (
+                <tr>
+                  <td>
+                    <div class="fw-medium">{post.data.title}</div>
+                    <small class="text-muted">{post.data.description}</small>
+                  </td>
+                  <td>
+                    <small>{post.data.pubDate.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}</small>
+                  </td>
+                  <td>
+                    {post.data.updatedDate ? (
+                      <small>{post.data.updatedDate.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}</small>
+                    ) : (
+                      <small class="text-muted">-</small>
+                    )}
+                  </td>
+                  <td>
+                    <a href={`/blog/${post.id}`} class="btn btn-sm btn-outline-primary" target="_blank">
+                      <i class="bi bi-eye me-1"></i>View
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">Content Management Info</h5>
+    </div>
+    <div class="card-body">
+      <p class="text-muted mb-0">
+        Blog posts are managed via MDX files in <code>src/content/blog/</code>.
+        To create a new post, add a new <code>.md</code> or <code>.mdx</code> file with the required frontmatter.
+      </p>
+    </div>
+  </div>
+</AdminLayout>

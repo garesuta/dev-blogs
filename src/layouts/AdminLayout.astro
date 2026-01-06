@@ -1,0 +1,94 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import UserMenu from "../components/UserMenu.vue";
+import { SITE_TITLE } from "../consts";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Admin panel" } = Astro.props;
+const user = Astro.locals.user;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={`${title} - Admin - ${SITE_TITLE}`} description={description} />
+  </head>
+  <body>
+    <Header />
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-3">
+          <div class="position-sticky">
+            <div class="px-3 mb-3">
+              <span class="badge bg-danger">Admin</span>
+            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/admin">
+                  <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin/users">
+                  <i class="bi bi-people me-2"></i>Users
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/editor">
+                  <i class="bi bi-pencil-square me-2"></i>Content
+                </a>
+              </li>
+            </ul>
+            <hr />
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <i class="bi bi-arrow-left me-2"></i>Back to Site
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-4">
+            <h1 class="h2">{title}</h1>
+            <UserMenu client:load />
+          </div>
+          <slot />
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  .sidebar {
+    min-height: calc(100vh - 60px);
+    border-right: 1px solid #dee2e6;
+  }
+
+  .nav-link {
+    color: #333;
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-link:hover {
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+  }
+
+  .nav-link.active {
+    color: #0d6efd;
+    background-color: #e7f1ff;
+    border-radius: 0.25rem;
+  }
+</style>

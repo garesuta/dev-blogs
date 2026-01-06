@@ -1,0 +1,68 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import LoginForm from "../components/LoginForm.vue";
+import GoogleButton from "../components/GoogleButton.vue";
+import { SITE_TITLE } from "../consts";
+
+// Redirect if already logged in
+if (Astro.locals.user) {
+  const redirect = Astro.url.searchParams.get("redirect") || "/";
+  return Astro.redirect(redirect);
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={`Sign In - ${SITE_TITLE}`} description="Sign in to your account" />
+  </head>
+  <body>
+    <Header />
+    <main class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <h1 class="h3 text-center mb-4">Sign In</h1>
+
+              <GoogleButton client:load />
+
+              <div class="divider my-4">
+                <span>or</span>
+              </div>
+
+              <LoginForm client:load />
+
+              <p class="text-center mt-4 mb-0">
+                Don't have an account? <a href="/register">Sign up</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #6c757d;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .divider span {
+    padding: 0 1rem;
+  }
+</style>

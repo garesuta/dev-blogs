@@ -1,0 +1,15 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import UserList from "../../components/UserList.vue";
+---
+
+<AdminLayout title="User Management">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">All Users</h5>
+    </div>
+    <div class="card-body p-0">
+      <UserList client:load />
+    </div>
+  </div>
+</AdminLayout>
