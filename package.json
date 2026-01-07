@@ -21,6 +21,7 @@
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "drizzle-orm": "^0.45.1",
+    "postgres": "^3.4.8",
     "sharp": "^0.34.3",
     "vue": "^3.5.26",
     "zod": "^4.3.5"
