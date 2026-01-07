@@ -3,6 +3,8 @@ import {
   text,
   timestamp,
   boolean,
+  integer,
+  index,
 } from "drizzle-orm/pg-core";
 
 // ============================================
@@ -69,6 +71,101 @@ export const verifications = pgTable("verifications", {
 });
 
 // ============================================
+// Blog CMS Schema
+// ============================================
+
+// Post status type
+export type PostStatus = "draft" | "published" | "scheduled";
+
+// Posts table - blog post content and metadata
+export const posts = pgTable(
+  "posts",
+  {
+    id: text("id").primaryKey(),
+    slug: text("slug").unique().notNull(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    content: text("content").notNull(),
+    heroImage: text("hero_image"),
+    status: text("status").notNull().default("draft"), // draft | published | scheduled
+    scheduledDate: timestamp("scheduled_date"),
+    authorId: text("author_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+
+    // SEO fields
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    ogTitle: text("og_title"),
+    ogDescription: text("og_description"),
+    ogImage: text("og_image"),
+    canonicalUrl: text("canonical_url"),
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    publishedAt: timestamp("published_at"),
+  },
+  (table) => [
+    index("idx_posts_slug").on(table.slug),
+    index("idx_posts_status").on(table.status),
+    index("idx_posts_author").on(table.authorId),
+  ]
+);
+
+// Post versions for history/rollback
+export const postVersions = pgTable(
+  "post_versions",
+  {
+    id: text("id").primaryKey(),
+    postId: text("post_id")
+      .notNull()
+      .references(() => posts.id, { onDelete: "cascade" }),
+    versionNumber: integer("version_number").notNull(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    content: text("content").notNull(),
+    heroImage: text("hero_image"),
+
+    // SEO fields snapshot
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    ogTitle: text("og_title"),
+    ogDescription: text("og_description"),
+    ogImage: text("og_image"),
+
+    // Version metadata
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdBy: text("created_by")
+      .notNull()
+      .references(() => users.id),
+    changeSummary: text("change_summary"),
+  },
+  (table) => [index("idx_post_versions_post_id").on(table.postId)]
+);
+
+// Image uploads tracking
+export const postImages = pgTable(
+  "post_images",
+  {
+    id: text("id").primaryKey(),
+    postId: text("post_id").references(() => posts.id, { onDelete: "set null" }),
+    filename: text("filename").notNull(),
+    originalName: text("original_name").notNull(),
+    minioKey: text("minio_key").notNull(),
+    minioBucket: text("minio_bucket").notNull(),
+    mimeType: text("mime_type").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    url: text("url").notNull(),
+    uploadedBy: text("uploaded_by")
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [index("idx_post_images_post_id").on(table.postId)]
+);
+
+// ============================================
 // Type Exports
 // ============================================
 
@@ -76,6 +173,14 @@ export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
 export type Account = typeof accounts.$inferSelect;
+
+// Blog CMS types
+export type Post = typeof posts.$inferSelect;
+export type NewPost = typeof posts.$inferInsert;
+export type PostVersion = typeof postVersions.$inferSelect;
+export type NewPostVersion = typeof postVersions.$inferInsert;
+export type PostImage = typeof postImages.$inferSelect;
+export type NewPostImage = typeof postImages.$inferInsert;
 
 // Role type for type safety
 export type UserRole = "user" | "editor" | "admin";

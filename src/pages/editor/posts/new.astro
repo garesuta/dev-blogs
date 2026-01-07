@@ -1,0 +1,18 @@
+---
+export const prerender = false;
+
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import PostEditor from "../../../components/PostEditor.vue";
+---
+
+<AdminLayout title="Create New Post">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/editor">Content</a></li>
+      <li class="breadcrumb-item"><a href="/editor/posts">Posts</a></li>
+      <li class="breadcrumb-item active" aria-current="page">New Post</li>
+    </ol>
+  </nav>
+
+  <PostEditor client:load />
+</AdminLayout>

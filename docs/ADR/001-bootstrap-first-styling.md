@@ -91,6 +91,33 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 <div class="my-flex-container">...</div>
 ```
 
+## Applied Examples
+
+### CMS Button Refactoring (2026-01-07)
+
+**Before:** Custom CSS with gradient styling
+```css
+.cms-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border-radius: 6px;
+  /* ... more custom styles */
+}
+```
+
+**After:** Bootstrap utility classes
+```html
+<a class="btn btn-primary btn-sm d-inline-flex align-items-center gap-1 text-decoration-none">
+  <svg>...</svg>
+  <span class="d-none d-sm-inline">CMS</span>
+</a>
+```
+
+**Reasoning:** Custom gradient styling violated Bootstrap-first principle. Bootstrap's `btn btn-primary` provides consistent button styling across the app.
+
 ## Future Considerations
 
 1. **Custom Theme** - Can create custom Bootstrap theme with SASS variables

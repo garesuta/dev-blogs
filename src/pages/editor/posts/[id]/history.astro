@@ -1,0 +1,21 @@
+---
+export const prerender = false;
+
+import AdminLayout from "../../../../layouts/AdminLayout.astro";
+import VersionHistory from "../../../../components/VersionHistory.vue";
+
+const { id } = Astro.params;
+---
+
+<AdminLayout title="Version History">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/editor">Content</a></li>
+      <li class="breadcrumb-item"><a href="/editor/posts">Posts</a></li>
+      <li class="breadcrumb-item"><a href={`/editor/posts/${id}`}>Edit</a></li>
+      <li class="breadcrumb-item active" aria-current="page">History</li>
+    </ol>
+  </nav>
+
+  <VersionHistory client:load postId={id!} />
+</AdminLayout>

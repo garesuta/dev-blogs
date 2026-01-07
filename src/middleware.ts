@@ -19,6 +19,20 @@ export const onRequest = defineMiddleware(async (context, next) => {
     headers: context.request.headers,
   });
 
+  // Debug: Log session info for protected routes
+  if (pathname.startsWith("/editor") || pathname.startsWith("/admin")) {
+    const rawRole = session?.user?.role;
+    const normalizedRole = ((rawRole as string) || "user").toLowerCase();
+    console.log("[Auth Debug]", {
+      pathname,
+      hasSession: !!session,
+      userId: session?.user?.id,
+      userEmail: session?.user?.email,
+      rawRole,
+      normalizedRole,
+    });
+  }
+
   // Set user and session in locals
   context.locals.user = session?.user ?? null;
   context.locals.session = session?.session ?? null;
@@ -41,8 +55,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
       return context.redirect("/banned");
     }
 
-    // Check role-based access
-    const userRole = (session.user.role as UserRole) || "user";
+    // Check role-based access (normalize to lowercase for case-insensitive comparison)
+    const userRole = ((session.user.role as string) || "user").toLowerCase() as UserRole;
 
     for (const [routePrefix, allowedRoles] of Object.entries(roleRoutes)) {
       if (pathname.startsWith(routePrefix)) {

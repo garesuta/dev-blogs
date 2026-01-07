@@ -1,0 +1,10 @@
+---
+export const prerender = false;
+
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import PostList from "../../../components/PostList.vue";
+---
+
+<AdminLayout title="Blog Posts">
+  <PostList client:load />
+</AdminLayout>
