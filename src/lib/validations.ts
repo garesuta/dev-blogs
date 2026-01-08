@@ -144,6 +144,10 @@ export const autoSavePostSchema = z.object({
   canonicalUrl: z.string().optional().nullable(),
 });
 
+// Sort options for posts
+export const postSortBySchema = z.enum(["updatedAt", "createdAt", "title", "publishedAt"]);
+export const sortOrderSchema = z.enum(["asc", "desc"]);
+
 // Post list query params
 export const postListQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
@@ -153,6 +157,8 @@ export const postListQuerySchema = z.object({
   authorId: z.string().optional(),
   categoryId: z.string().optional(),
   tagId: z.string().optional(),
+  sortBy: postSortBySchema.optional().default("updatedAt"),
+  sortOrder: sortOrderSchema.optional().default("desc"),
 });
 
 // Image upload validation

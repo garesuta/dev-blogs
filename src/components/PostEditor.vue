@@ -2,6 +2,7 @@
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import BlogEditor from "./BlogEditor.vue";
 import SeoFields from "./SeoFields.vue";
+import ImageUpload from "./ImageUpload.vue";
 import { generateSlug } from "../lib/validations";
 
 // Types
@@ -415,6 +416,24 @@ onMounted(async () => {
     </div>
 
     <template v-else>
+      <!-- Header with title and Preview button -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">{{ isNewPost ? 'New Post' : 'Edit Post' }}</h4>
+        <div class="d-flex gap-2">
+          <a
+            v-if="!isNewPost"
+            :href="`/editor/posts/${postId}/preview`"
+            class="btn btn-outline-primary"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+            </svg>
+            Preview
+          </a>
+        </div>
+      </div>
+
       <!-- Error message -->
       <div v-if="error" class="alert alert-danger alert-dismissible" role="alert">
         {{ error }}
@@ -485,22 +504,11 @@ onMounted(async () => {
 
               <!-- Hero image -->
               <div class="mb-3">
-                <label for="heroImage" class="form-label">Hero Image URL</label>
-                <input
-                  type="url"
-                  class="form-control"
-                  id="heroImage"
+                <ImageUpload
                   v-model="post.heroImage"
-                  placeholder="https://..."
+                  label="Hero Image"
+                  placeholder="Upload a hero image for your post"
                 />
-                <div v-if="post.heroImage" class="mt-2">
-                  <img
-                    :src="post.heroImage"
-                    alt="Hero preview"
-                    class="img-fluid rounded"
-                    style="max-height: 150px;"
-                  />
-                </div>
               </div>
 
               <!-- Category -->

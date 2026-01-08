@@ -1,0 +1,31 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import CategoryManager from "../../components/CategoryManager.vue";
+import TagManager from "../../components/TagManager.vue";
+
+export const prerender = false;
+---
+
+<AdminLayout title="Categories & Tags">
+  <p class="text-muted mb-4">
+    Manage categories and tags for organizing your blog posts.
+  </p>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <CategoryManager client:load />
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <TagManager client:load />
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

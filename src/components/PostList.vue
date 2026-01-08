@@ -58,6 +58,10 @@ const categoryFilter = ref<string>("");
 const tagFilter = ref<string>("");
 const searchQuery = ref("");
 
+// Sorting
+const sortBy = ref<string>("updatedAt");
+const sortOrder = ref<string>("desc");
+
 // Debounce search
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -107,6 +111,12 @@ async function fetchPosts() {
     if (searchQuery.value) {
       params.set("search", searchQuery.value);
     }
+    if (sortBy.value) {
+      params.set("sortBy", sortBy.value);
+    }
+    if (sortOrder.value) {
+      params.set("sortOrder", sortOrder.value);
+    }
 
     const response = await fetch(`/api/posts?${params}`);
 
@@ -155,6 +165,25 @@ function goToPage(page: number) {
   if (page < 1 || page > pagination.value.totalPages) return;
   pagination.value.page = page;
   fetchPosts();
+}
+
+// Sorting
+function toggleSort(column: string) {
+  if (sortBy.value === column) {
+    // Toggle order if same column
+    sortOrder.value = sortOrder.value === "desc" ? "asc" : "desc";
+  } else {
+    // New column, default to desc
+    sortBy.value = column;
+    sortOrder.value = "desc";
+  }
+  pagination.value.page = 1;
+  fetchPosts();
+}
+
+function getSortIcon(column: string) {
+  if (sortBy.value !== column) return "";
+  return sortOrder.value === "desc" ? "▼" : "▲";
 }
 
 // Fetch filter options
@@ -292,13 +321,20 @@ onMounted(() => {
       <table class="table table-hover align-middle">
         <thead class="table-light">
           <tr>
-            <th>Title</th>
+            <th class="sortable" @click="toggleSort('title')">
+              Title <span class="sort-icon">{{ getSortIcon('title') }}</span>
+            </th>
             <th style="width: 100px;">Status</th>
             <th style="width: 130px;">Category</th>
-            <th style="width: 180px;">Tags</th>
-            <th style="width: 130px;">Author</th>
-            <th style="width: 160px;">Updated</th>
-            <th style="width: 90px;">Actions</th>
+            <th style="width: 150px;">Tags</th>
+            <th style="width: 120px;">Author</th>
+            <th class="sortable" style="width: 145px;" @click="toggleSort('createdAt')">
+              Created <span class="sort-icon">{{ getSortIcon('createdAt') }}</span>
+            </th>
+            <th class="sortable" style="width: 145px;" @click="toggleSort('updatedAt')">
+              Updated <span class="sort-icon">{{ getSortIcon('updatedAt') }}</span>
+            </th>
+            <th style="width: 80px;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -344,6 +380,9 @@ onMounted(() => {
             </td>
             <td>
               <span class="small">{{ post.authorName || post.authorEmail || "Unknown" }}</span>
+            </td>
+            <td>
+              <span class="small">{{ formatDate(post.createdAt) }}</span>
             </td>
             <td>
               <span class="small">{{ formatDate(post.updatedAt) }}</span>
@@ -452,5 +491,20 @@ onMounted(() => {
 
 .table tbody tr:last-child td {
   border-bottom: none;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable:hover {
+  background-color: #e9ecef;
+}
+
+.sort-icon {
+  font-size: 0.75em;
+  margin-left: 4px;
+  opacity: 0.7;
 }
 </style>

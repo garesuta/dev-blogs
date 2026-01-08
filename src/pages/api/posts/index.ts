@@ -7,7 +7,7 @@ import {
   createPostSchema,
   postListQuerySchema,
 } from "../../../lib/validations";
-import { eq, desc, like, and, count, inArray } from "drizzle-orm";
+import { eq, desc, asc, like, and, count, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 export const prerender = false;
@@ -43,6 +43,8 @@ export const GET: APIRoute = async ({ request }) => {
       authorId: url.searchParams.get("authorId") || undefined,
       categoryId: url.searchParams.get("categoryId") || undefined,
       tagId: url.searchParams.get("tagId") || undefined,
+      sortBy: url.searchParams.get("sortBy") || "updatedAt",
+      sortOrder: url.searchParams.get("sortOrder") || "desc",
     };
 
     const validated = postListQuerySchema.safeParse(queryParams);
@@ -53,7 +55,7 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
-    const { page, limit, status, search, authorId, categoryId, tagId } = validated.data;
+    const { page, limit, status, search, authorId, categoryId, tagId, sortBy, sortOrder } = validated.data;
     const offset = (page - 1) * limit;
 
     // If filtering by tag, get post IDs that have this tag
@@ -97,6 +99,16 @@ export const GET: APIRoute = async ({ request }) => {
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
+    // Build sort order
+    const sortColumn = {
+      updatedAt: posts.updatedAt,
+      createdAt: posts.createdAt,
+      title: posts.title,
+      publishedAt: posts.publishedAt,
+    }[sortBy] || posts.updatedAt;
+
+    const orderByClause = sortOrder === "asc" ? asc(sortColumn) : desc(sortColumn);
+
     // Get total count
     const [{ total }] = await db
       .select({ total: count() })
@@ -127,7 +139,7 @@ export const GET: APIRoute = async ({ request }) => {
       .leftJoin(users, eq(posts.authorId, users.id))
       .leftJoin(categories, eq(posts.categoryId, categories.id))
       .where(whereClause)
-      .orderBy(desc(posts.updatedAt))
+      .orderBy(orderByClause)
       .limit(limit)
       .offset(offset);
 

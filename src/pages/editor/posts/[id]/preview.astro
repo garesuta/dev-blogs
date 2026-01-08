@@ -1,14 +1,18 @@
 ---
 export const prerender = false;
 
-import AdminLayout from "../../../../layouts/AdminLayout.astro";
+import BaseHead from "../../../../components/BaseHead.astro";
+import Header from "../../../../components/Header.astro";
+import Footer from "../../../../components/Footer.astro";
+import FormattedDate from "../../../../components/FormattedDate.astro";
 import { db } from "../../../../lib/db";
-import { posts, users } from "../../../../lib/schema";
-import { eq } from "drizzle-orm";
+import { posts, users, categories, tags, postTags } from "../../../../lib/schema";
+import { eq, inArray } from "drizzle-orm";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const { id } = Astro.params;
 
-// Fetch post data
+// Fetch post data with category
 const [post] = await db
   .select({
     id: posts.id,
@@ -21,10 +25,15 @@ const [post] = await db
     publishedAt: posts.publishedAt,
     createdAt: posts.createdAt,
     updatedAt: posts.updatedAt,
+    authorId: posts.authorId,
     authorName: users.name,
+    categoryId: posts.categoryId,
+    categoryName: categories.name,
+    categoryColor: categories.color,
   })
   .from(posts)
   .leftJoin(users, eq(posts.authorId, users.id))
+  .leftJoin(categories, eq(posts.categoryId, categories.id))
   .where(eq(posts.id, id!))
   .limit(1);
 
@@ -32,152 +41,373 @@ if (!post) {
   return Astro.redirect("/editor/posts");
 }
 
-// Simple markdown to HTML conversion for preview
-// In production, you'd use a proper markdown parser
-function simpleMarkdownToHtml(markdown: string): string {
-  return markdown
-    // Headers
+// Fetch tags for this post
+let postTagList: { id: string; name: string }[] = [];
+const tagRows = await db
+  .select({
+    tagId: tags.id,
+    tagName: tags.name,
+  })
+  .from(postTags)
+  .innerJoin(tags, eq(postTags.tagId, tags.id))
+  .where(eq(postTags.postId, id!));
+
+postTagList = tagRows.map(row => ({ id: row.tagId, name: row.tagName }));
+
+// Use marked for proper markdown parsing (or fallback to simple parser)
+function markdownToHtml(markdown: string): string {
+  // Enhanced markdown parser for preview
+  let html = markdown
+    // Escape HTML first (security)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    // Code blocks (must come before other rules)
+    .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+      return `<pre><code class="language-${lang || 'text'}">${code.trim()}</code></pre>`;
+    })
+    // Inline code
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    // Images
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="img-fluid rounded my-3">')
+    // Links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    // Headers (must process from h6 to h1)
+    .replace(/^###### (.*$)/gim, '<h6>$1</h6>')
+    .replace(/^##### (.*$)/gim, '<h5>$1</h5>')
+    .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
     .replace(/^### (.*$)/gim, '<h3>$1</h3>')
     .replace(/^## (.*$)/gim, '<h2>$1</h2>')
     .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-    // Bold
+    // Bold and italic
+    .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    // Italic
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // Code blocks
-    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-    // Inline code
-    .replace(/`(.+?)`/g, '<code>$1</code>')
-    // Links
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
-    // Images
-    .replace(/!\[(.+?)\]\((.+?)\)/g, '<img src="$2" alt="$1" class="img-fluid">')
-    // Line breaks
-    .replace(/\n\n/g, '</p><p>')
-    // Wrap in paragraphs
-    .replace(/^(.+)$/gm, '<p>$1</p>')
-    // Clean up empty paragraphs
+    .replace(/___(.+?)___/g, '<strong><em>$1</em></strong>')
+    .replace(/__(.+?)__/g, '<strong>$1</strong>')
+    .replace(/_(.+?)_/g, '<em>$1</em>')
+    // Strikethrough
+    .replace(/~~(.+?)~~/g, '<del>$1</del>')
+    // Blockquotes
+    .replace(/^&gt; (.*$)/gim, '<blockquote>$1</blockquote>')
+    // Horizontal rules
+    .replace(/^(-{3,}|\*{3,}|_{3,})$/gim, '<hr>')
+    // Unordered lists
+    .replace(/^\s*[-*+] (.+)$/gim, '<li>$1</li>')
+    // Ordered lists
+    .replace(/^\s*\d+\. (.+)$/gim, '<li>$1</li>')
+    // Paragraphs (double newlines)
+    .replace(/\n\n+/g, '</p><p>')
+    // Single line breaks
+    .replace(/\n/g, '<br>');
+
+  // Wrap in paragraphs
+  html = '<p>' + html + '</p>';
+
+  // Clean up empty paragraphs and fix structure
+  html = html
     .replace(/<p><\/p>/g, '')
     .replace(/<p>(<h[1-6]>)/g, '$1')
-    .replace(/(<\/h[1-6]>)<\/p>/g, '$1');
+    .replace(/(<\/h[1-6]>)<\/p>/g, '$1')
+    .replace(/<p>(<pre>)/g, '$1')
+    .replace(/(<\/pre>)<\/p>/g, '$1')
+    .replace(/<p>(<blockquote>)/g, '$1')
+    .replace(/(<\/blockquote>)<\/p>/g, '$1')
+    .replace(/<p>(<hr>)/g, '$1')
+    .replace(/(<hr>)<\/p>/g, '$1')
+    .replace(/<p>(<li>)/g, '<ul>$1')
+    .replace(/(<\/li>)<\/p>/g, '$1</ul>')
+    .replace(/<\/li><br><li>/g, '</li><li>')
+    .replace(/<p><br>/g, '<p>')
+    .replace(/<br><\/p>/g, '</p>');
+
+  // Merge consecutive blockquotes
+  html = html.replace(/<\/blockquote><blockquote>/g, '<br>');
+
+  return html;
 }
 
-const htmlContent = simpleMarkdownToHtml(post.content);
-const formatDate = (date: Date | null) => {
-  if (!date) return "";
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
+const htmlContent = markdownToHtml(post.content);
+
+// Use createdAt as fallback for pubDate in preview
+const displayDate = post.publishedAt || post.createdAt;
 ---
 
-<AdminLayout title="Preview Post">
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/editor">Content</a></li>
-      <li class="breadcrumb-item"><a href="/editor/posts">Posts</a></li>
-      <li class="breadcrumb-item"><a href={`/editor/posts/${id}`}>Edit</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Preview</li>
-    </ol>
-  </nav>
+<html lang="en">
+  <head>
+    <BaseHead title={`Preview: ${post.title}`} description={post.description} />
+    <style>
+      main {
+        width: calc(100% - 2em);
+        max-width: 100%;
+        margin: 0;
+      }
+      .hero-image {
+        width: 100%;
+      }
+      .hero-image img {
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+        max-height: 500px;
+        width: 100%;
+        object-fit: cover;
+      }
+      .prose {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 1em;
+        color: rgb(var(--gray-dark));
+      }
+      .title {
+        margin-bottom: 1em;
+        padding: 1em 0;
+        text-align: center;
+        line-height: 1;
+      }
+      .title h1 {
+        margin: 0 0 0.5em 0;
+      }
+      .date {
+        margin-bottom: 0.5em;
+        color: rgb(var(--gray));
+      }
+      .last-updated-on {
+        font-style: italic;
+      }
 
-  <!-- Preview banner -->
-  <div class="alert alert-info d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <strong>Preview Mode</strong> - This is how your post will look when published.
-      <span class="badge bg-{post.status === 'published' ? 'success' : 'secondary'} ms-2">
-        {post.status}
-      </span>
-    </div>
-    <div>
-      <a href={`/editor/posts/${id}`} class="btn btn-sm btn-outline-primary me-2">
-        Edit Post
-      </a>
-      {post.status === 'published' && (
-        <a href={`/blog/${post.slug}`} class="btn btn-sm btn-primary" target="_blank">
-          View Live
+      /* Preview banner styles */
+      .preview-banner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.75rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      .preview-banner-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .preview-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .preview-status {
+        font-size: 0.875rem;
+        opacity: 0.9;
+      }
+      .preview-banner-right {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .preview-banner .btn {
+        font-size: 0.875rem;
+        padding: 0.375rem 0.75rem;
+      }
+      .preview-banner .btn-light {
+        background: white;
+        color: #667eea;
+        border: none;
+      }
+      .preview-banner .btn-light:hover {
+        background: #f0f0f0;
+      }
+      .preview-banner .btn-outline-light {
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+      }
+      .preview-banner .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: white;
+      }
+
+      /* Adjust body padding for fixed banner */
+      body {
+        padding-top: 60px;
+      }
+
+      /* Post content styles */
+      .post-content {
+        line-height: 1.8;
+        font-size: 1.1rem;
+      }
+      .post-content h1,
+      .post-content h2,
+      .post-content h3,
+      .post-content h4,
+      .post-content h5,
+      .post-content h6 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+      }
+      .post-content h1 { font-size: 2rem; }
+      .post-content h2 { font-size: 1.75rem; }
+      .post-content h3 { font-size: 1.5rem; }
+      .post-content h4 { font-size: 1.25rem; }
+      .post-content pre {
+        background-color: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+      }
+      .post-content code {
+        background-color: #f1f5f9;
+        color: #0f172a;
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        font-size: 0.9em;
+      }
+      .post-content pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+      }
+      .post-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1.5rem auto;
+        display: block;
+      }
+      .post-content blockquote {
+        border-left: 4px solid #667eea;
+        padding-left: 1.5rem;
+        margin: 1.5rem 0;
+        color: #64748b;
+        font-style: italic;
+      }
+      .post-content ul,
+      .post-content ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+      }
+      .post-content li {
+        margin-bottom: 0.5rem;
+      }
+      .post-content a {
+        color: #667eea;
+        text-decoration: underline;
+      }
+      .post-content a:hover {
+        color: #764ba2;
+      }
+      .post-content hr {
+        margin: 2rem 0;
+        border: none;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      /* Category and tags */
+      .post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 1rem;
+      }
+      .category-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: white;
+      }
+      .tag-badge {
+        background: #f1f5f9;
+        color: #475569;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+      }
+    </style>
+    <script>
+      import "bootstrap/dist/js/bootstrap.bundle.min.js";
+    </script>
+  </head>
+
+  <body>
+    <!-- Preview Banner -->
+    <div class="preview-banner">
+      <div class="preview-banner-left">
+        <span class="preview-badge">PREVIEW</span>
+        <span class="preview-status">
+          Status: <strong>{post.status.charAt(0).toUpperCase() + post.status.slice(1)}</strong>
+          {post.status === 'draft' && ' - Not yet published'}
+          {post.status === 'scheduled' && ' - Scheduled for publishing'}
+        </span>
+      </div>
+      <div class="preview-banner-right">
+        <a href={`/editor/posts/${id}`} class="btn btn-outline-light">
+          Edit Post
         </a>
-      )}
-    </div>
-  </div>
-
-  <!-- Post preview -->
-  <article class="card">
-    {post.heroImage && (
-      <img
-        src={post.heroImage}
-        alt={post.title}
-        class="card-img-top"
-        style="max-height: 400px; object-fit: cover;"
-      />
-    )}
-    <div class="card-body">
-      <h1 class="card-title mb-3">{post.title}</h1>
-
-      <div class="text-muted mb-4">
-        <span>By {post.authorName || "Unknown"}</span>
-        {post.publishedAt && (
-          <>
-            <span class="mx-2">•</span>
-            <time datetime={post.publishedAt.toISOString()}>
-              {formatDate(post.publishedAt)}
-            </time>
-          </>
+        <a href="/editor/posts" class="btn btn-outline-light">
+          All Posts
+        </a>
+        {post.status === 'published' && (
+          <a href={`/blog/${post.slug}`} class="btn btn-light" target="_blank">
+            View Live
+          </a>
         )}
       </div>
-
-      <p class="lead">{post.description}</p>
-
-      <hr />
-
-      <div class="post-content" set:html={htmlContent} />
     </div>
-  </article>
-</AdminLayout>
 
-<style>
-  .post-content {
-    line-height: 1.8;
-  }
+    <Header />
+    <main>
+      <article>
+        <div class="hero-image">
+          {post.heroImage && (
+            <img src={post.heroImage} alt={post.title} />
+          )}
+        </div>
+        <div class="prose">
+          <div class="title">
+            <div class="date">
+              <FormattedDate date={displayDate} />
+              {post.updatedAt && post.publishedAt && post.updatedAt > post.publishedAt && (
+                <div class="last-updated-on">
+                  Last updated on <FormattedDate date={post.updatedAt} />
+                </div>
+              )}
+            </div>
+            <h1>{post.title}</h1>
 
-  .post-content h1,
-  .post-content h2,
-  .post-content h3 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-  }
+            <!-- Category and Tags -->
+            <div class="post-meta">
+              {post.categoryName && (
+                <span
+                  class="category-badge"
+                  style={`background-color: ${post.categoryColor || '#6c757d'}`}
+                >
+                  {post.categoryName}
+                </span>
+              )}
+              {postTagList.map((tag) => (
+                <span class="tag-badge">{tag.name}</span>
+              ))}
+            </div>
 
-  .post-content pre {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.375rem;
-    overflow-x: auto;
-  }
+            <hr />
+          </div>
 
-  .post-content code {
-    background-color: #f8f9fa;
-    padding: 0.125rem 0.25rem;
-    border-radius: 0.25rem;
-    font-size: 0.875em;
-  }
-
-  .post-content pre code {
-    background-color: transparent;
-    padding: 0;
-  }
-
-  .post-content img {
-    max-width: 100%;
-    height: auto;
-    margin: 1rem 0;
-  }
-
-  .post-content blockquote {
-    border-left: 4px solid #dee2e6;
-    padding-left: 1rem;
-    margin-left: 0;
-    color: #6c757d;
-  }
-</style>
+          <div class="post-content" set:html={htmlContent} />
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
