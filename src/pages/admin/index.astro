@@ -2,6 +2,8 @@
 import AdminLayout from "../../layouts/AdminLayout.astro";
 import { auth } from "../../lib/auth";
 
+export const prerender = false;
+
 const user = Astro.locals.user;
 
 // Get some stats

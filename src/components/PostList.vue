@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 // Types
 interface Post {
@@ -16,6 +16,23 @@ interface Post {
   authorId: string;
   authorName: string | null;
   authorEmail: string | null;
+  categoryId: string | null;
+  categoryName: string | null;
+  categoryColor: string | null;
+  tags: { id: string; name: string }[];
+}
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  color: string | null;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+  slug: string;
 }
 
 interface Pagination {
@@ -31,8 +48,14 @@ const pagination = ref<Pagination>({ page: 1, limit: 20, total: 0, totalPages: 0
 const isLoading = ref(true);
 const error = ref("");
 
+// Filter options
+const categories = ref<Category[]>([]);
+const availableTags = ref<Tag[]>([]);
+
 // Filters
 const statusFilter = ref<string>("");
+const categoryFilter = ref<string>("");
+const tagFilter = ref<string>("");
 const searchQuery = ref("");
 
 // Debounce search
@@ -74,6 +97,12 @@ async function fetchPosts() {
 
     if (statusFilter.value) {
       params.set("status", statusFilter.value);
+    }
+    if (categoryFilter.value) {
+      params.set("categoryId", categoryFilter.value);
+    }
+    if (tagFilter.value) {
+      params.set("tagId", tagFilter.value);
     }
     if (searchQuery.value) {
       params.set("search", searchQuery.value);
@@ -128,8 +157,39 @@ function goToPage(page: number) {
   fetchPosts();
 }
 
+// Fetch filter options
+async function fetchFilterOptions() {
+  try {
+    const [catRes, tagRes] = await Promise.all([
+      fetch("/api/categories"),
+      fetch("/api/tags"),
+    ]);
+
+    if (catRes.ok) {
+      const catData = await catRes.json();
+      categories.value = catData.categories || [];
+    }
+    if (tagRes.ok) {
+      const tagData = await tagRes.json();
+      availableTags.value = tagData.tags || [];
+    }
+  } catch (err) {
+    console.error("Error fetching filter options:", err);
+  }
+}
+
 // Watch filters
 watch(statusFilter, () => {
+  pagination.value.page = 1;
+  fetchPosts();
+});
+
+watch(categoryFilter, () => {
+  pagination.value.page = 1;
+  fetchPosts();
+});
+
+watch(tagFilter, () => {
   pagination.value.page = 1;
   fetchPosts();
 });
@@ -144,6 +204,7 @@ watch(searchQuery, () => {
 
 // Initialize
 onMounted(() => {
+  fetchFilterOptions();
   fetchPosts();
 });
 </script>
@@ -168,6 +229,22 @@ onMounted(() => {
         <option value="draft">Draft</option>
         <option value="published">Published</option>
         <option value="scheduled">Scheduled</option>
+      </select>
+
+      <!-- Category filter -->
+      <select class="form-select" style="width: auto;" v-model="categoryFilter">
+        <option value="">All categories</option>
+        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
+
+      <!-- Tag filter -->
+      <select class="form-select" style="width: auto;" v-model="tagFilter">
+        <option value="">All tags</option>
+        <option v-for="tag in availableTags" :key="tag.id" :value="tag.id">
+          {{ tag.name }}
+        </option>
       </select>
 
       <!-- New post button -->
@@ -217,9 +294,11 @@ onMounted(() => {
           <tr>
             <th>Title</th>
             <th style="width: 100px;">Status</th>
-            <th style="width: 150px;">Author</th>
-            <th style="width: 180px;">Updated</th>
-            <th style="width: 100px;">Actions</th>
+            <th style="width: 130px;">Category</th>
+            <th style="width: 180px;">Tags</th>
+            <th style="width: 130px;">Author</th>
+            <th style="width: 160px;">Updated</th>
+            <th style="width: 90px;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -237,6 +316,31 @@ onMounted(() => {
               <div v-if="post.status === 'scheduled' && post.scheduledDate" class="small text-muted">
                 {{ formatDate(post.scheduledDate) }}
               </div>
+            </td>
+            <td>
+              <span
+                v-if="post.categoryName"
+                class="badge"
+                :style="{ backgroundColor: post.categoryColor || '#6c757d' }"
+              >
+                {{ post.categoryName }}
+              </span>
+              <span v-else class="text-muted small">—</span>
+            </td>
+            <td>
+              <div v-if="post.tags && post.tags.length > 0" class="d-flex flex-wrap gap-1">
+                <span
+                  v-for="tag in post.tags.slice(0, 3)"
+                  :key="tag.id"
+                  class="badge bg-light text-dark border"
+                >
+                  {{ tag.name }}
+                </span>
+                <span v-if="post.tags.length > 3" class="badge bg-light text-muted border">
+                  +{{ post.tags.length - 3 }}
+                </span>
+              </div>
+              <span v-else class="text-muted small">—</span>
             </td>
             <td>
               <span class="small">{{ post.authorName || post.authorEmail || "Unknown" }}</span>
@@ -333,6 +437,20 @@ onMounted(() => {
 
 <style scoped>
 .post-list {
-  min-height: 400px;
+  min-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+
+.table-responsive {
+  flex: 1;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
 }
 </style>

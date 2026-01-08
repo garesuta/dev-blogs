@@ -14,6 +14,7 @@ interface Post {
   heroImage: string | null;
   status: "draft" | "published" | "scheduled";
   scheduledDate: string | null;
+  categoryId: string | null;
   metaTitle: string | null;
   metaDescription: string | null;
   ogTitle: string | null;
@@ -23,6 +24,20 @@ interface Post {
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  color: string | null;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+  slug: string;
 }
 
 // Props
@@ -45,6 +60,7 @@ const post = reactive<Partial<Post>>({
   heroImage: null,
   status: "draft",
   scheduledDate: null,
+  categoryId: null,
   metaTitle: null,
   metaDescription: null,
   ogTitle: null,
@@ -56,6 +72,14 @@ const post = reactive<Partial<Post>>({
 const originalUpdatedAt = ref<string | null>(null);
 const lastSavedAt = ref<Date | null>(null);
 const isDirty = ref(false);
+
+// Categories and tags
+const allCategories = ref<Category[]>([]);
+const allTags = ref<Tag[]>([]);
+const selectedTags = ref<Tag[]>([]);
+const newTagInput = ref("");
+const isLoadingCategories = ref(false);
+const isLoadingTags = ref(false);
 
 // Refs
 const editorRef = ref<InstanceType<typeof BlogEditor> | null>(null);
@@ -77,6 +101,38 @@ const statusBadgeClass = computed(() => {
   }
 });
 
+// Load categories
+async function loadCategories() {
+  isLoadingCategories.value = true;
+  try {
+    const response = await fetch("/api/categories");
+    if (response.ok) {
+      const data = await response.json();
+      allCategories.value = data.categories;
+    }
+  } catch (err) {
+    console.error("Failed to load categories:", err);
+  } finally {
+    isLoadingCategories.value = false;
+  }
+}
+
+// Load tags
+async function loadTags() {
+  isLoadingTags.value = true;
+  try {
+    const response = await fetch("/api/tags");
+    if (response.ok) {
+      const data = await response.json();
+      allTags.value = data.tags;
+    }
+  } catch (err) {
+    console.error("Failed to load tags:", err);
+  } finally {
+    isLoadingTags.value = false;
+  }
+}
+
 // Load existing post
 async function loadPost() {
   if (!props.postId) {
@@ -94,6 +150,11 @@ async function loadPost() {
     const data = await response.json();
     Object.assign(post, data.post);
     originalUpdatedAt.value = data.post.updatedAt;
+
+    // Load tags for this post
+    if (data.tags) {
+      selectedTags.value = data.tags;
+    }
   } catch (err) {
     error.value = err instanceof Error ? err.message : "Failed to load post";
   } finally {
@@ -119,6 +180,8 @@ async function savePost(showSuccess = true) {
       description: post.description,
       content: post.content,
       heroImage: post.heroImage,
+      categoryId: post.categoryId,
+      tagIds: selectedTags.value.map((t) => t.id),
       metaTitle: post.metaTitle,
       metaDescription: post.metaDescription,
       ogTitle: post.ogTitle,
@@ -259,6 +322,52 @@ function handleTitleInput(event: Event) {
   }
 }
 
+// Add tag to selection
+function addTag(tag: Tag) {
+  if (!selectedTags.value.find((t) => t.id === tag.id)) {
+    selectedTags.value.push(tag);
+    isDirty.value = true;
+  }
+  newTagInput.value = "";
+}
+
+// Remove tag from selection
+function removeTag(tagId: string) {
+  selectedTags.value = selectedTags.value.filter((t) => t.id !== tagId);
+  isDirty.value = true;
+}
+
+// Create new tag and add to selection
+async function createAndAddTag() {
+  const tagName = newTagInput.value.trim();
+  if (!tagName) return;
+
+  try {
+    const response = await fetch("/api/tags", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: tagName }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      addTag(data.tag);
+      // Refresh all tags list
+      if (!data.exists) {
+        allTags.value.push(data.tag);
+      }
+    }
+  } catch (err) {
+    console.error("Failed to create tag:", err);
+  }
+}
+
+// Filter tags for dropdown (exclude already selected)
+const availableTags = computed(() => {
+  const selectedIds = selectedTags.value.map((t) => t.id);
+  return allTags.value.filter((t) => !selectedIds.includes(t.id));
+});
+
 // Watch for changes to mark dirty
 watch(
   () => [
@@ -266,6 +375,7 @@ watch(
     post.slug,
     post.description,
     post.heroImage,
+    post.categoryId,
     post.metaTitle,
     post.metaDescription,
     post.ogTitle,
@@ -280,8 +390,17 @@ watch(
 );
 
 // Initialize
-onMounted(() => {
-  loadPost();
+onMounted(async () => {
+  console.log("[PostEditor] Mounted, starting to load data...");
+
+  // Load all data in parallel
+  await Promise.all([
+    loadCategories().then(() => console.log("[PostEditor] Categories loaded")),
+    loadTags().then(() => console.log("[PostEditor] Tags loaded")),
+    loadPost().then(() => console.log("[PostEditor] Post loaded, isLoading:", isLoading.value)),
+  ]);
+
+  console.log("[PostEditor] All data loaded, isLoading:", isLoading.value);
 });
 </script>
 
@@ -382,6 +501,70 @@ onMounted(() => {
                     style="max-height: 150px;"
                   />
                 </div>
+              </div>
+
+              <!-- Category -->
+              <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select
+                  class="form-select"
+                  id="category"
+                  v-model="post.categoryId"
+                  :disabled="isLoadingCategories"
+                >
+                  <option :value="null">No category</option>
+                  <option
+                    v-for="category in allCategories"
+                    :key="category.id"
+                    :value="category.id"
+                  >
+                    {{ category.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Tags -->
+              <div class="mb-3">
+                <label class="form-label">Tags</label>
+                <!-- Selected tags -->
+                <div v-if="selectedTags.length > 0" class="mb-2">
+                  <span
+                    v-for="tag in selectedTags"
+                    :key="tag.id"
+                    class="badge bg-secondary me-1 mb-1"
+                  >
+                    {{ tag.name }}
+                    <button
+                      type="button"
+                      class="btn-close btn-close-white ms-1"
+                      style="font-size: 0.6em;"
+                      @click="removeTag(tag.id)"
+                    ></button>
+                  </span>
+                </div>
+                <!-- Add tag dropdown -->
+                <div class="input-group input-group-sm">
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="newTagInput"
+                    placeholder="Add tag..."
+                    list="available-tags"
+                    @keydown.enter.prevent="createAndAddTag"
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    @click="createAndAddTag"
+                    :disabled="!newTagInput.trim()"
+                  >
+                    Add
+                  </button>
+                </div>
+                <datalist id="available-tags">
+                  <option v-for="tag in availableTags" :key="tag.id" :value="tag.name" />
+                </datalist>
+                <div class="form-text">Press Enter or click Add to create a new tag</div>
               </div>
 
               <!-- Schedule date (for scheduled posts) -->

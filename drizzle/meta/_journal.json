@@ -15,6 +15,13 @@
       "when": 1767796537556,
       "tag": "0001_colorful_peter_quill",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1767802617614,
+      "tag": "0002_black_titania",
+      "breakpoints": true
     }
   ]
 }

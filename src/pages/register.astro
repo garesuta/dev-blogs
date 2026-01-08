@@ -6,6 +6,8 @@ import RegisterForm from "../components/RegisterForm.vue";
 import GoogleButton from "../components/GoogleButton.vue";
 import { SITE_TITLE } from "../consts";
 
+export const prerender = false;
+
 // Redirect if already logged in
 if (Astro.locals.user) {
   return Astro.redirect("/");

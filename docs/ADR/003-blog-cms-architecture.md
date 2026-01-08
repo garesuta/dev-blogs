@@ -47,9 +47,25 @@ The CMS uses a hybrid storage model:
 posts: {
   id, slug, title, description, content,
   status, // draft | published | scheduled
-  scheduledDate, authorId,
+  scheduledDate, authorId, categoryId,
   metaTitle, metaDescription, ogTitle, ogDescription, ogImage, canonicalUrl,
   createdAt, updatedAt, publishedAt
+}
+
+// Categories - post categorization
+categories: {
+  id, name, slug, description, color,
+  createdAt, updatedAt
+}
+
+// Tags - post tagging
+tags: {
+  id, name, slug, createdAt
+}
+
+// Post-Tags junction (many-to-many)
+post_tags: {
+  postId, tagId
 }
 
 // Version history
@@ -124,6 +140,33 @@ await db.update(posts).set({ content });  // Missing version creation
 
 ---
 
+## Amendments
+
+### 2026-01-07: Server Output Mode
+
+**Decision:** Changed Astro output mode from hybrid to full server rendering (`output: 'server'`).
+
+**Reason:** The `UserMenu` component (in `Header.astro`) requires access to `Astro.request.headers` for authentication state. With hybrid mode, prerendered pages would fail because headers aren't available at build time.
+
+**Impact:**
+- All pages are now server-rendered by default
+- Individual pages can opt-out with `export const prerender = true` if needed
+- Slightly increased server load but consistent authentication state across all pages
+
+### 2026-01-07: Categories and Tags
+
+**Decision:** Added categories (one-to-many) and tags (many-to-many) to posts.
+
+**Reason:** Support future blog filtering and search by category/tag.
+
+**Schema additions:**
+- `categories` table with name, slug, description, color
+- `tags` table with name, slug
+- `post_tags` junction table
+- `categoryId` foreign key in `posts` table
+
+---
+
 ## Future Considerations
 
 1. **Real-time preview** - WebSocket-based live preview without page refresh
@@ -131,6 +174,7 @@ await db.update(posts).set({ content });  // Missing version creation
 3. **Media library** - Centralized image management with gallery view
 4. **CDN integration** - Put CDN in front of MinIO for better performance
 5. **Collaborative editing** - Real-time collaboration with conflict resolution
+6. **Category/Tag filtering** - Blog list filtering by category and tags
 
 ---
 

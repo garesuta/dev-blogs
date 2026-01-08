@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from "vue";
-import Editor from "@toast-ui/editor";
-import "@toast-ui/editor/dist/toastui-editor.css";
+import { ref, onMounted, onUnmounted, watch, computed, shallowRef } from "vue";
+
+// Dynamic import types
+type EditorType = typeof import("@toast-ui/editor").default;
 
 // Props
 const props = defineProps<{
@@ -23,11 +24,12 @@ const emit = defineEmits<{
 
 // Refs
 const editorRef = ref<HTMLDivElement | null>(null);
-const editorInstance = ref<Editor | null>(null);
+const editorInstance = shallowRef<InstanceType<EditorType> | null>(null);
 const saveStatus = ref<"idle" | "saving" | "saved" | "error">("idle");
 const lastSavedAt = ref<Date | null>(null);
 const autoSaveTimer = ref<ReturnType<typeof setInterval> | null>(null);
 const isDirty = ref(false);
+const isLoading = ref(true);
 
 // Computed
 const saveStatusText = computed(() => {
@@ -124,49 +126,64 @@ async function handleImageUpload(
 }
 
 // Initialize editor
-onMounted(() => {
-  if (!editorRef.value) return;
-
-  editorInstance.value = new Editor({
-    el: editorRef.value,
-    initialValue: props.modelValue || "",
-    initialEditType: props.initialMode || "markdown",
-    previewStyle: "vertical",
-    height: props.height || "500px",
-    placeholder: props.placeholder || "Write your post content here...",
-    toolbarItems: [
-      ["heading", "bold", "italic", "strike"],
-      ["hr", "quote"],
-      ["ul", "ol", "task", "indent", "outdent"],
-      ["table", "image", "link"],
-      ["code", "codeblock"],
-      ["scrollSync"],
-    ],
-    hooks: {
-      addImageBlobHook: handleImageUpload,
-    },
-    usageStatistics: false,
-  });
-
-  // Listen for changes
-  editorInstance.value.on("change", () => {
-    const content = editorInstance.value?.getMarkdown() || "";
-    emit("update:modelValue", content);
-    isDirty.value = true;
-    saveStatus.value = "idle";
-  });
-
-  // Setup auto-save
-  if (props.autoSaveInterval && props.autoSaveInterval > 0) {
-    autoSaveTimer.value = setInterval(() => {
-      if (isDirty.value && !props.disabled) {
-        triggerSave();
-      }
-    }, props.autoSaveInterval * 1000);
+onMounted(async () => {
+  if (!editorRef.value) {
+    isLoading.value = false;
+    return;
   }
 
-  // Keyboard shortcuts
-  editorRef.value.addEventListener("keydown", handleKeydown);
+  try {
+    // Dynamically import editor and CSS (client-side only)
+    const [{ default: Editor }] = await Promise.all([
+      import("@toast-ui/editor"),
+      import("@toast-ui/editor/dist/toastui-editor.css"),
+    ]);
+
+    editorInstance.value = new Editor({
+      el: editorRef.value,
+      initialValue: props.modelValue || "",
+      initialEditType: props.initialMode || "markdown",
+      previewStyle: "vertical",
+      height: props.height || "500px",
+      placeholder: props.placeholder || "Write your post content here...",
+      toolbarItems: [
+        ["heading", "bold", "italic", "strike"],
+        ["hr", "quote"],
+        ["ul", "ol", "task", "indent", "outdent"],
+        ["table", "image", "link"],
+        ["code", "codeblock"],
+        ["scrollSync"],
+      ],
+      hooks: {
+        addImageBlobHook: handleImageUpload,
+      },
+      usageStatistics: false,
+    });
+
+    // Listen for changes
+    editorInstance.value.on("change", () => {
+      const content = editorInstance.value?.getMarkdown() || "";
+      emit("update:modelValue", content);
+      isDirty.value = true;
+      saveStatus.value = "idle";
+    });
+
+    // Setup auto-save
+    if (props.autoSaveInterval && props.autoSaveInterval > 0) {
+      autoSaveTimer.value = setInterval(() => {
+        if (isDirty.value && !props.disabled) {
+          triggerSave();
+        }
+      }, props.autoSaveInterval * 1000);
+    }
+
+    // Keyboard shortcuts
+    editorRef.value.addEventListener("keydown", handleKeydown);
+  } catch (error) {
+    console.error("Failed to load editor:", error);
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 // Cleanup
@@ -242,8 +259,14 @@ defineExpose({
 
 <template>
   <div class="blog-editor">
+    <!-- Loading state -->
+    <div v-if="isLoading" class="d-flex justify-content-center align-items-center py-5">
+      <div class="spinner-border text-primary me-2" role="status"></div>
+      <span>Loading editor...</span>
+    </div>
+
     <!-- Save status bar -->
-    <div class="d-flex justify-content-between align-items-center mb-2">
+    <div v-show="!isLoading" class="d-flex justify-content-between align-items-center mb-2">
       <small :class="saveStatusClass">
         <span v-if="saveStatus === 'saving'" class="spinner-border spinner-border-sm me-1"></span>
         {{ saveStatusText }}
@@ -253,8 +276,9 @@ defineExpose({
       </small>
     </div>
 
-    <!-- Editor container -->
+    <!-- Editor container (always in DOM for ref) -->
     <div
+      v-show="!isLoading"
       ref="editorRef"
       class="editor-container"
       :class="{ disabled: disabled }"

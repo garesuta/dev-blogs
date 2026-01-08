@@ -1,13 +1,13 @@
 import type { APIRoute } from "astro";
 import { db } from "../../../lib/db";
-import { posts, postVersions, users } from "../../../lib/schema";
+import { posts, postVersions, users, categories, tags, postTags } from "../../../lib/schema";
 import { auth } from "../../../lib/auth";
 import { canManageContent } from "../../../lib/permissions";
 import {
   createPostSchema,
   postListQuerySchema,
 } from "../../../lib/validations";
-import { eq, desc, like, and, count } from "drizzle-orm";
+import { eq, desc, like, and, count, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 export const prerender = false;
@@ -41,6 +41,8 @@ export const GET: APIRoute = async ({ request }) => {
       status: url.searchParams.get("status") || undefined,
       search: url.searchParams.get("search") || undefined,
       authorId: url.searchParams.get("authorId") || undefined,
+      categoryId: url.searchParams.get("categoryId") || undefined,
+      tagId: url.searchParams.get("tagId") || undefined,
     };
 
     const validated = postListQuerySchema.safeParse(queryParams);
@@ -51,8 +53,29 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
-    const { page, limit, status, search, authorId } = validated.data;
+    const { page, limit, status, search, authorId, categoryId, tagId } = validated.data;
     const offset = (page - 1) * limit;
+
+    // If filtering by tag, get post IDs that have this tag
+    let postIdsWithTag: string[] | null = null;
+    if (tagId) {
+      const postTagRows = await db
+        .select({ postId: postTags.postId })
+        .from(postTags)
+        .where(eq(postTags.tagId, tagId));
+      postIdsWithTag = postTagRows.map((row) => row.postId);
+
+      // If no posts have this tag, return empty result
+      if (postIdsWithTag.length === 0) {
+        return new Response(
+          JSON.stringify({
+            posts: [],
+            pagination: { page, limit, total: 0, totalPages: 0 },
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        );
+      }
+    }
 
     // Build where conditions
     const conditions = [];
@@ -65,6 +88,12 @@ export const GET: APIRoute = async ({ request }) => {
     if (authorId) {
       conditions.push(eq(posts.authorId, authorId));
     }
+    if (categoryId) {
+      conditions.push(eq(posts.categoryId, categoryId));
+    }
+    if (postIdsWithTag) {
+      conditions.push(inArray(posts.id, postIdsWithTag));
+    }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
@@ -74,7 +103,7 @@ export const GET: APIRoute = async ({ request }) => {
       .from(posts)
       .where(whereClause);
 
-    // Get posts with author info
+    // Get posts with author and category info
     const postList = await db
       .select({
         id: posts.id,
@@ -90,17 +119,50 @@ export const GET: APIRoute = async ({ request }) => {
         authorId: posts.authorId,
         authorName: users.name,
         authorEmail: users.email,
+        categoryId: posts.categoryId,
+        categoryName: categories.name,
+        categoryColor: categories.color,
       })
       .from(posts)
       .leftJoin(users, eq(posts.authorId, users.id))
+      .leftJoin(categories, eq(posts.categoryId, categories.id))
       .where(whereClause)
       .orderBy(desc(posts.updatedAt))
       .limit(limit)
       .offset(offset);
 
+    // Fetch tags for each post
+    const postIds = postList.map((p) => p.id);
+    let postTagsMap: Record<string, { id: string; name: string }[]> = {};
+
+    if (postIds.length > 0) {
+      const postTagRows = await db
+        .select({
+          postId: postTags.postId,
+          tagId: tags.id,
+          tagName: tags.name,
+        })
+        .from(postTags)
+        .innerJoin(tags, eq(postTags.tagId, tags.id))
+        .where(inArray(postTags.postId, postIds));
+
+      for (const row of postTagRows) {
+        if (!postTagsMap[row.postId]) {
+          postTagsMap[row.postId] = [];
+        }
+        postTagsMap[row.postId].push({ id: row.tagId, name: row.tagName });
+      }
+    }
+
+    // Combine posts with their tags
+    const postsWithTags = postList.map((post) => ({
+      ...post,
+      tags: postTagsMap[post.id] || [],
+    }));
+
     return new Response(
       JSON.stringify({
-        posts: postList,
+        posts: postsWithTags,
         pagination: {
           page,
           limit,

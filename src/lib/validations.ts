@@ -104,6 +104,9 @@ export const createPostSchema = z.object({
   heroImage: z.string().url().optional().nullable(),
   status: postStatusSchema.default("draft"),
   scheduledDate: z.coerce.date().optional().nullable(),
+  // Category and tags
+  categoryId: z.string().optional().nullable(),
+  tagIds: z.array(z.string()).optional(),
   // SEO fields
   metaTitle: metaTitleSchema,
   metaDescription: metaDescriptionSchema,
@@ -131,6 +134,8 @@ export const autoSavePostSchema = z.object({
   description: z.string().optional(),
   content: z.string().optional(),
   heroImage: z.string().optional().nullable(),
+  categoryId: z.string().optional().nullable(),
+  tagIds: z.array(z.string()).optional(),
   metaTitle: z.string().optional().nullable(),
   metaDescription: z.string().optional().nullable(),
   ogTitle: z.string().optional().nullable(),
@@ -146,6 +151,8 @@ export const postListQuerySchema = z.object({
   status: postStatusSchema.optional(),
   search: z.string().optional(),
   authorId: z.string().optional(),
+  categoryId: z.string().optional(),
+  tagId: z.string().optional(),
 });
 
 // Image upload validation

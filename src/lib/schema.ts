@@ -77,6 +77,50 @@ export const verifications = pgTable("verifications", {
 // Post status type
 export type PostStatus = "draft" | "published" | "scheduled";
 
+// Categories table - blog post categories
+export const categories = pgTable(
+  "categories",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull().unique(),
+    slug: text("slug").notNull().unique(),
+    description: text("description"),
+    color: text("color"), // Hex color for UI badges
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [index("idx_categories_slug").on(table.slug)]
+);
+
+// Tags table - blog post tags
+export const tags = pgTable(
+  "tags",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull().unique(),
+    slug: text("slug").notNull().unique(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [index("idx_tags_slug").on(table.slug)]
+);
+
+// Post-Tags junction table (many-to-many)
+export const postTags = pgTable(
+  "post_tags",
+  {
+    postId: text("post_id")
+      .notNull()
+      .references(() => posts.id, { onDelete: "cascade" }),
+    tagId: text("tag_id")
+      .notNull()
+      .references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    index("idx_post_tags_post_id").on(table.postId),
+    index("idx_post_tags_tag_id").on(table.tagId),
+  ]
+);
+
 // Posts table - blog post content and metadata
 export const posts = pgTable(
   "posts",
@@ -92,6 +136,11 @@ export const posts = pgTable(
     authorId: text("author_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
+
+    // Category (one-to-many)
+    categoryId: text("category_id").references(() => categories.id, {
+      onDelete: "set null",
+    }),
 
     // SEO fields
     metaTitle: text("meta_title"),
@@ -110,6 +159,7 @@ export const posts = pgTable(
     index("idx_posts_slug").on(table.slug),
     index("idx_posts_status").on(table.status),
     index("idx_posts_author").on(table.authorId),
+    index("idx_posts_category").on(table.categoryId),
   ]
 );
 
@@ -181,6 +231,11 @@ export type PostVersion = typeof postVersions.$inferSelect;
 export type NewPostVersion = typeof postVersions.$inferInsert;
 export type PostImage = typeof postImages.$inferSelect;
 export type NewPostImage = typeof postImages.$inferInsert;
+export type Category = typeof categories.$inferSelect;
+export type NewCategory = typeof categories.$inferInsert;
+export type Tag = typeof tags.$inferSelect;
+export type NewTag = typeof tags.$inferInsert;
+export type PostTag = typeof postTags.$inferSelect;
 
 // Role type for type safety
 export type UserRole = "user" | "editor" | "admin";

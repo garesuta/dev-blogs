@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { authClient } from "../lib/auth-client";
 
 interface User {
@@ -12,6 +12,12 @@ interface User {
 
 const user = ref<User | null>(null);
 const isLoading = ref(true);
+
+// Check if we're already in the editor/CMS area
+const isInEditorArea = computed(() => {
+  if (typeof window === "undefined") return false;
+  return window.location.pathname.startsWith("/editor");
+});
 
 onMounted(async () => {
   try {
@@ -62,9 +68,9 @@ function getRoleBadgeClass(role: string): string {
   </div>
 
   <div v-else-if="user" class="user-menu-container">
-    <!-- CMS Button for Admin/Editor -->
+    <!-- CMS Button for Admin/Editor (hidden when already in editor) -->
     <a
-      v-if="user.role?.toLowerCase() === 'admin' || user.role?.toLowerCase() === 'editor'"
+      v-if="(user.role?.toLowerCase() === 'admin' || user.role?.toLowerCase() === 'editor') && !isInEditorArea"
       href="/editor/posts"
       class="btn btn-primary btn-sm d-inline-flex align-items-center gap-1 text-decoration-none"
     >

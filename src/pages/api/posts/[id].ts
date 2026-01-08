@@ -1,10 +1,10 @@
 import type { APIRoute } from "astro";
 import { db } from "../../../lib/db";
-import { posts, postVersions, users } from "../../../lib/schema";
+import { posts, postVersions, users, categories, tags, postTags } from "../../../lib/schema";
 import { auth } from "../../../lib/auth";
 import { canManageContent, isAdmin } from "../../../lib/permissions";
 import { updatePostSchema } from "../../../lib/validations";
-import { eq, desc, max } from "drizzle-orm";
+import { eq, max } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 export const prerender = false;
@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ params, request }) => {
       });
     }
 
-    // Get post with author info
+    // Get post with author info and category
     const [post] = await db
       .select({
         id: posts.id,
@@ -50,6 +50,7 @@ export const GET: APIRoute = async ({ params, request }) => {
         status: posts.status,
         scheduledDate: posts.scheduledDate,
         authorId: posts.authorId,
+        categoryId: posts.categoryId,
         metaTitle: posts.metaTitle,
         metaDescription: posts.metaDescription,
         ogTitle: posts.ogTitle,
@@ -61,9 +62,13 @@ export const GET: APIRoute = async ({ params, request }) => {
         publishedAt: posts.publishedAt,
         authorName: users.name,
         authorEmail: users.email,
+        categoryName: categories.name,
+        categorySlug: categories.slug,
+        categoryColor: categories.color,
       })
       .from(posts)
       .leftJoin(users, eq(posts.authorId, users.id))
+      .leftJoin(categories, eq(posts.categoryId, categories.id))
       .where(eq(posts.id, id))
       .limit(1);
 
@@ -74,7 +79,18 @@ export const GET: APIRoute = async ({ params, request }) => {
       });
     }
 
-    return new Response(JSON.stringify({ post }), {
+    // Get tags for this post
+    const postTagsResult = await db
+      .select({
+        id: tags.id,
+        name: tags.name,
+        slug: tags.slug,
+      })
+      .from(postTags)
+      .innerJoin(tags, eq(postTags.tagId, tags.id))
+      .where(eq(postTags.postId, id));
+
+    return new Response(JSON.stringify({ post, tags: postTagsResult }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
@@ -189,6 +205,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
     if (data.heroImage !== undefined) updateData.heroImage = data.heroImage;
     if (data.status !== undefined) updateData.status = data.status;
     if (data.scheduledDate !== undefined) updateData.scheduledDate = data.scheduledDate;
+    if (data.categoryId !== undefined) updateData.categoryId = data.categoryId;
     if (data.metaTitle !== undefined) updateData.metaTitle = data.metaTitle;
     if (data.metaDescription !== undefined) updateData.metaDescription = data.metaDescription;
     if (data.ogTitle !== undefined) updateData.ogTitle = data.ogTitle;
@@ -235,7 +252,33 @@ export const PUT: APIRoute = async ({ params, request }) => {
       changeSummary: body.changeSummary || null,
     });
 
-    return new Response(JSON.stringify({ post: updatedPost }), {
+    // Handle tags if provided
+    if (body.tagIds !== undefined) {
+      // Remove existing tags
+      await db.delete(postTags).where(eq(postTags.postId, id));
+
+      // Add new tags
+      if (Array.isArray(body.tagIds) && body.tagIds.length > 0) {
+        const tagInserts = body.tagIds.map((tagId: string) => ({
+          postId: id,
+          tagId,
+        }));
+        await db.insert(postTags).values(tagInserts);
+      }
+    }
+
+    // Get updated tags
+    const updatedTags = await db
+      .select({
+        id: tags.id,
+        name: tags.name,
+        slug: tags.slug,
+      })
+      .from(postTags)
+      .innerJoin(tags, eq(postTags.tagId, tags.id))
+      .where(eq(postTags.postId, id));
+
+    return new Response(JSON.stringify({ post: updatedPost, tags: updatedTags }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

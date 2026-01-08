@@ -1,7 +1,5 @@
 ---
 import BaseHead from "../components/BaseHead.astro";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
 import UserMenu from "../components/UserMenu.vue";
 import { SITE_TITLE } from "../consts";
 
@@ -11,7 +9,6 @@ interface Props {
 }
 
 const { title, description = "Admin panel" } = Astro.props;
-const user = Astro.locals.user;
 ---
 
 <!doctype html>
@@ -20,15 +17,36 @@ const user = Astro.locals.user;
     <BaseHead title={`${title} - Admin - ${SITE_TITLE}`} description={description} />
   </head>
   <body>
-    <Header />
+    <!-- Admin Header -->
+    <header class="admin-header navbar navbar-expand-lg bg-white border-bottom sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center gap-2 text-dark" href="/editor/posts">
+          <i class="bi bi-pencil-square"></i>
+          <span>{SITE_TITLE} CMS</span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <a href="/" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Back to Site
+          </a>
+          <UserMenu client:load />
+        </div>
+      </div>
+    </header>
+
     <div class="container-fluid">
       <div class="row">
         <!-- Sidebar -->
         <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-3">
           <div class="position-sticky">
-            <div class="px-3 mb-3">
-              <span class="badge bg-danger">Admin</span>
-            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" href="/editor/posts">
+                  <i class="bi bi-file-text me-2"></i>Posts
+                </a>
+              </li>
+            </ul>
+            <hr />
+            <p class="px-3 text-muted small mb-2">Admin Only</p>
             <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link" href="/admin">
@@ -40,38 +58,21 @@ const user = Astro.locals.user;
                   <i class="bi bi-people me-2"></i>Users
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/editor">
-                  <i class="bi bi-pencil-square me-2"></i>Content
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/editor/posts">
-                  <i class="bi bi-file-text me-2"></i>Posts
-                </a>
-              </li>
-            </ul>
-            <hr />
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="/">
-                  <i class="bi bi-arrow-left me-2"></i>Back to Site
-                </a>
-              </li>
             </ul>
           </div>
         </nav>
 
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-4">
-            <h1 class="h2">{title}</h1>
-            <UserMenu client:load />
-          </div>
+          <h1 class="h2 mb-4">{title}</h1>
           <slot />
         </main>
       </div>
     </div>
+    <!-- Bootstrap JS -->
+    <script>
+      import "bootstrap/dist/js/bootstrap.bundle.min.js";
+    </script>
   </body>
 </html>
 
