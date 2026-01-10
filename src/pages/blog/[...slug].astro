@@ -1,19 +1,176 @@
 ---
-import { type CollectionEntry, getCollection, getEntry, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { db } from '../../lib/db';
+import { posts, users, categories } from '../../lib/schema';
+import { eq } from 'drizzle-orm';
+import { marked } from 'marked';
 
 export const prerender = false;
 
 const { slug } = Astro.params;
-const post = await getEntry('blog', slug as string);
 
-if (!post) {
-	return Astro.redirect('/404');
+// Fetch post from database by slug
+const [post] = await db
+  .select({
+    id: posts.id,
+    slug: posts.slug,
+    title: posts.title,
+    description: posts.description,
+    content: posts.content,
+    heroImage: posts.heroImage,
+    status: posts.status,
+    publishedAt: posts.publishedAt,
+    createdAt: posts.createdAt,
+    updatedAt: posts.updatedAt,
+    authorId: posts.authorId,
+    authorName: users.name,
+    categoryId: posts.categoryId,
+    categoryName: categories.name,
+    categorySlug: categories.slug,
+    categoryColor: categories.color,
+    categoryIcon: categories.icon,
+    metaTitle: posts.metaTitle,
+    metaDescription: posts.metaDescription,
+  })
+  .from(posts)
+  .leftJoin(users, eq(posts.authorId, users.id))
+  .leftJoin(categories, eq(posts.categoryId, categories.id))
+  .where(eq(posts.slug, slug as string))
+  .limit(1);
+
+if (!post || post.status !== 'published') {
+  return Astro.redirect('/404');
 }
 
-const { Content } = await render(post);
+// Parse markdown content to HTML
+const contentHtml = await marked.parse(post.content);
 ---
 
-<BlogPost {...post.data}>
-	<Content />
-</BlogPost>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={post.metaTitle || post.title}
+      description={post.metaDescription || post.description}
+    />
+    <style>
+      main {
+        width: calc(100% - 2em);
+        max-width: 100%;
+        margin: 0;
+      }
+      .hero-image {
+        width: 100%;
+      }
+      .hero-image img {
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+        max-width: 100%;
+        height: auto;
+      }
+      .prose {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 1em;
+        color: rgb(var(--gray-dark));
+      }
+      .title {
+        margin-bottom: 1em;
+        padding: 1em 0;
+        text-align: center;
+        line-height: 1;
+      }
+      .title h1 {
+        margin: 0 0 0.5em 0;
+      }
+      .date {
+        margin-bottom: 0.5em;
+        color: rgb(var(--gray));
+      }
+      .last-updated-on {
+        font-style: italic;
+      }
+      .prose :global(pre) {
+        background: #1e1e1e;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+      }
+      .prose :global(code) {
+        font-family: 'Fira Code', monospace;
+      }
+      .prose :global(img) {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+    <main>
+      <article>
+        {post.heroImage && (
+          <div class="hero-image">
+            <img
+              src={post.heroImage}
+              alt={post.title}
+              width="1020"
+              height="510"
+              style="object-fit: cover;"
+            />
+          </div>
+        )}
+        <div class="prose">
+          <div class="title">
+            <div class="date">
+              {post.publishedAt && (
+                <time datetime={post.publishedAt.toISOString()}>
+                  {post.publishedAt.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+              )}
+              {post.updatedAt && post.publishedAt && post.updatedAt > post.publishedAt && (
+                <div class="last-updated-on">
+                  Last updated on {post.updatedAt.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </div>
+              )}
+            </div>
+            {post.categoryName && (
+              <a
+                href={`/blog?category=${post.categorySlug}`}
+                class="badge mb-2"
+                style={post.categoryColor ? `background-color: ${post.categoryColor};` : ''}
+              >
+                {post.categoryIcon && <i class={`bi ${post.categoryIcon} me-1`}></i>}
+                {post.categoryName}
+              </a>
+            )}
+            <h1>{post.title}</h1>
+            {post.authorName && (
+              <p class="text-muted small">
+                <i class="bi bi-person me-1"></i>
+                By {post.authorName}
+              </p>
+            )}
+            <hr />
+          </div>
+          <div set:html={contentHtml} />
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>

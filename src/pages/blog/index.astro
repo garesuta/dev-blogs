@@ -1,116 +1,282 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { db } from '../../lib/db';
+import { categories, posts as postsTable, users } from '../../lib/schema';
+import { asc, desc, eq, and } from 'drizzle-orm';
 
 export const prerender = false;
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+// Fetch categories from DB
+const allCategories = await db
+  .select()
+  .from(categories)
+  .orderBy(asc(categories.name));
+
+// Get filter from URL
+const url = Astro.url;
+const categoryFilter = url.searchParams.get('category');
+
+// Find category ID if filtering
+let categoryId: string | null = null;
+if (categoryFilter) {
+  const matchedCategory = allCategories.find(c => c.slug === categoryFilter);
+  categoryId = matchedCategory?.id || null;
+}
+
+// Fetch published posts from DB with optional category filter
+const postsQuery = db
+  .select({
+    id: postsTable.id,
+    slug: postsTable.slug,
+    title: postsTable.title,
+    description: postsTable.description,
+    heroImage: postsTable.heroImage,
+    status: postsTable.status,
+    publishedAt: postsTable.publishedAt,
+    createdAt: postsTable.createdAt,
+    categoryId: postsTable.categoryId,
+    authorId: postsTable.authorId,
+    authorName: users.name,
+  })
+  .from(postsTable)
+  .leftJoin(users, eq(postsTable.authorId, users.id))
+  .where(
+    categoryId
+      ? and(eq(postsTable.status, 'published'), eq(postsTable.categoryId, categoryId))
+      : eq(postsTable.status, 'published')
+  )
+  .orderBy(desc(postsTable.publishedAt));
+
+const posts = await postsQuery;
+
+// Separate featured (first) post from the rest
+const featuredPost = posts[0] || null;
+const remainingPosts = posts.slice(1);
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main class="container py-4">
+      <!-- Hero Section -->
+      <section class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Blog</h1>
+        <p class="lead text-muted">
+          Programming notes, tutorials, and learnings about web development
+        </p>
+      </section>
+
+      <!-- Category Filter with Icons -->
+      <section class="mb-4">
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+          <a
+            href="/blog"
+            class:list={["btn d-inline-flex align-items-center gap-2", !categoryFilter ? "btn-primary" : "btn-outline-secondary"]}
+          >
+            <i class="bi bi-grid-3x3-gap"></i>
+            All Posts
+          </a>
+          {allCategories.map((cat) => (
+            <a
+              href={`/blog?category=${cat.slug}`}
+              class:list={[
+                "btn d-inline-flex align-items-center gap-2",
+                categoryFilter === cat.slug ? "btn-primary" : "btn-outline-secondary"
+              ]}
+              style={cat.color && categoryFilter !== cat.slug ? `color: ${cat.color}; border-color: ${cat.color};` : ''}
+            >
+              {cat.icon && <i class={`bi ${cat.icon}`}></i>}
+              {cat.name}
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Featured Post -->
+      {featuredPost && !categoryFilter && (
+        <section class="mb-5">
+          <article class="card border-0 bg-light overflow-hidden">
+            <div class="row g-0">
+              {featuredPost.heroImage && (
+                <div class="col-lg-6">
+                  <img
+                    src={featuredPost.heroImage}
+                    class="w-100 h-100"
+                    style="object-fit: cover; min-height: 300px;"
+                    alt=""
+                  />
+                </div>
+              )}
+              <div class={featuredPost.heroImage ? "col-lg-6" : "col-12"}>
+                <div class="card-body p-4 d-flex flex-column justify-content-center h-100">
+                  <span class="badge bg-primary mb-2 align-self-start">
+                    <i class="bi bi-star-fill me-1"></i>
+                    Latest
+                  </span>
+                  <h2 class="card-title h3 mb-3">
+                    <a href={`/blog/${featuredPost.slug}`} class="text-decoration-none text-dark">
+                      {featuredPost.title}
+                    </a>
+                  </h2>
+                  <p class="text-muted small mb-2">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    {featuredPost.publishedAt ? (
+                      <time datetime={featuredPost.publishedAt.toISOString()}>
+                        {featuredPost.publishedAt.toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </time>
+                    ) : (
+                      <span>No date</span>
+                    )}
+                    {featuredPost.authorName && (
+                      <span class="ms-2">
+                        <i class="bi bi-person me-1"></i>
+                        {featuredPost.authorName}
+                      </span>
+                    )}
+                  </p>
+                  <p class="card-text text-muted mb-3">{featuredPost.description}</p>
+                  <a href={`/blog/${featuredPost.slug}`} class="btn btn-outline-primary align-self-start">
+                    Read More
+                    <i class="bi bi-arrow-right ms-1"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+      )}
+
+      <!-- Category Cards - Browse by Topic -->
+      {allCategories.length > 0 && !categoryFilter && (
+        <section class="mb-5">
+          <h2 class="h4 mb-3">
+            <i class="bi bi-bookmark me-2"></i>
+            Browse by Topic
+          </h2>
+          <div class="row g-3">
+            {allCategories.map((cat) => (
+              <div class="col-6 col-md-4 col-lg-3">
+                <a
+                  href={`/blog?category=${cat.slug}`}
+                  class="card h-100 text-decoration-none border-0 shadow-sm hover-lift"
+                  style={cat.color ? `border-left: 4px solid ${cat.color} !important;` : 'border-left: 4px solid var(--bs-primary) !important;'}
+                >
+                  <div class="card-body d-flex flex-column align-items-center text-center p-3">
+                    {cat.icon ? (
+                      <i
+                        class={`bi ${cat.icon} fs-1 mb-2`}
+                        style={cat.color ? `color: ${cat.color};` : ''}
+                      ></i>
+                    ) : (
+                      <i class="bi bi-folder fs-1 mb-2 text-muted"></i>
+                    )}
+                    <h3 class="h6 mb-1">{cat.name}</h3>
+                    {cat.description && (
+                      <p class="text-muted small mb-0">{cat.description}</p>
+                    )}
+                  </div>
+                </a>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Category Header when filtering -->
+      {categoryFilter && (
+        <section class="mb-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <h2 class="h4 mb-0">
+              {allCategories.find(c => c.slug === categoryFilter)?.icon && (
+                <i class={`bi ${allCategories.find(c => c.slug === categoryFilter)?.icon} me-2`}></i>
+              )}
+              {allCategories.find(c => c.slug === categoryFilter)?.name || 'Category'}
+            </h2>
+            <a href="/blog" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-x-lg me-1"></i>
+              Clear filter
+            </a>
+          </div>
+        </section>
+      )}
+
+      <!-- Posts Grid -->
+      <section>
+        <h2 class="h4 mb-3">
+          <i class="bi bi-journal-text me-2"></i>
+          {categoryFilter ? 'Posts' : 'All Posts'}
+        </h2>
+
+        {posts.length === 0 ? (
+          <div class="text-center py-5">
+            <i class="bi bi-journal-x fs-1 text-muted mb-3 d-block"></i>
+            <p class="text-muted">No posts yet. Check back soon!</p>
+          </div>
+        ) : (
+          <div class="row g-4">
+            {(categoryFilter ? posts : remainingPosts).map((post) => (
+              <div class="col-md-6 col-lg-4">
+                <article class="card h-100 border-0 shadow-sm hover-lift">
+                  {post.heroImage && (
+                    <img
+                      src={post.heroImage}
+                      class="card-img-top"
+                      alt=""
+                      style="height: 180px; object-fit: cover;"
+                    />
+                  )}
+                  <div class="card-body d-flex flex-column">
+                    <h3 class="h5 card-title">
+                      <a href={`/blog/${post.slug}`} class="text-decoration-none text-dark stretched-link">
+                        {post.title}
+                      </a>
+                    </h3>
+                    <p class="text-muted small mb-2">
+                      <i class="bi bi-calendar3 me-1"></i>
+                      {post.publishedAt ? (
+                        <time datetime={post.publishedAt.toISOString()}>
+                          {post.publishedAt.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </time>
+                      ) : (
+                        <span>No date</span>
+                      )}
+                    </p>
+                    <p class="card-text text-muted small flex-grow-1">
+                      {post.description}
+                    </p>
+                  </div>
+                </article>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </main>
+    <Footer />
+
+    <style>
+      .hover-lift {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+      }
+    </style>
+  </body>
 </html>

@@ -51,7 +51,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const body = await request.json();
-    const { name, description, color } = body;
+    const { name, description, color, icon } = body;
 
     if (!name || typeof name !== "string" || name.trim().length === 0) {
       return new Response(JSON.stringify({ error: "Name is required" }), {
@@ -82,6 +82,7 @@ export const POST: APIRoute = async ({ request }) => {
       slug,
       description: description?.trim() || null,
       color: color || null,
+      icon: icon?.trim() || null,
     };
 
     await db.insert(categories).values(newCategory);

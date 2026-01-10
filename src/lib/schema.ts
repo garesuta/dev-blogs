@@ -86,6 +86,7 @@ export const categories = pgTable(
     slug: text("slug").notNull().unique(),
     description: text("description"),
     color: text("color"), // Hex color for UI badges
+    icon: text("icon"), // Bootstrap Icons class (e.g., "bi-code-slash")
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },

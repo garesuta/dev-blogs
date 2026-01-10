@@ -88,7 +88,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
     }
 
     const body = await request.json();
-    const { name, description, color } = body;
+    const { name, description, color, icon } = body;
 
     if (!name || typeof name !== "string" || name.trim().length === 0) {
       return new Response(JSON.stringify({ error: "Name is required" }), {
@@ -122,6 +122,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
         slug: newSlug,
         description: description?.trim() || null,
         color: color || null,
+        icon: icon?.trim() || null,
         updatedAt: new Date(),
       })
       .where(eq(categories.id, id))
