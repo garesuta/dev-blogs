@@ -217,9 +217,23 @@ export const postImages = pgTable(
 );
 
 // ============================================
+// Site Settings Schema
+// ============================================
+
+// Site settings table - stores configurable site content like about page
+export const siteSettings = pgTable("site_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  updatedBy: text("updated_by").references(() => users.id),
+});
+
+// ============================================
 // Type Exports
 // ============================================
 
+export type SiteSetting = typeof siteSettings.$inferSelect;
+export type NewSiteSetting = typeof siteSettings.$inferInsert;
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Session = typeof sessions.$inferSelect;

@@ -1,0 +1,14 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import AboutManager from "../../components/AboutManager.vue";
+
+export const prerender = false;
+---
+
+<AdminLayout title="About Page Settings">
+  <p class="text-muted mb-4">
+    Manage the content displayed on your About page. Changes will be reflected immediately.
+  </p>
+
+  <AboutManager client:load />
+</AdminLayout>

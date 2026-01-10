@@ -52,6 +52,7 @@ const isSaving = ref(false);
 const isPublishing = ref(false);
 const error = ref("");
 const successMessage = ref("");
+const showPreviewModal = ref(false);
 
 const post = reactive<Partial<Post>>({
   title: "",
@@ -369,6 +370,79 @@ const availableTags = computed(() => {
   return allTags.value.filter((t) => !selectedIds.includes(t.id));
 });
 
+// Markdown to HTML converter for preview
+function markdownToHtml(markdown: string): string {
+  let html = markdown
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+      return `<pre><code class="language-${lang || 'text'}">${code.trim()}</code></pre>`;
+    })
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="img-fluid rounded my-3">')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/^###### (.*$)/gim, '<h6>$1</h6>')
+    .replace(/^##### (.*$)/gim, '<h5>$1</h5>')
+    .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
+    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/___(.+?)___/g, '<strong><em>$1</em></strong>')
+    .replace(/__(.+?)__/g, '<strong>$1</strong>')
+    .replace(/_(.+?)_/g, '<em>$1</em>')
+    .replace(/~~(.+?)~~/g, '<del>$1</del>')
+    .replace(/^&gt; (.*$)/gim, '<blockquote>$1</blockquote>')
+    .replace(/^(-{3,}|\*{3,}|_{3,})$/gim, '<hr>')
+    .replace(/^\s*[-*+] (.+)$/gim, '<li>$1</li>')
+    .replace(/^\s*\d+\. (.+)$/gim, '<li>$1</li>')
+    .replace(/\n\n+/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+
+  html = '<p>' + html + '</p>';
+  html = html
+    .replace(/<p><\/p>/g, '')
+    .replace(/<p>(<h[1-6]>)/g, '$1')
+    .replace(/(<\/h[1-6]>)<\/p>/g, '$1')
+    .replace(/<p>(<pre>)/g, '$1')
+    .replace(/(<\/pre>)<\/p>/g, '$1')
+    .replace(/<p>(<blockquote>)/g, '$1')
+    .replace(/(<\/blockquote>)<\/p>/g, '$1')
+    .replace(/<p>(<hr>)/g, '$1')
+    .replace(/(<hr>)<\/p>/g, '$1')
+    .replace(/<p>(<li>)/g, '<ul>$1')
+    .replace(/(<\/li>)<\/p>/g, '$1</ul>')
+    .replace(/<\/li><br><li>/g, '</li><li>')
+    .replace(/<p><br>/g, '<p>')
+    .replace(/<br><\/p>/g, '</p>')
+    .replace(/<\/blockquote><blockquote>/g, '<br>');
+
+  return html;
+}
+
+// Computed preview HTML
+const previewHtml = computed(() => markdownToHtml(post.content || ''));
+
+// Get selected category details
+const selectedCategory = computed(() => {
+  return allCategories.value.find(c => c.id === post.categoryId) || null;
+});
+
+// Open preview
+function openPreview() {
+  showPreviewModal.value = true;
+  document.body.style.overflow = 'hidden';
+}
+
+// Close preview
+function closePreview() {
+  showPreviewModal.value = false;
+  document.body.style.overflow = '';
+}
+
 // Watch for changes to mark dirty
 watch(
   () => [
@@ -420,17 +494,17 @@ onMounted(async () => {
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">{{ isNewPost ? 'New Post' : 'Edit Post' }}</h4>
         <div class="d-flex gap-2">
-          <a
-            v-if="!isNewPost"
-            :href="`/editor/posts/${postId}/preview`"
+          <button
+            type="button"
             class="btn btn-outline-primary"
+            @click="openPreview"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">
               <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
               <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
             </svg>
             Preview
-          </a>
+          </button>
         </div>
       </div>
 
@@ -665,12 +739,13 @@ onMounted(async () => {
               <h6 class="mb-0">Quick Links</h6>
             </div>
             <div class="list-group list-group-flush">
-              <a
-                :href="`/editor/posts/${postId}/preview`"
-                class="list-group-item list-group-item-action"
+              <button
+                type="button"
+                class="list-group-item list-group-item-action text-start"
+                @click="openPreview"
               >
                 Preview
-              </a>
+              </button>
               <a
                 :href="`/editor/posts/${postId}/history`"
                 class="list-group-item list-group-item-action"
@@ -690,11 +765,311 @@ onMounted(async () => {
         </div>
       </div>
     </template>
+
+    <!-- Preview Modal -->
+    <Teleport to="body">
+      <div v-if="showPreviewModal" class="preview-modal-overlay" @click.self="closePreview">
+        <div class="preview-modal">
+          <!-- Preview Banner -->
+          <div class="preview-banner">
+            <div class="preview-banner-left">
+              <span class="preview-badge">PREVIEW</span>
+              <span class="preview-status">
+                Status: <strong>{{ (post.status || 'draft').charAt(0).toUpperCase() + (post.status || 'draft').slice(1) }}</strong>
+                <template v-if="post.status === 'draft' || !post.status"> - Not yet published</template>
+                <template v-if="post.status === 'scheduled'"> - Scheduled for publishing</template>
+              </span>
+            </div>
+            <div class="preview-banner-right">
+              <button type="button" class="btn btn-light btn-sm" @click="closePreview">
+                <i class="bi bi-x-lg me-1"></i>
+                Close Preview
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview Content -->
+          <div class="preview-content">
+            <article class="preview-article">
+              <!-- Hero Image -->
+              <div v-if="post.heroImage" class="preview-hero">
+                <img :src="post.heroImage" :alt="post.title" />
+              </div>
+
+              <div class="preview-prose">
+                <div class="preview-title">
+                  <div class="preview-date">
+                    {{ new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}
+                  </div>
+                  <h1>{{ post.title || 'Untitled Post' }}</h1>
+
+                  <!-- Category and Tags -->
+                  <div class="preview-meta">
+                    <span
+                      v-if="selectedCategory"
+                      class="category-badge"
+                      :style="{ backgroundColor: selectedCategory.color || '#6c757d' }"
+                    >
+                      {{ selectedCategory.name }}
+                    </span>
+                    <span
+                      v-for="tag in selectedTags"
+                      :key="tag.id"
+                      class="tag-badge"
+                    >
+                      {{ tag.name }}
+                    </span>
+                  </div>
+
+                  <hr />
+                </div>
+
+                <!-- Description -->
+                <p v-if="post.description" class="preview-description">
+                  {{ post.description }}
+                </p>
+
+                <!-- Content -->
+                <div class="post-content" v-html="previewHtml"></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <style scoped>
 .post-editor {
   min-height: calc(100vh - 200px);
+}
+</style>
+
+<!-- Global styles for preview modal (not scoped) -->
+<style>
+.preview-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.preview-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 900px;
+  max-height: calc(100vh - 4rem);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.preview-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.preview-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.preview-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.preview-status {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.preview-banner-right .btn-light {
+  background: white;
+  color: #667eea;
+  border: none;
+}
+
+.preview-banner-right .btn-light:hover {
+  background: #f0f0f0;
+}
+
+.preview-content {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.preview-article {
+  padding-bottom: 2rem;
+}
+
+.preview-hero {
+  width: 100%;
+}
+
+.preview-hero img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.preview-prose {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.preview-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.preview-title h1 {
+  margin: 0.5rem 0;
+  font-size: 2rem;
+}
+
+.preview-date {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.preview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.preview-meta .category-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+}
+
+.preview-meta .tag-badge {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+}
+
+.preview-description {
+  color: #6b7280;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+/* Post content styles */
+.preview-modal .post-content {
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.preview-modal .post-content h1,
+.preview-modal .post-content h2,
+.preview-modal .post-content h3,
+.preview-modal .post-content h4,
+.preview-modal .post-content h5,
+.preview-modal .post-content h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.preview-modal .post-content h1 { font-size: 2rem; }
+.preview-modal .post-content h2 { font-size: 1.75rem; }
+.preview-modal .post-content h3 { font-size: 1.5rem; }
+.preview-modal .post-content h4 { font-size: 1.25rem; }
+
+.preview-modal .post-content pre {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.preview-modal .post-content code {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+.preview-modal .post-content pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.preview-modal .post-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  display: block;
+  border-radius: 0.5rem;
+}
+
+.preview-modal .post-content blockquote {
+  border-left: 4px solid #667eea;
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  color: #64748b;
+  font-style: italic;
+}
+
+.preview-modal .post-content ul,
+.preview-modal .post-content ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.preview-modal .post-content li {
+  margin-bottom: 0.5rem;
+}
+
+.preview-modal .post-content a {
+  color: #667eea;
+  text-decoration: underline;
+}
+
+.preview-modal .post-content a:hover {
+  color: #764ba2;
+}
+
+.preview-modal .post-content hr {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid #e2e8f0;
+}
+
+.preview-modal .post-content p {
+  margin-bottom: 1rem;
 }
 </style>

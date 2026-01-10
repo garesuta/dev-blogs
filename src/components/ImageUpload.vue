@@ -157,20 +157,22 @@ function removeImage() {
       <button type="button" class="btn-close btn-sm float-end" @click="error = ''"></button>
     </div>
 
-    <!-- Current image preview -->
-    <div v-if="hasImage && !isUploading" class="current-image mb-2">
+    <!-- Current image preview (shown when image exists) -->
+    <div v-if="hasImage && !isUploading" class="current-image">
       <div class="position-relative d-inline-block">
         <img
           :src="modelValue!"
           alt="Current image"
-          class="img-fluid rounded"
-          style="max-height: 150px;"
+          class="img-fluid rounded border"
+          style="max-height: 120px;"
         />
         <button
           type="button"
-          class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1"
+          class="btn btn-sm btn-danger remove-btn position-absolute"
           @click="removeImage"
-          title="Remove image"
+          title="Remove image to upload a new one"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
             <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
@@ -179,8 +181,9 @@ function removeImage() {
       </div>
     </div>
 
-    <!-- Upload zone -->
+    <!-- Upload zone (only shown when NO image exists) -->
     <div
+      v-if="!hasImage || isUploading"
       class="upload-zone border rounded p-3 text-center"
       :class="{
         'border-primary bg-light': isDragging,
@@ -245,7 +248,15 @@ function removeImage() {
   border-style: dashed !important;
 }
 
-.current-image img {
-  border: 1px solid #dee2e6;
+.current-image .remove-btn {
+  top: 4px;
+  right: 4px;
+  padding: 4px 6px;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.current-image .remove-btn:hover {
+  opacity: 1;
 }
 </style>
