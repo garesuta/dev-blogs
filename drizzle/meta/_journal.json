@@ -36,6 +36,20 @@
       "when": 1768010560297,
       "tag": "0004_modern_penance",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768032838589,
+      "tag": "0005_yummy_hedge_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1768316296775,
+      "tag": "0006_mean_daimon_hellstrom",
+      "breakpoints": true
     }
   ]
 }

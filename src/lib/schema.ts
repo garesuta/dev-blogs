@@ -15,10 +15,20 @@ import {
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
+  nickname: text("nickname"), // Display name shown on blog posts
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull().default(false),
   image: text("image"),
   role: text("role").notNull().default("user"), // user | editor | admin
+  // Profile fields
+  bio: text("bio"), // User bio (max 500 chars)
+  website: text("website"), // Personal website URL
+  twitter: text("twitter"), // Twitter username
+  github: text("github"), // GitHub username
+  linkedin: text("linkedin"), // LinkedIn username
+  coverImage: text("cover_image"), // Profile cover/banner image
+  isPublic: boolean("is_public").default(false), // Public profile visibility
+  // Status fields
   banned: boolean("banned").default(false),
   banReason: text("ban_reason"),
   banExpires: timestamp("ban_expires"),

@@ -26,6 +26,8 @@ const [post] = await db
     updatedAt: posts.updatedAt,
     authorId: posts.authorId,
     authorName: users.name,
+    authorNickname: users.nickname,
+    authorImage: users.image,
     categoryId: posts.categoryId,
     categoryName: categories.name,
     categorySlug: categories.slug,
@@ -39,6 +41,8 @@ const [post] = await db
   .leftJoin(categories, eq(posts.categoryId, categories.id))
   .where(eq(posts.slug, slug as string))
   .limit(1);
+
+const authorDisplayName = post?.authorNickname || post?.authorName;
 
 if (!post || post.status !== 'published') {
   return Astro.redirect('/404');
@@ -108,6 +112,26 @@ const contentHtml = await marked.parse(post.content);
         height: auto;
         border-radius: 8px;
       }
+      .author-box {
+        margin-top: 3rem;
+        padding-top: 1rem;
+      }
+      .author-avatar {
+        object-fit: cover;
+      }
+      .author-avatar-placeholder {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #6c757d;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        flex-shrink: 0;
+      }
     </style>
   </head>
 
@@ -159,15 +183,49 @@ const contentHtml = await marked.parse(post.content);
               </a>
             )}
             <h1>{post.title}</h1>
-            {post.authorName && (
+            {authorDisplayName && (
               <p class="text-muted small">
                 <i class="bi bi-person me-1"></i>
-                By {post.authorName}
+                By {authorDisplayName}
               </p>
             )}
             <hr />
           </div>
           <div set:html={contentHtml} />
+
+          <!-- Author Box at end of post -->
+          {authorDisplayName && (
+            <div class="author-box">
+              <hr />
+              <div class="d-flex align-items-center gap-3">
+                {post.authorImage ? (
+                  <img
+                    src={post.authorImage}
+                    alt={authorDisplayName}
+                    class="author-avatar rounded-circle"
+                    width="64"
+                    height="64"
+                  />
+                ) : (
+                  <div class="author-avatar-placeholder">
+                    {authorDisplayName.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div>
+                  <p class="mb-0 fw-semibold">
+                    Written by {authorDisplayName}
+                  </p>
+                  <p class="mb-0 text-muted small">
+                    {post.publishedAt?.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </article>
     </main>

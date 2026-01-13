@@ -1,0 +1,468 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { SITE_TITLE } from "../../consts";
+import { db } from "../../lib/db";
+import { users, posts } from "../../lib/schema";
+import { eq, desc, and, count } from "drizzle-orm";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/404");
+}
+
+// Fetch user data (only if public)
+const [author] = await db
+  .select({
+    id: users.id,
+    name: users.name,
+    nickname: users.nickname,
+    image: users.image,
+    bio: users.bio,
+    website: users.website,
+    twitter: users.twitter,
+    github: users.github,
+    linkedin: users.linkedin,
+    isPublic: users.isPublic,
+    createdAt: users.createdAt,
+  })
+  .from(users)
+  .where(eq(users.id, id))
+  .limit(1);
+
+// If user not found or profile is not public, redirect to 404
+if (!author || !author.isPublic) {
+  return Astro.redirect("/404");
+}
+
+// Fetch post count
+const [postCountResult] = await db
+  .select({ count: count() })
+  .from(posts)
+  .where(and(eq(posts.authorId, id), eq(posts.status, "published")));
+
+// Fetch published posts
+const authorPosts = await db
+  .select({
+    id: posts.id,
+    slug: posts.slug,
+    title: posts.title,
+    description: posts.description,
+    heroImage: posts.heroImage,
+    publishedAt: posts.publishedAt,
+  })
+  .from(posts)
+  .where(and(eq(posts.authorId, id), eq(posts.status, "published")))
+  .orderBy(desc(posts.publishedAt));
+
+const displayName = author.nickname || author.name;
+const postCount = postCountResult?.count || 0;
+const hasSocialLinks = author.website || author.twitter || author.github || author.linkedin;
+
+// Format date helper
+function formatDate(date: Date | null): string {
+  if (!date) return "";
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={`${displayName} - Author - ${SITE_TITLE}`}
+      description={author.bio || `View posts by ${displayName}`}
+      image={author.image}
+    />
+  </head>
+  <body>
+    <Header />
+    <main class="author-page">
+      <!-- Author Header -->
+      <div class="author-header">
+        <div class="author-header-bg"></div>
+        <div class="author-container">
+          <div class="author-header-content">
+            <div class="author-avatar-wrapper">
+              {author.image ? (
+                <img
+                  src={author.image}
+                  alt={displayName}
+                  class="author-avatar"
+                />
+              ) : (
+                <div class="author-avatar author-avatar-placeholder">
+                  {displayName.charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div class="author-header-info">
+              <h1 class="author-name">{displayName}</h1>
+              {author.bio && (
+                <p class="author-bio">{author.bio}</p>
+              )}
+              {hasSocialLinks && (
+                <div class="author-social-links">
+                  {author.website && (
+                    <a href={author.website} target="_blank" rel="noopener noreferrer" class="social-link" title="Website">
+                      <i class="bi bi-globe"></i>
+                    </a>
+                  )}
+                  {author.twitter && (
+                    <a href={`https://twitter.com/${author.twitter}`} target="_blank" rel="noopener noreferrer" class="social-link" title="Twitter">
+                      <i class="bi bi-twitter-x"></i>
+                    </a>
+                  )}
+                  {author.github && (
+                    <a href={`https://github.com/${author.github}`} target="_blank" rel="noopener noreferrer" class="social-link" title="GitHub">
+                      <i class="bi bi-github"></i>
+                    </a>
+                  )}
+                  {author.linkedin && (
+                    <a href={`https://linkedin.com/in/${author.linkedin}`} target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
+                      <i class="bi bi-linkedin"></i>
+                    </a>
+                  )}
+                </div>
+              )}
+              <div class="author-stats">
+                <span class="stat">
+                  <i class="bi bi-file-earmark-text me-1"></i>
+                  {postCount} {postCount === 1 ? 'post' : 'posts'}
+                </span>
+                <span class="stat">
+                  <i class="bi bi-calendar3 me-1"></i>
+                  Member since {new Date(author.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short" })}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts Section -->
+      <div class="author-container py-5">
+        <h2 class="section-title">
+          <i class="bi bi-journal-text me-2"></i>
+          Posts by {displayName}
+        </h2>
+
+        {authorPosts.length === 0 ? (
+          <div class="empty-state">
+            <i class="bi bi-journal-x"></i>
+            <p>No published posts yet</p>
+          </div>
+        ) : (
+          <div class="posts-grid">
+            {authorPosts.map((post) => (
+              <a href={`/blog/${post.slug}`} class="post-card">
+                {post.heroImage && (
+                  <div class="post-image">
+                    <img src={post.heroImage} alt={post.title} />
+                  </div>
+                )}
+                <div class="post-content">
+                  <h3 class="post-title">{post.title}</h3>
+                  <p class="post-description">{post.description}</p>
+                  <span class="post-date">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    {formatDate(post.publishedAt)}
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .author-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .author-container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  .author-page {
+    background: #f8f9fa;
+    min-height: calc(100vh - 200px);
+  }
+
+  /* Author Header */
+  .author-header {
+    position: relative;
+    padding: 4rem 0;
+  }
+
+  .author-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 0;
+  }
+
+  .author-header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .author-avatar-wrapper {
+    flex-shrink: 0;
+  }
+
+  .author-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    object-fit: cover;
+  }
+
+  .author-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    font-size: 3.5rem;
+    font-weight: 700;
+  }
+
+  .author-header-info {
+    color: white;
+    flex: 1;
+  }
+
+  .author-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .author-bio {
+    margin: 0 0 1rem;
+    opacity: 0.95;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  .author-social-links {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .social-link:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+    color: white;
+  }
+
+  .social-link i {
+    font-size: 1.2rem;
+  }
+
+  .author-stats {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  /* Section Title */
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6c757d;
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    opacity: 0.3;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state p {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  /* Posts Grid */
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .posts-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .posts-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .post-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  .post-image {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: #e9ecef;
+  }
+
+  .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .post-card:hover .post-image img {
+    transform: scale(1.05);
+  }
+
+  .post-content {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0 0 0.5rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-description {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 0 0 1rem;
+    line-height: 1.5;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-date {
+    font-size: 0.8rem;
+    color: #adb5bd;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .author-header-content {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .author-avatar {
+      width: 120px;
+      height: 120px;
+    }
+
+    .author-avatar-placeholder {
+      font-size: 3rem;
+    }
+
+    .author-name {
+      font-size: 2rem;
+    }
+
+    .author-bio {
+      text-align: center;
+    }
+
+    .author-social-links {
+      justify-content: center;
+    }
+
+    .author-stats {
+      justify-content: center;
+    }
+  }
+</style>
