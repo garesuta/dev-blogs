@@ -22,45 +22,114 @@ const isPublic = ref(props.initialIsPublic || false);
 const isSaving = ref(false);
 const message = ref<{ type: "success" | "error"; text: string } | null>(null);
 
-// Validation
+// Validation patterns
+const usernamePattern = /^[a-zA-Z0-9_]*$/;
+const nicknamePattern = /^[a-zA-Z0-9_\s\-]*$/;
+const urlPattern = /https?:\/\/[^\s]+/gi;
+
+// Nickname validation
+const nicknameError = computed(() => {
+  if (!nickname.value) return null;
+  const trimmed = nickname.value.trim();
+  if (trimmed !== nickname.value) {
+    return "Remove leading or trailing spaces";
+  }
+  if (trimmed.length < 2) {
+    return "Nickname must be at least 2 characters";
+  }
+  if (trimmed.length > 50) {
+    return "Nickname must be 50 characters or less";
+  }
+  if (!nicknamePattern.test(trimmed)) {
+    return "Only letters, numbers, spaces, underscores, and hyphens allowed";
+  }
+  return null;
+});
+
+// Bio validation
+const bioError = computed(() => {
+  if (!bio.value) return null;
+  if (bio.value.length > 0 && bio.value.length < 10) {
+    return "Bio must be at least 10 characters if provided";
+  }
+  if (bio.value.length > 500) {
+    return "Bio must be 500 characters or less";
+  }
+  if (urlPattern.test(bio.value)) {
+    return "URLs are not allowed in bio";
+  }
+  return null;
+});
+
+// Website validation
 const websiteError = computed(() => {
   if (!website.value) return null;
   try {
-    new URL(website.value);
+    const url = new URL(website.value);
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      return "URL must start with http:// or https://";
+    }
     return null;
   } catch {
     return "Please enter a valid URL (e.g., https://example.com)";
   }
 });
 
-const usernamePattern = /^[a-zA-Z0-9_]*$/;
-
+// Twitter validation
 const twitterError = computed(() => {
   if (!twitter.value) return null;
   if (!usernamePattern.test(twitter.value)) {
     return "Only letters, numbers, and underscores allowed";
   }
+  if (twitter.value.length < 1) {
+    return "Username must be at least 1 character";
+  }
+  if (twitter.value.length > 15) {
+    return "Twitter username must be 15 characters or less";
+  }
   return null;
 });
 
+// GitHub validation
 const githubError = computed(() => {
   if (!github.value) return null;
   if (!usernamePattern.test(github.value)) {
     return "Only letters, numbers, and underscores allowed";
   }
+  if (github.value.length < 1) {
+    return "Username must be at least 1 character";
+  }
+  if (github.value.length > 39) {
+    return "GitHub username must be 39 characters or less";
+  }
   return null;
 });
 
+// LinkedIn validation
 const linkedinError = computed(() => {
   if (!linkedin.value) return null;
-  if (!usernamePattern.test(linkedin.value)) {
-    return "Only letters, numbers, and underscores allowed";
+  const linkedinPattern = /^[a-zA-Z0-9\-]*$/;
+  if (!linkedinPattern.test(linkedin.value)) {
+    return "Only letters, numbers, and hyphens allowed";
+  }
+  if (linkedin.value.length < 3) {
+    return "LinkedIn username must be at least 3 characters";
+  }
+  if (linkedin.value.length > 100) {
+    return "LinkedIn username must be 100 characters or less";
   }
   return null;
 });
 
 const hasValidationErrors = computed(() => {
-  return !!(websiteError.value || twitterError.value || githubError.value || linkedinError.value);
+  return !!(
+    nicknameError.value ||
+    bioError.value ||
+    websiteError.value ||
+    twitterError.value ||
+    githubError.value ||
+    linkedinError.value
+  );
 });
 
 async function saveProfile() {
@@ -139,6 +208,7 @@ async function saveProfile() {
             v-model="nickname"
             type="text"
             class="form-input"
+            :class="{ 'input-error': nicknameError }"
             placeholder="Enter a display name..."
             maxlength="50"
           />
@@ -146,7 +216,11 @@ async function saveProfile() {
             {{ nickname.length }}/50
           </span>
         </div>
-        <p class="form-hint">
+        <p v-if="nicknameError" class="form-error">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          {{ nicknameError }}
+        </p>
+        <p v-else class="form-hint">
           <i class="bi bi-info-circle me-1"></i>
           Leave empty to use your account name instead.
         </p>
@@ -166,6 +240,7 @@ async function saveProfile() {
             id="bio"
             v-model="bio"
             class="form-input form-textarea"
+            :class="{ 'input-error': bioError }"
             placeholder="Write a short bio about yourself..."
             maxlength="500"
             rows="4"
@@ -174,6 +249,10 @@ async function saveProfile() {
             {{ bio.length }}/500
           </span>
         </div>
+        <p v-if="bioError" class="form-error">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          {{ bioError }}
+        </p>
       </div>
 
       <!-- Social Links Section -->
@@ -460,12 +539,14 @@ async function saveProfile() {
 
 .input-with-prefix {
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
 .input-prefix {
+  display: flex;
+  align-items: center;
   background: #e9ecef;
-  padding: 0.75rem 0.75rem;
+  padding: 0 0.75rem;
   border: 2px solid #e9ecef;
   border-right: none;
   border-radius: 10px 0 0 10px;

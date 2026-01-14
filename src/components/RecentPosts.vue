@@ -5,6 +5,7 @@ interface Post {
   id: string;
   slug: string;
   title: string;
+  status: string;
   publishedAt: string | null;
   createdAt: string;
 }
@@ -52,10 +53,16 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
       >
         <div class="post-info">
           <h6 class="post-title">{{ post.title }}</h6>
-          <span class="post-date">
-            <i class="bi bi-calendar3 me-1"></i>
-            {{ formatDate(post.publishedAt) }}
-          </span>
+          <div class="post-meta">
+            <span v-if="post.status === 'published'" class="post-status status-published">
+              <i class="bi bi-check-circle-fill me-1"></i>
+              Published
+            </span>
+            <span class="post-date">
+              <i class="bi bi-calendar3 me-1"></i>
+              {{ formatDate(post.publishedAt) }}
+            </span>
+          </div>
         </div>
         <div class="post-actions">
           <a
@@ -66,20 +73,13 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
           >
             <i class="bi bi-pencil"></i>
           </a>
-          <span class="action-btn action-view">
-            <i class="bi bi-arrow-right"></i>
-          </span>
         </div>
       </a>
 
-      <div class="posts-footer">
-        <a v-if="hasMorePosts" href="/editor/posts" class="view-all-btn">
-          View All Posts ({{ totalCount }})
-          <i class="bi bi-arrow-right ms-1"></i>
-        </a>
-        <a href="/editor/posts/new" class="new-post-btn">
-          <i class="bi bi-plus-lg me-1"></i>
-          New Post
+      <div class="posts-footer" style="display: flex; justify-content: flex-end;">
+        <a href="/editor/posts" class="see-all-btn">
+          View All Posts
+          <i class="bi bi-arrow-right"></i>
         </a>
       </div>
     </div>
@@ -177,6 +177,27 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
   text-overflow: ellipsis;
 }
 
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.post-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status-published {
+  background: #d4edda;
+  color: #155724;
+}
+
 .post-date {
   font-size: 0.8rem;
   color: #6c757d;
@@ -209,54 +230,31 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
   border-color: #667eea;
 }
 
-.action-view {
-  background: transparent;
-  border: none;
-  color: #adb5bd;
-}
-
-.post-item:hover .action-view {
-  color: #667eea;
-}
-
 .posts-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #e9ecef;
+  text-align: right;
 }
 
-.view-all-btn {
-  font-size: 0.9rem;
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.view-all-btn:hover {
-  color: #764ba2;
-}
-
-.new-post-btn {
+.see-all-btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1rem;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
   color: white;
-  border-radius: 8px;
   text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 600;
   transition: all 0.2s ease;
+  min-width: 150px;
 }
 
-.new-post-btn:hover {
+.see-all-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-  color: white;
 }
 </style>

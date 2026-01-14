@@ -49,19 +49,20 @@ const [postCountResult] = await db
   .from(posts)
   .where(and(eq(posts.authorId, user.id), eq(posts.status, "published")));
 
-// Fetch recent posts
+// Fetch recent posts (published only, with status for display)
 const recentPosts = await db
   .select({
     id: posts.id,
     slug: posts.slug,
     title: posts.title,
+    status: posts.status,
     publishedAt: posts.publishedAt,
     createdAt: posts.createdAt,
   })
   .from(posts)
   .where(and(eq(posts.authorId, user.id), eq(posts.status, "published")))
   .orderBy(desc(posts.publishedAt))
-  .limit(5);
+  .limit(3);
 
 const roleName = getRoleDisplayName(fullUser.role as UserRole);
 const displayName = fullUser.nickname || fullUser.name;
@@ -271,6 +272,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
 
           <!-- Right Column: Edit Profile & Recent Posts -->
           <div class="col-12 col-lg-8 col-xl-9">
+            <div class="main-content">
             <div class="profile-card mb-4">
               <ProfileEditor
                 client:load
@@ -294,6 +296,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
                 />
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
@@ -532,8 +535,12 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
 
   /* Sidebar */
   .sidebar-sticky {
-    position: sticky;
-    top: 1rem;
+    padding-top: 2rem; /* Clear the header overlap */
+  }
+
+  /* Main content area */
+  .main-content {
+    padding-top: 2rem; /* Match sidebar spacing */
   }
 
   .sidebar-card {
@@ -643,10 +650,6 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     transform: translateX(4px);
   }
 
-  .quick-action-btn:hover i {
-    color: white;
-  }
-
   .quick-action-btn i:first-child {
     font-size: 1.1rem;
     width: 20px;
@@ -659,12 +662,22 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     opacity: 0.5;
   }
 
+  .quick-action-btn:hover i:first-child,
+  .quick-action-btn:hover i:last-child {
+    color: white;
+    opacity: 1;
+  }
+
   .quick-action-btn.btn-admin {
     background: linear-gradient(135deg, #dc354515 0%, #fd7e1415 100%);
   }
 
   .quick-action-btn.btn-admin i:first-child {
     color: #dc3545;
+  }
+
+  .quick-action-btn.btn-admin:hover i:first-child {
+    color: white;
   }
 
   .quick-action-btn.btn-admin:hover {
