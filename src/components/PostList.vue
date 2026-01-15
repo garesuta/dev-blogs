@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+
+// Bootstrap Modal type (imported dynamically to avoid SSR issues)
+type BootstrapModal = {
+  show: () => void;
+  hide: () => void;
+};
 
 // Types
 interface Post {
@@ -48,6 +54,12 @@ const pagination = ref<Pagination>({ page: 1, limit: 20, total: 0, totalPages: 0
 const isLoading = ref(true);
 const error = ref("");
 
+// Delete modal state
+const postToDelete = ref<Post | null>(null);
+const isDeleting = ref(false);
+const deleteModalRef = ref<HTMLElement | null>(null);
+let deleteModal: BootstrapModal | null = null;
+
 // Filter options
 const categories = ref<Category[]>([]);
 const availableTags = ref<Tag[]>([]);
@@ -77,16 +89,102 @@ const statusBadgeClass = (status: string) => {
   }
 };
 
-const formatDate = (dateString: string | null) => {
+const formatRelativeTime = (dateString: string | null) => {
   if (!dateString) return "-";
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
+
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30);
+
+  // Future dates
+  if (diffMs < 0) {
+    const futureDays = Math.abs(diffDays);
+    if (futureDays === 0) return "Today";
+    if (futureDays === 1) return "Tomorrow";
+    if (futureDays < 7) return `In ${futureDays} days`;
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  }
+
+  // Past dates
+  if (diffSecs < 60) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays === 1) return "Yesterday";
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffWeeks === 1) return "1 week ago";
+  if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
+  if (diffMonths === 1) return "1 month ago";
+  if (diffMonths < 12) return `${diffMonths} months ago`;
+
+  // Older than a year - show date
+  return date.toLocaleDateString("en-US", {
     month: "short",
+    day: "numeric",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined
+  });
+};
+
+const formatFullDate = (dateString: string | null) => {
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   });
 };
+
+// Computed property for truncated pagination
+type PageItem = { type: "page"; page: number; key: string } | { type: "ellipsis"; key: string };
+const visiblePages = computed<PageItem[]>(() => {
+  const total = pagination.value.totalPages;
+  const current = pagination.value.page;
+  const delta = 2; // Number of pages to show around current page
+
+  if (total <= 7) {
+    // Show all pages if 7 or fewer
+    return Array.from({ length: total }, (_, i) => ({
+      type: "page" as const,
+      page: i + 1,
+      key: `page-${i + 1}`,
+    }));
+  }
+
+  const pages: PageItem[] = [];
+  const rangeStart = Math.max(2, current - delta);
+  const rangeEnd = Math.min(total - 1, current + delta);
+
+  // Always show first page
+  pages.push({ type: "page", page: 1, key: "page-1" });
+
+  // Show ellipsis if there's a gap after first page
+  if (rangeStart > 2) {
+    pages.push({ type: "ellipsis", key: "ellipsis-start" });
+  }
+
+  // Show pages around current
+  for (let i = rangeStart; i <= rangeEnd; i++) {
+    pages.push({ type: "page", page: i, key: `page-${i}` });
+  }
+
+  // Show ellipsis if there's a gap before last page
+  if (rangeEnd < total - 1) {
+    pages.push({ type: "ellipsis", key: "ellipsis-end" });
+  }
+
+  // Always show last page
+  pages.push({ type: "page", page: total, key: `page-${total}` });
+
+  return pages;
+});
 
 // Fetch posts
 async function fetchPosts() {
@@ -136,14 +234,25 @@ async function fetchPosts() {
   }
 }
 
-// Delete post
-async function deletePost(post: Post) {
-  if (!confirm(`Are you sure you want to delete "${post.title}"?`)) {
-    return;
+// Delete post - open confirmation modal
+async function confirmDelete(post: Post) {
+  postToDelete.value = post;
+  if (!deleteModal && deleteModalRef.value) {
+    // Dynamically import Bootstrap Modal to avoid SSR issues
+    const { Modal } = await import("bootstrap");
+    deleteModal = new Modal(deleteModalRef.value);
   }
+  deleteModal?.show();
+}
+
+// Execute the delete after modal confirmation
+async function executeDelete() {
+  if (!postToDelete.value) return;
+
+  isDeleting.value = true;
 
   try {
-    const response = await fetch(`/api/posts/${post.id}`, {
+    const response = await fetch(`/api/posts/${postToDelete.value.id}`, {
       method: "DELETE",
     });
 
@@ -153,10 +262,17 @@ async function deletePost(post: Post) {
     }
 
     // Remove from list
-    posts.value = posts.value.filter((p) => p.id !== post.id);
+    posts.value = posts.value.filter((p) => p.id !== postToDelete.value?.id);
     pagination.value.total -= 1;
+
+    // Close modal
+    deleteModal?.hide();
+    postToDelete.value = null;
   } catch (err) {
-    alert(err instanceof Error ? err.message : "Failed to delete post");
+    error.value = err instanceof Error ? err.message : "Failed to delete post";
+    deleteModal?.hide();
+  } finally {
+    isDeleting.value = false;
   }
 }
 
@@ -241,43 +357,47 @@ onMounted(() => {
 <template>
   <div class="post-list">
     <!-- Toolbar -->
-    <div class="d-flex flex-wrap gap-3 mb-4 align-items-center">
-      <!-- Search -->
-      <div class="flex-grow-1" style="min-width: 200px; max-width: 400px;">
-        <input
-          type="search"
-          class="form-control"
-          v-model="searchQuery"
-          placeholder="Search posts..."
-        />
+    <div class="toolbar d-flex flex-column flex-lg-row gap-3 mb-4">
+      <!-- Filters group -->
+      <div class="filters-group d-flex flex-wrap gap-2 flex-grow-1 align-items-center">
+        <!-- Search -->
+        <div class="search-wrapper">
+          <input
+            type="search"
+            class="form-control"
+            v-model="searchQuery"
+            placeholder="Search posts..."
+            aria-label="Search posts"
+          />
+        </div>
+
+        <!-- Status filter -->
+        <select class="form-select filter-select" v-model="statusFilter" aria-label="Filter by status">
+          <option value="">All statuses</option>
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+          <option value="scheduled">Scheduled</option>
+        </select>
+
+        <!-- Category filter -->
+        <select class="form-select filter-select" v-model="categoryFilter" aria-label="Filter by category">
+          <option value="">All categories</option>
+          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+            {{ cat.name }}
+          </option>
+        </select>
+
+        <!-- Tag filter -->
+        <select class="form-select filter-select" v-model="tagFilter" aria-label="Filter by tag">
+          <option value="">All tags</option>
+          <option v-for="tag in availableTags" :key="tag.id" :value="tag.id">
+            {{ tag.name }}
+          </option>
+        </select>
       </div>
 
-      <!-- Status filter -->
-      <select class="form-select" style="width: auto;" v-model="statusFilter">
-        <option value="">All statuses</option>
-        <option value="draft">Draft</option>
-        <option value="published">Published</option>
-        <option value="scheduled">Scheduled</option>
-      </select>
-
-      <!-- Category filter -->
-      <select class="form-select" style="width: auto;" v-model="categoryFilter">
-        <option value="">All categories</option>
-        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-          {{ cat.name }}
-        </option>
-      </select>
-
-      <!-- Tag filter -->
-      <select class="form-select" style="width: auto;" v-model="tagFilter">
-        <option value="">All tags</option>
-        <option v-for="tag in availableTags" :key="tag.id" :value="tag.id">
-          {{ tag.name }}
-        </option>
-      </select>
-
       <!-- New post button -->
-      <a href="/editor/posts/new" class="btn btn-primary ms-auto">
+      <a href="/editor/posts/new" class="btn btn-primary new-post-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">
           <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
         </svg>
@@ -321,36 +441,75 @@ onMounted(() => {
       <table class="table table-hover align-middle">
         <thead class="table-light">
           <tr>
-            <th class="sortable" @click="toggleSort('title')">
-              Title <span class="sort-icon">{{ getSortIcon('title') }}</span>
+            <th
+              class="sortable"
+              @click="toggleSort('title')"
+              :aria-sort="sortBy === 'title' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'"
+              role="columnheader"
+            >
+              <span class="sortable-content">
+                Title
+                <span class="sort-indicator" :class="{ active: sortBy === 'title' }">
+                  {{ getSortIcon('title') || '⇅' }}
+                </span>
+              </span>
             </th>
-            <th style="width: 100px;">Status</th>
-            <th style="width: 130px;">Category</th>
-            <th style="width: 150px;">Tags</th>
-            <th style="width: 120px;">Author</th>
-            <th class="sortable" style="width: 145px;" @click="toggleSort('createdAt')">
-              Created <span class="sort-icon">{{ getSortIcon('createdAt') }}</span>
+            <th class="col-status">Status</th>
+            <th class="col-category">Category</th>
+            <th class="col-tags">Tags</th>
+            <th class="col-author">Author</th>
+            <th
+              class="sortable col-date"
+              @click="toggleSort('createdAt')"
+              :aria-sort="sortBy === 'createdAt' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'"
+              role="columnheader"
+            >
+              <span class="sortable-content">
+                Created
+                <span class="sort-indicator" :class="{ active: sortBy === 'createdAt' }">
+                  {{ getSortIcon('createdAt') || '⇅' }}
+                </span>
+              </span>
             </th>
-            <th class="sortable" style="width: 145px;" @click="toggleSort('updatedAt')">
-              Updated <span class="sort-icon">{{ getSortIcon('updatedAt') }}</span>
+            <th
+              class="sortable col-date"
+              @click="toggleSort('updatedAt')"
+              :aria-sort="sortBy === 'updatedAt' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'"
+              role="columnheader"
+            >
+              <span class="sortable-content">
+                Updated
+                <span class="sort-indicator" :class="{ active: sortBy === 'updatedAt' }">
+                  {{ getSortIcon('updatedAt') || '⇅' }}
+                </span>
+              </span>
             </th>
-            <th style="width: 80px;">Actions</th>
+            <th class="col-actions">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="post in posts" :key="post.id">
-            <td>
-              <a :href="`/editor/posts/${post.id}`" class="fw-semibold text-decoration-none">
+            <td class="cell-title">
+              <a
+                :href="`/editor/posts/${post.id}`"
+                class="fw-semibold text-decoration-none title-link"
+                :title="post.title"
+              >
                 {{ post.title }}
               </a>
-              <div class="small text-muted">/blog/{{ post.slug }}</div>
+              <div
+                class="small text-muted description-text"
+                :title="post.description"
+              >
+                {{ post.description || '/blog/' + post.slug }}
+              </div>
             </td>
             <td>
               <span class="badge" :class="statusBadgeClass(post.status)">
                 {{ post.status }}
               </span>
-              <div v-if="post.status === 'scheduled' && post.scheduledDate" class="small text-muted">
-                {{ formatDate(post.scheduledDate) }}
+              <div v-if="post.status === 'scheduled' && post.scheduledDate" class="small text-muted" :title="formatFullDate(post.scheduledDate)">
+                {{ formatRelativeTime(post.scheduledDate) }}
               </div>
             </td>
             <td>
@@ -382,10 +541,14 @@ onMounted(() => {
               <span class="small">{{ post.authorName || post.authorEmail || "Unknown" }}</span>
             </td>
             <td>
-              <span class="small">{{ formatDate(post.createdAt) }}</span>
+              <span class="small date-relative" :title="formatFullDate(post.createdAt)">
+                {{ formatRelativeTime(post.createdAt) }}
+              </span>
             </td>
             <td>
-              <span class="small">{{ formatDate(post.updatedAt) }}</span>
+              <span class="small date-relative" :title="formatFullDate(post.updatedAt)">
+                {{ formatRelativeTime(post.updatedAt) }}
+              </span>
             </td>
             <td>
               <div class="dropdown">
@@ -420,7 +583,11 @@ onMounted(() => {
                   </li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <button class="dropdown-item text-danger" @click="deletePost(post)">
+                    <button
+                      class="dropdown-item text-danger"
+                      @click="confirmDelete(post)"
+                      :aria-label="`Delete post: ${post.title}`"
+                    >
                       Delete
                     </button>
                   </li>
@@ -432,40 +599,104 @@ onMounted(() => {
       </table>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div
+      class="modal fade"
+      id="deleteModal"
+      tabindex="-1"
+      aria-labelledby="deleteModalLabel"
+      aria-hidden="true"
+      ref="deleteModalRef"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title" id="deleteModalLabel">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="text-danger me-2" viewBox="0 0 16 16">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              Delete Post
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-1">Are you sure you want to delete this post?</p>
+            <p class="fw-semibold text-dark mb-0" v-if="postToDelete">
+              "{{ postToDelete.title }}"
+            </p>
+            <p class="text-muted small mt-2 mb-0">This action cannot be undone.</p>
+          </div>
+          <div class="modal-footer border-0 pt-0">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-danger" @click="executeDelete" :disabled="isDeleting">
+              <span v-if="isDeleting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              {{ isDeleting ? 'Deleting...' : 'Delete Post' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Pagination -->
     <div
       v-if="pagination.totalPages > 1"
-      class="d-flex justify-content-between align-items-center mt-4"
+      class="pagination-wrapper d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 mt-4"
     >
-      <small class="text-muted">
+      <small class="text-muted order-2 order-sm-1">
         Showing {{ (pagination.page - 1) * pagination.limit + 1 }} -
         {{ Math.min(pagination.page * pagination.limit, pagination.total) }}
         of {{ pagination.total }} posts
       </small>
 
-      <nav aria-label="Posts pagination">
+      <nav aria-label="Posts pagination" class="order-1 order-sm-2">
         <ul class="pagination pagination-sm mb-0">
           <li class="page-item" :class="{ disabled: pagination.page === 1 }">
-            <button class="page-link" @click="goToPage(pagination.page - 1)">
-              Previous
+            <button
+              class="page-link"
+              @click="goToPage(pagination.page - 1)"
+              :disabled="pagination.page === 1"
+              aria-label="Go to previous page"
+            >
+              <span aria-hidden="true">&laquo;</span>
+              <span class="d-none d-md-inline ms-1">Previous</span>
             </button>
           </li>
-          <li
-            v-for="page in pagination.totalPages"
-            :key="page"
-            class="page-item"
-            :class="{ active: page === pagination.page }"
-          >
-            <button class="page-link" @click="goToPage(page)">
-              {{ page }}
-            </button>
-          </li>
+
+          <!-- Truncated pagination -->
+          <template v-for="item in visiblePages" :key="item.key">
+            <li v-if="item.type === 'ellipsis'" class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+            <li
+              v-else
+              class="page-item"
+              :class="{ active: item.page === pagination.page }"
+            >
+              <button
+                class="page-link"
+                @click="goToPage(item.page)"
+                :aria-label="`Go to page ${item.page}`"
+                :aria-current="item.page === pagination.page ? 'page' : undefined"
+              >
+                {{ item.page }}
+              </button>
+            </li>
+          </template>
+
           <li
             class="page-item"
             :class="{ disabled: pagination.page === pagination.totalPages }"
           >
-            <button class="page-link" @click="goToPage(pagination.page + 1)">
-              Next
+            <button
+              class="page-link"
+              @click="goToPage(pagination.page + 1)"
+              :disabled="pagination.page === pagination.totalPages"
+              aria-label="Go to next page"
+            >
+              <span class="d-none d-md-inline me-1">Next</span>
+              <span aria-hidden="true">&raquo;</span>
             </button>
           </li>
         </ul>
@@ -481,30 +712,212 @@ onMounted(() => {
   flex-direction: column;
 }
 
+/* Toolbar styles */
+.toolbar {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.search-wrapper {
+  flex: 1;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.filter-select {
+  width: auto;
+  min-width: 140px;
+}
+
+.new-post-btn {
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.new-post-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(13, 110, 253, 0.25);
+}
+
+/* Table styles */
 .table-responsive {
   flex: 1;
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+  overflow: hidden;
 }
 
 .table {
   margin-bottom: 0;
 }
 
+.table thead th {
+  border-bottom: 2px solid #dee2e6;
+  background-color: #f8f9fa;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: #495057;
+}
+
+.table tbody tr {
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+  border-left-color: #0d6efd;
+}
+
 .table tbody tr:last-child td {
   border-bottom: none;
 }
 
+/* Column widths - compact to give more space to title/description */
+.col-status { width: 85px; }
+.col-category { width: 100px; }
+.col-tags { width: 120px; }
+.col-author { width: 100px; }
+.col-date { width: 95px; }
+.col-actions { width: 80px; }
+
+/* Title cell with truncation */
+.cell-title {
+  max-width: 300px;
+  min-width: 200px;
+}
+
+.title-link {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.description-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+/* Relative date styling */
+.date-relative {
+  cursor: help;
+  border-bottom: 1px dotted #adb5bd;
+  padding-bottom: 1px;
+  transition: border-color 0.15s ease;
+}
+
+.date-relative:hover {
+  border-bottom-color: #6c757d;
+}
+
+/* Sortable headers */
 .sortable {
   cursor: pointer;
   user-select: none;
+  transition: background-color 0.15s ease;
 }
 
 .sortable:hover {
   background-color: #e9ecef;
 }
 
-.sort-icon {
+.sortable-content {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.sort-indicator {
   font-size: 0.75em;
-  margin-left: 4px;
-  opacity: 0.7;
+  opacity: 0.3;
+  transition: opacity 0.15s ease;
+}
+
+.sort-indicator.active {
+  opacity: 1;
+  color: #0d6efd;
+}
+
+.sortable:hover .sort-indicator {
+  opacity: 0.6;
+}
+
+/* Pagination */
+.pagination-wrapper {
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.pagination .page-link {
+  border-radius: 0.375rem;
+  margin: 0 2px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.pagination .page-item.active .page-link {
+  font-weight: 600;
+}
+
+.pagination .page-item:not(.disabled):not(.active) .page-link:hover {
+  background-color: #e9ecef;
+  transform: translateY(-1px);
+}
+
+/* Empty state enhancements */
+.text-center.py-5 {
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  border: 1px dashed #dee2e6;
+}
+
+/* Modal enhancements */
+.modal-content {
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .toolbar {
+    padding: 0.75rem;
+  }
+
+  .search-wrapper {
+    max-width: 100%;
+  }
+
+  .filter-select {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .filters-group {
+    width: 100%;
+  }
+
+  .filter-select {
+    width: 100% !important;
+  }
+
+  .new-post-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>

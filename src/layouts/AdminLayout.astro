@@ -9,6 +9,20 @@ interface Props {
 }
 
 const { title, description = "Admin panel" } = Astro.props;
+
+// Get current path for active state
+const currentPath = Astro.url.pathname;
+
+// Helper to check if link is active
+const isActive = (href: string) => {
+  if (href === "/editor/posts") {
+    return currentPath === href || currentPath.startsWith("/editor/posts/");
+  }
+  if (href === "/admin") {
+    return currentPath === href;
+  }
+  return currentPath.startsWith(href);
+};
 ---
 
 <!doctype html>
@@ -38,33 +52,34 @@ const { title, description = "Admin panel" } = Astro.props;
         <!-- Sidebar -->
         <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-3">
           <div class="position-sticky">
+            <p class="px-3 text-muted small mb-2 text-uppercase fw-semibold">Content</p>
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" href="/editor/posts">
+                <a class:list={["nav-link", { active: isActive("/editor/posts") }]} href="/editor/posts">
                   <i class="bi bi-file-text me-2"></i>Posts
                 </a>
               </li>
             </ul>
             <hr />
-            <p class="px-3 text-muted small mb-2">Admin Only</p>
+            <p class="px-3 text-muted small mb-2 text-uppercase fw-semibold">Admin Only</p>
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" href="/admin">
+                <a class:list={["nav-link", { active: isActive("/admin") }]} href="/admin">
                   <i class="bi bi-speedometer2 me-2"></i>Dashboard
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/admin/users">
+                <a class:list={["nav-link", { active: isActive("/admin/users") }]} href="/admin/users">
                   <i class="bi bi-people me-2"></i>Users
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/admin/taxonomy">
+                <a class:list={["nav-link", { active: isActive("/admin/taxonomy") }]} href="/admin/taxonomy">
                   <i class="bi bi-tags me-2"></i>Categories & Tags
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/admin/about">
+                <a class:list={["nav-link", { active: isActive("/admin/about") }]} href="/admin/about">
                   <i class="bi bi-person-circle me-2"></i>About Page
                 </a>
               </li>
@@ -95,16 +110,39 @@ const { title, description = "Admin panel" } = Astro.props;
   .nav-link {
     color: #333;
     padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    margin: 0.125rem 0.5rem;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
   }
 
   .nav-link:hover {
     background-color: #e9ecef;
-    border-radius: 0.25rem;
+    color: #212529;
   }
 
   .nav-link.active {
     color: #0d6efd;
     background-color: #e7f1ff;
-    border-radius: 0.25rem;
+    font-weight: 500;
+  }
+
+  .nav-link.active i {
+    color: #0d6efd;
+  }
+
+  .nav-link i {
+    color: #6c757d;
+    transition: color 0.15s ease;
+  }
+
+  .nav-link:hover i {
+    color: #495057;
+  }
+
+  hr {
+    margin: 1rem 0.75rem;
+    opacity: 0.15;
   }
 </style>
