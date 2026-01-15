@@ -5,7 +5,7 @@ import Header from '../../components/Header.astro';
 import { db } from '../../lib/db';
 import { posts, users, categories } from '../../lib/schema';
 import { eq } from 'drizzle-orm';
-import { marked } from 'marked';
+import { processContentForDisplay } from '../../lib/content-processor';
 
 export const prerender = false;
 
@@ -48,8 +48,8 @@ if (!post || post.status !== 'published') {
   return Astro.redirect('/404');
 }
 
-// Parse markdown content to HTML
-const contentHtml = await marked.parse(post.content);
+// Process content to add heading IDs for TOC navigation
+const contentHtml = processContentForDisplay(post.content);
 ---
 
 <html lang="en">
@@ -131,6 +131,110 @@ const contentHtml = await marked.parse(post.content);
         font-size: 1.5rem;
         font-weight: bold;
         flex-shrink: 0;
+      }
+      /* Table of Contents styles */
+      .prose :global(.toc-block) {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .prose :global(.toc-title) {
+        margin: 0 0 0.75rem 0;
+        font-size: 1rem;
+        color: #495057;
+      }
+      .prose :global(.toc-list) {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .prose :global(.toc-list li) {
+        padding: 0.35rem 0;
+        display: flex;
+        align-items: center;
+      }
+      .prose :global(.toc-list li::before) {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #9b9a97;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+      /* Level-based cascading styles */
+      .prose :global(.toc-list .toc-level-0) {
+        padding-left: 0;
+      }
+      .prose :global(.toc-list .toc-level-0::before) {
+        width: 8px;
+        height: 8px;
+        background: #495057;
+      }
+      .prose :global(.toc-list .toc-level-0 a) {
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      .prose :global(.toc-list .toc-level-1) {
+        padding-left: 1.25rem;
+      }
+      .prose :global(.toc-list .toc-level-1::before) {
+        width: 6px;
+        height: 6px;
+        background: #6c757d;
+      }
+      .prose :global(.toc-list .toc-level-1 a) {
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+      .prose :global(.toc-list .toc-level-2) {
+        padding-left: 2.5rem;
+      }
+      .prose :global(.toc-list .toc-level-2::before) {
+        width: 5px;
+        height: 5px;
+        background: #adb5bd;
+      }
+      .prose :global(.toc-list .toc-level-2 a) {
+        font-weight: 400;
+        font-size: 0.9rem;
+        color: #6c757d;
+      }
+      .prose :global(.toc-list .toc-level-3) {
+        padding-left: 3.75rem;
+      }
+      .prose :global(.toc-list .toc-level-3::before) {
+        width: 4px;
+        height: 4px;
+        background: #ced4da;
+      }
+      .prose :global(.toc-list .toc-level-3 a) {
+        font-weight: 400;
+        font-size: 0.85rem;
+        color: #868e96;
+      }
+      .prose :global(.toc-list a) {
+        color: #495057;
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .prose :global(.toc-list a:hover) {
+        color: #0d6efd;
+        text-decoration: underline;
+      }
+      .prose :global(.toc-placeholder) {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 4px;
+        padding: 0.75rem 1rem;
+        color: #856404;
+      }
+      /* Smooth scroll for anchor links */
+      :global(html) {
+        scroll-behavior: smooth;
       }
     </style>
   </head>

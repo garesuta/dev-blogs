@@ -140,41 +140,6 @@ function regenerateSlug() {
       </div>
     </div>
 
-    <!-- Basic SEO Fields -->
-    <div class="mb-3">
-      <label for="metaTitle" class="form-label d-flex justify-content-between">
-        <span>Meta Title</span>
-        <small :class="metaTitleStatus.class">{{ metaTitleStatus.text }}</small>
-      </label>
-      <input
-        type="text"
-        class="form-control"
-        id="metaTitle"
-        :value="metaTitle"
-        @input="emit('update:metaTitle', ($event.target as HTMLInputElement).value || null)"
-        :disabled="disabled"
-        :placeholder="title || 'Leave blank to use post title'"
-        maxlength="70"
-      />
-    </div>
-
-    <div class="mb-3">
-      <label for="metaDescription" class="form-label d-flex justify-content-between">
-        <span>Meta Description</span>
-        <small :class="metaDescriptionStatus.class">{{ metaDescriptionStatus.text }}</small>
-      </label>
-      <textarea
-        class="form-control"
-        id="metaDescription"
-        :value="metaDescription"
-        @input="emit('update:metaDescription', ($event.target as HTMLTextAreaElement).value || null)"
-        :disabled="disabled"
-        :placeholder="description || 'Leave blank to use post description'"
-        maxlength="160"
-        rows="2"
-      ></textarea>
-    </div>
-
     <!-- Advanced SEO (collapsible) -->
     <div class="mb-3">
       <button
@@ -198,6 +163,43 @@ function regenerateSlug() {
     </div>
 
     <div v-show="showAdvanced" class="advanced-seo-fields">
+      <!-- Meta Title -->
+      <div class="mb-3">
+        <label for="metaTitle" class="form-label d-flex justify-content-between">
+          <span>Meta Title</span>
+          <small :class="metaTitleStatus.class">{{ metaTitleStatus.text }}</small>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="metaTitle"
+          :value="metaTitle"
+          @input="emit('update:metaTitle', ($event.target as HTMLInputElement).value || null)"
+          :disabled="disabled"
+          :placeholder="title || 'Leave blank to use post title'"
+          maxlength="70"
+        />
+        <div class="form-text">Override the title shown in search results</div>
+      </div>
+
+      <!-- Meta Description -->
+      <div class="mb-3">
+        <label for="metaDescription" class="form-label d-flex justify-content-between">
+          <span>Meta Description</span>
+          <small :class="metaDescriptionStatus.class">{{ metaDescriptionStatus.text }}</small>
+        </label>
+        <textarea
+          class="form-control"
+          id="metaDescription"
+          :value="metaDescription"
+          @input="emit('update:metaDescription', ($event.target as HTMLTextAreaElement).value || null)"
+          :disabled="disabled"
+          :placeholder="description || 'Leave blank to use post description'"
+          maxlength="160"
+          rows="2"
+        ></textarea>
+        <div class="form-text">Override the description shown in search results</div>
+      </div>
       <!-- Open Graph Preview -->
       <div class="card mb-3">
         <div class="card-header py-2">

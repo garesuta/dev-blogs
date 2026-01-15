@@ -95,13 +95,21 @@ export const metaTitleSchema = z
 // Post status
 export const postStatusSchema = z.enum(["draft", "published", "scheduled"]);
 
+// Helper to handle optional URL fields that may receive empty strings
+const optionalUrlSchema = z
+  .string()
+  .transform((val) => (val === "" ? null : val))
+  .pipe(z.string().url().nullable())
+  .optional()
+  .nullable();
+
 // Create post schema
 export const createPostSchema = z.object({
   title: postTitleSchema,
   slug: slugSchema,
   description: postDescriptionSchema,
   content: postContentSchema,
-  heroImage: z.string().url().optional().nullable(),
+  heroImage: optionalUrlSchema,
   status: postStatusSchema.default("draft"),
   scheduledDate: z.coerce.date().optional().nullable(),
   // Category and tags
@@ -112,8 +120,8 @@ export const createPostSchema = z.object({
   metaDescription: metaDescriptionSchema,
   ogTitle: z.string().max(70).optional().nullable(),
   ogDescription: z.string().max(200).optional().nullable(),
-  ogImage: z.string().url().optional().nullable(),
-  canonicalUrl: z.string().url().optional().nullable(),
+  ogImage: optionalUrlSchema,
+  canonicalUrl: optionalUrlSchema,
 });
 
 // Update post schema (all fields optional except what's being updated)
@@ -127,21 +135,28 @@ export const publishPostSchema = z.object({
   scheduledDate: z.coerce.date().optional().nullable(),
 });
 
+// Helper for optional string that transforms empty to null
+const optionalStringToNull = z
+  .string()
+  .transform((val) => (val === "" ? null : val))
+  .optional()
+  .nullable();
+
 // Auto-save draft schema (minimal validation for drafts)
 export const autoSavePostSchema = z.object({
   title: z.string().optional(),
   slug: z.string().optional(),
   description: z.string().optional(),
   content: z.string().optional(),
-  heroImage: z.string().optional().nullable(),
-  categoryId: z.string().optional().nullable(),
+  heroImage: optionalStringToNull,
+  categoryId: optionalStringToNull,
   tagIds: z.array(z.string()).optional(),
-  metaTitle: z.string().optional().nullable(),
-  metaDescription: z.string().optional().nullable(),
-  ogTitle: z.string().optional().nullable(),
-  ogDescription: z.string().optional().nullable(),
-  ogImage: z.string().optional().nullable(),
-  canonicalUrl: z.string().optional().nullable(),
+  metaTitle: optionalStringToNull,
+  metaDescription: optionalStringToNull,
+  ogTitle: optionalStringToNull,
+  ogDescription: optionalStringToNull,
+  ogImage: optionalStringToNull,
+  canonicalUrl: optionalStringToNull,
 });
 
 // Sort options for posts

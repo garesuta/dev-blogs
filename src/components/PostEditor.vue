@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, watch } from "vue";
-import BlogEditor from "./BlogEditor.vue";
+import TiptapEditor from "./TiptapEditor.vue";
 import SeoFields from "./SeoFields.vue";
 import ImageUpload from "./ImageUpload.vue";
 import { generateSlug } from "../lib/validations";
+import { processContentForDisplay } from "../lib/content-processor";
 
 // Types
 interface Post {
@@ -84,7 +85,8 @@ const isLoadingCategories = ref(false);
 const isLoadingTags = ref(false);
 
 // Refs
-const editorRef = ref<InstanceType<typeof BlogEditor> | null>(null);
+const editorRef = ref<InstanceType<typeof TiptapEditor> | null>(null);
+const previewContentRef = ref<HTMLElement | null>(null);
 
 // Computed
 const isNewPost = computed(() => !props.postId);
@@ -423,8 +425,8 @@ function markdownToHtml(markdown: string): string {
   return html;
 }
 
-// Computed preview HTML
-const previewHtml = computed(() => markdownToHtml(post.content || ''));
+// Computed preview HTML - process content to add heading IDs for TOC links
+const previewHtml = computed(() => processContentForDisplay(post.content || ''));
 
 // Get selected category details
 const selectedCategory = computed(() => {
@@ -441,6 +443,34 @@ function openPreview() {
 function closePreview() {
   showPreviewModal.value = false;
   document.body.style.overflow = '';
+}
+
+// Handle TOC link clicks in preview modal
+function handlePreviewTocClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  const link = target.closest('a[href^="#"]');
+  if (!link) return;
+
+  const href = link.getAttribute('href');
+  if (!href?.startsWith('#')) return;
+
+  event.preventDefault();
+  const headingId = CSS.escape(href.slice(1));
+
+  // Find the heading element and scroll to center it in the viewport
+  const headingElement = previewContentRef.value?.querySelector(`#${headingId}`) as HTMLElement;
+  if (headingElement && previewContentRef.value) {
+    const containerRect = previewContentRef.value.getBoundingClientRect();
+    const headingRect = headingElement.getBoundingClientRect();
+    const containerHeight = previewContentRef.value.clientHeight;
+    // Calculate scroll position to center the heading
+    const scrollTop = previewContentRef.value.scrollTop + (headingRect.top - containerRect.top) - (containerHeight / 2) + (headingRect.height / 2);
+
+    previewContentRef.value.scrollTo({
+      top: scrollTop,
+      behavior: 'smooth'
+    });
+  }
 }
 
 // Watch for changes to mark dirty
@@ -523,30 +553,9 @@ onMounted(async () => {
       <div class="row">
         <!-- Main editor column -->
         <div class="col-lg-8">
-          <!-- Title -->
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control form-control-lg"
-              :value="post.title"
-              @input="handleTitleInput"
-              placeholder="Post title"
-            />
-          </div>
-
-          <!-- Description -->
-          <div class="mb-3">
-            <textarea
-              class="form-control"
-              v-model="post.description"
-              placeholder="Brief description of your post..."
-              rows="2"
-            ></textarea>
-          </div>
-
           <!-- Content editor -->
           <div class="mb-3">
-            <BlogEditor
+            <TiptapEditor
               ref="editorRef"
               :model-value="post.content || ''"
               @update:model-value="handleContentChange"
@@ -566,6 +575,31 @@ onMounted(async () => {
               <h6 class="mb-0">Post Settings</h6>
             </div>
             <div class="card-body">
+              <!-- Title -->
+              <div class="mb-3">
+                <label for="postTitle" class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="postTitle"
+                  :value="post.title"
+                  @input="handleTitleInput"
+                  placeholder="Post title"
+                />
+              </div>
+
+              <!-- Description -->
+              <div class="mb-3">
+                <label for="postDescription" class="form-label">Description</label>
+                <textarea
+                  class="form-control"
+                  id="postDescription"
+                  v-model="post.description"
+                  placeholder="Brief description..."
+                  rows="2"
+                ></textarea>
+              </div>
+
               <!-- Status -->
               <div class="mb-3">
                 <label class="form-label">Status</label>
@@ -789,7 +823,7 @@ onMounted(async () => {
           </div>
 
           <!-- Preview Content -->
-          <div class="preview-content">
+          <div class="preview-content" ref="previewContentRef" @click="handlePreviewTocClick">
             <article class="preview-article">
               <!-- Hero Image -->
               <div v-if="post.heroImage" class="preview-hero">
@@ -914,6 +948,7 @@ onMounted(async () => {
 .preview-content {
   overflow-y: auto;
   flex: 1;
+  scroll-behavior: smooth;
 }
 
 .preview-article {
@@ -1071,5 +1106,124 @@ onMounted(async () => {
 
 .preview-modal .post-content p {
   margin-bottom: 1rem;
+}
+
+/* Table of Contents styles for preview */
+.preview-modal .post-content .toc-block {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.preview-modal .post-content .toc-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: #495057;
+}
+
+.preview-modal .post-content .toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.preview-modal .post-content .toc-list li {
+  padding: 0.35rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.preview-modal .post-content .toc-list li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #9b9a97;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* Level-based cascading styles */
+.preview-modal .post-content .toc-list .toc-level-0 {
+  padding-left: 0;
+}
+
+.preview-modal .post-content .toc-list .toc-level-0::before {
+  width: 8px;
+  height: 8px;
+  background: #495057;
+}
+
+.preview-modal .post-content .toc-list .toc-level-0 a {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.preview-modal .post-content .toc-list .toc-level-1 {
+  padding-left: 1.25rem;
+}
+
+.preview-modal .post-content .toc-list .toc-level-1::before {
+  width: 6px;
+  height: 6px;
+  background: #6c757d;
+}
+
+.preview-modal .post-content .toc-list .toc-level-1 a {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.preview-modal .post-content .toc-list .toc-level-2 {
+  padding-left: 2.5rem;
+}
+
+.preview-modal .post-content .toc-list .toc-level-2::before {
+  width: 5px;
+  height: 5px;
+  background: #adb5bd;
+}
+
+.preview-modal .post-content .toc-list .toc-level-2 a {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.preview-modal .post-content .toc-list .toc-level-3 {
+  padding-left: 3.75rem;
+}
+
+.preview-modal .post-content .toc-list .toc-level-3::before {
+  width: 4px;
+  height: 4px;
+  background: #ced4da;
+}
+
+.preview-modal .post-content .toc-list .toc-level-3 a {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #868e96;
+}
+
+.preview-modal .post-content .toc-list a {
+  color: #495057;
+  text-decoration: none;
+}
+
+.preview-modal .post-content .toc-list a:hover {
+  color: #667eea;
+  text-decoration: underline;
+}
+
+.preview-modal .post-content .toc-placeholder {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  color: #856404;
 }
 </style>
