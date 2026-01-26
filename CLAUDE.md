@@ -22,6 +22,38 @@ pnpm drizzle-kit studio     # Open Drizzle Studio GUI
 
 Requires `DATABASE_URL` in `.env` file pointing to Neon PostgreSQL.
 
+### Testing (Vitest)
+
+```bash
+pnpm test           # Run tests in watch mode
+pnpm test:run       # Run tests once
+pnpm test:ui        # Run tests with UI interface
+pnpm test:coverage  # Generate coverage report
+```
+
+**Test structure:**
+- `test/unit/` - Unit tests for utilities, validations, permissions
+- `test/components/` - Vue component tests
+- `test/integration/` - Integration tests for middleware and API endpoints
+- `test/setup.ts` - Global test configuration and mocks
+
+**Current coverage:**
+- Validations: 51 tests (all passing)
+- Permissions: 17 tests (all passing)
+- Content Processing: 22 tests (all passing)
+- Components: 25 tests (mostly passing)
+- Integration: 41 tests (some need refinement)
+
+**Documentation:**
+- `test/TESTING.md` - Testing guide and conventions
+- `test/TEST_SUMMARY.md` - Test coverage overview
+- `test/CODE_REVIEW.md` - Code review findings
+
+**TypeScript configuration:**
+- Path aliases configured (`@/*` → `./src/*`)
+- Vitest globals enabled
+- Vue component type declarations included
+
 ## Architecture
 
 This is an Astro blog with SSR (Node.js adapter) using Vue components, MDX content, and Drizzle ORM for database access.

@@ -5,10 +5,19 @@
     "**/*"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    "node_modules",
+    ".astro"
   ],
   "compilerOptions": {
     "strictNullChecks": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["vitest/globals"],
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
   }
 }
