@@ -18,3 +18,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 - **deps**: Added vitest, @vue/test-utils, @testing-library/vue, happy-dom
 - **deps**: Added @vitest/ui and @vitest/coverage-v8 for test tooling
 - **docs**: Updated CLAUDE.md with testing section and documentation
+- **cli**: Added Claude Code skills for testing automation, UX/UI review, and Gemini CLI
+- **cli**: Added git-commit and git-push commands for version control workflows
+- **cli**: Updated plan-feature command with improved discovery phase
+- **cli**: Added execute-plan-tdd command for test-driven implementation

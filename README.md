@@ -60,3 +60,11 @@ Check out [our documentation](https://docs.astro.build) or jump into our [Discor
 ## Credit
 
 This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+
+change the claude subscription key and url in `hobbyproject/local_scripts/switch_claude.sh`
+
+# API mode
+source switch_claude.sh api
+
+# Subscription mode
+source switch_claude.sh sub
