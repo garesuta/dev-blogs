@@ -5,10 +5,22 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 ## [Unreleased]
 
 ### Added
+- **theme**: Cyber tech dark/light theme with CSS custom properties
+- **theme**: Theme switcher with localStorage persistence (best practice flow)
+- **theme**: Theme toggle buttons in Header and Footer components
+- **theme**: Bootstrap 5.3 color mode support (data-bs-theme attribute)
+- **testing**: 99 theme-related tests (unit, component, integration)
+- **docs**: Theme implementation logs and README-THEME.md documentation
 
 ### Changed
+- **components**: Updated BaseHead with inline theme script to prevent flash
+- **components**: Redesigned index.astro and BlogPost.astro with cyber theme
+- **config**: Added docs/mock_design/ to gitignore
 
 ### Fixed
+- **theme**: localStorage only saves on user action (not page load)
+- **tests**: Fixed accessibility attribute tests for theme toggle
+- **tests**: Fixed touch target size test for jsdom compatibility
 
 ## [0.0.2] - 2026-01-26
 
