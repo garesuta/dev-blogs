@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # local scripts
 local_scripts/
+
+# mock designs
+docs/mock_design/
