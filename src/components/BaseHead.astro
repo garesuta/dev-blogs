@@ -4,6 +4,7 @@
 import '../styles/global.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import '../styles/theme-cyber.css';
 import type { ImageMetadata } from 'astro';
 import FallbackImage from '../assets/blog-placeholder-1.jpg';
 import { SITE_TITLE } from '../consts';
@@ -57,3 +58,94 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+
+<!-- Theme Switcher Script - Must run immediately to prevent flash -->
+<script is:inline>
+(function() {
+  'use strict';
+
+  const THEME_KEY = 'cyber-theme-preference';
+  const THEMES = { DARK: 'dark', LIGHT: 'light' };
+
+  // Get theme: localStorage > system preference > default dark
+  function getStoredTheme() {
+    try {
+      return localStorage.getItem(THEME_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function getSystemTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.DARK : THEMES.LIGHT;
+  }
+
+  function getEffectiveTheme() {
+    return getStoredTheme() || getSystemTheme();
+  }
+
+  // Save theme to localStorage (only when user explicitly changes)
+  function saveTheme(theme) {
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch (e) {
+      console.warn('Could not save theme preference:', e);
+    }
+  }
+
+  // Apply theme to document
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+  }
+
+  // Update button icons and text
+  function updateToggleButtons(theme) {
+    const toggleButtons = document.querySelectorAll('.theme-toggle');
+    toggleButtons.forEach(button => {
+      const icon = button.querySelector('i');
+      const text = button.querySelector('.theme-text');
+      if (theme === THEMES.DARK) {
+        if (icon) icon.className = 'bi bi-moon-fill';
+        if (text) text.textContent = 'Dark';
+      } else {
+        if (icon) icon.className = 'bi bi-sun-fill';
+        if (text) text.textContent = 'Light';
+      }
+    });
+  }
+
+  // Toggle theme and save preference
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK;
+
+    applyTheme(newTheme);
+    saveTheme(newTheme);  // Only save when user explicitly toggles
+    updateToggleButtons(newTheme);
+
+    // Dispatch custom event for other components
+    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: newTheme } }));
+  }
+
+  // Initialize: Apply theme immediately (before DOM ready) to prevent flash
+  applyTheme(getEffectiveTheme());
+
+  // Listen for system theme changes (only if user hasn't set preference)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!getStoredTheme()) {
+      const newTheme = e.matches ? THEMES.DARK : THEMES.LIGHT;
+      applyTheme(newTheme);
+      updateToggleButtons(newTheme);
+    }
+  });
+
+  // Setup buttons once DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const theme = document.documentElement.getAttribute('data-bs-theme');
+    updateToggleButtons(theme);
+  });
+
+  // Expose globally for onclick handlers
+  window.toggleCyberTheme = toggleTheme;
+})();
+</script>

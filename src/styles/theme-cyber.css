@@ -1,0 +1,680 @@
+/**
+ * Cyber Tech Theme - Bootstrap 5.3 Custom Theme
+ * Based on design-2-variant-tech-news.html
+ * Includes both Dark (default) and Light variants
+ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES - DARK THEME (DEFAULT)
+   ============================================ */
+:root {
+  /* Primary Colors */
+  --cyber-primary: #00ff88;
+  --cyber-primary-rgb: 0, 255, 136;
+  --cyber-secondary: #00d9ff;
+  --cyber-secondary-rgb: 0, 217, 255;
+  --cyber-accent: #ff00ff;
+  --cyber-accent-rgb: 255, 0, 255;
+
+  /* Background Colors */
+  --cyber-bg-primary: #0a0e27;
+  --cyber-bg-secondary: #151934;
+  --cyber-bg-tertiary: #1a1f3a;
+  --cyber-bg-code: #0f1419;
+
+  /* Text Colors */
+  --cyber-text-primary: #e0e6ed;
+  --cyber-text-secondary: #8892b0;
+  --cyber-text-muted: #5a6378;
+
+  /* Border Colors */
+  --cyber-border-color: rgba(0, 255, 136, 0.1);
+  --cyber-border-hover: rgba(0, 255, 136, 0.3);
+
+  /* Gradient Definitions */
+  --cyber-gradient-primary: linear-gradient(135deg, #00ff88 0%, #00d9ff 100%);
+  --cyber-gradient-secondary: linear-gradient(135deg, #00d9ff 0%, #ff00ff 100%);
+  --cyber-gradient-dark: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+
+  /* Shadows */
+  --cyber-shadow-sm: 0 2px 8px rgba(0, 255, 136, 0.1);
+  --cyber-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --cyber-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --cyber-shadow-glow: 0 0 40px rgba(0, 255, 136, 0.3);
+
+  /* Theme Toggle */
+  --cyber-theme-mode: dark;
+}
+
+/* ============================================
+   LIGHT THEME VARIANT
+   ============================================ */
+[data-bs-theme="light"] {
+  /* Primary Colors - Adjusted for light backgrounds */
+  --cyber-primary: #00cc6a;
+  --cyber-primary-rgb: 0, 204, 106;
+  --cyber-secondary: #00a8cc;
+  --cyber-secondary-rgb: 0, 168, 204;
+  --cyber-accent: #cc00cc;
+  --cyber-accent-rgb: 204, 0, 204;
+
+  /* Background Colors - Light variant */
+  --cyber-bg-primary: #f8fafc;
+  --cyber-bg-secondary: #ffffff;
+  --cyber-bg-tertiary: #f1f5f9;
+  --cyber-bg-code: #1e293b;
+
+  /* Text Colors - Dark text for light backgrounds */
+  --cyber-text-primary: #0f172a;
+  --cyber-text-secondary: #475569;
+  --cyber-text-muted: #94a3b8;
+
+  /* Border Colors */
+  --cyber-border-color: rgba(0, 204, 106, 0.15);
+  --cyber-border-hover: rgba(0, 204, 106, 0.3);
+
+  /* Gradient Definitions - Light variant */
+  --cyber-gradient-primary: linear-gradient(135deg, #00cc6a 0%, #00a8cc 100%);
+  --cyber-gradient-secondary: linear-gradient(135deg, #00a8cc 0%, #cc00cc 100%);
+  --cyber-gradient-dark: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+
+  /* Shadows - Lighter for light theme */
+  --cyber-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --cyber-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --cyber-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+  --cyber-shadow-glow: 0 0 30px rgba(0, 204, 106, 0.2);
+
+  --cyber-theme-mode: light;
+}
+
+/* ============================================
+   BODY STYLES - Override global.css
+   ============================================ */
+body {
+  background: var(--cyber-bg-primary) !important;
+  background-size: auto !important;
+  color: var(--cyber-text-primary) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Explicit body styles for light theme to ensure override */
+[data-bs-theme="light"] body,
+html[data-bs-theme="light"] body {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Explicit body styles for dark theme */
+[data-bs-theme="dark"] body,
+html[data-bs-theme="dark"] body {
+  background: #0a0e27 !important;
+  color: #e0e6ed !important;
+}
+
+/* ============================================
+   BOOTSTRAP OVERRIDES - DARK THEME
+   ============================================ */
+:root,
+[data-bs-theme="dark"] {
+  /* Bootstrap Primary Color */
+  --bs-primary: var(--cyber-primary);
+  --bs-primary-rgb: var(--cyber-primary-rgb);
+  --bs-primary-text: #000000;
+  --bs-primary-bg-subtle: rgba(0, 255, 136, 0.1);
+  --bs-primary-border-subtle: rgba(0, 255, 136, 0.2);
+
+  /* Bootstrap Secondary Color */
+  --bs-secondary: var(--cyber-secondary);
+  --bs-secondary-rgb: var(--cyber-secondary-rgb);
+  --bs-secondary-text: #000000;
+
+  /* Bootstrap Accent Color */
+  --bs-info: var(--cyber-secondary);
+  --bs-success: var(--cyber-primary);
+  --bs-danger: var(--cyber-accent);
+
+  /* Background Colors */
+  --bs-body-bg: var(--cyber-bg-primary);
+  --bs-body-color: var(--cyber-text-primary);
+  --bs-emphasis-color: #ffffff;
+
+  /* Border Colors */
+  --bs-border-color: var(--cyber-border-color);
+  --bs-border-color-translucent: rgba(0, 255, 136, 0.15);
+
+  /* Link Colors */
+  --bs-link-color: var(--cyber-primary);
+  --bs-link-hover-color: var(--cyber-secondary);
+  --bs-link-decoration: none;
+
+  /* Card Styles */
+  --bs-card-bg: var(--cyber-bg-secondary);
+  --bs-card-border-color: var(--cyber-border-color);
+  --bs-card-color: var(--cyber-text-primary);
+  --bs-card-cap-bg: rgba(0, 255, 136, 0.05);
+
+  /* Navbar Styles */
+  --bs-navbar-bg: var(--cyber-bg-primary);
+  --bs-navbar-color: var(--cyber-text-secondary);
+  --bs-navbar-hover-color: var(--cyber-primary);
+  --bs-navbar-active-color: var(--cyber-primary);
+  --bs-navbar-brand-color: var(--cyber-primary);
+  --bs-navbar-toggler-border-color: var(--cyber-border-color);
+
+  /* Form Controls */
+  --bs-input-bg: var(--cyber-bg-tertiary);
+  --bs-input-color: var(--cyber-text-primary);
+  --bs-input-border-color: var(--cyber-border-color);
+  --bs-input-focus-border-color: var(--cyber-primary);
+  --bs-input-focus-color: var(--cyber-text-primary);
+  --bs-input-placeholder-color: var(--cyber-text-muted);
+  --bs-form-select-bg: var(--cyber-bg-tertiary);
+  --bs-form-select-color: var(--cyber-text-primary);
+
+  /* Dropdown */
+  --bs-dropdown-bg: var(--cyber-bg-secondary);
+  --bs-dropdown-color: var(--cyber-text-primary);
+  --bs-dropdown-border-color: var(--cyber-border-color);
+  --bs-dropdown-link-color: var(--cyber-text-primary);
+  --bs-dropdown-link-hover-color: var(--cyber-primary);
+  --bs-dropdown-link-hover-bg: rgba(0, 255, 136, 0.1);
+
+  /* Modal */
+  --bs-modal-bg: var(--cyber-bg-secondary);
+  --bs-modal-color: var(--cyber-text-primary);
+  --bs-modal-border-color: var(--cyber-border-color);
+
+  /* Alert */
+  --bs-alert-bg: var(--cyber-bg-secondary);
+  --bs-alert-color: var(--cyber-text-primary);
+  --bs-alert-border-color: var(--cyber-border-color);
+}
+
+/* ============================================
+   BOOTSTRAP OVERRIDES - LIGHT THEME
+   ============================================ */
+[data-bs-theme="light"] {
+  /* Bootstrap Primary Color */
+  --bs-primary: var(--cyber-primary);
+  --bs-primary-rgb: var(--cyber-primary-rgb);
+  --bs-primary-text: #ffffff;
+  --bs-primary-bg-subtle: rgba(0, 204, 106, 0.1);
+  --bs-primary-border-subtle: rgba(0, 204, 106, 0.2);
+
+  /* Bootstrap Secondary Color */
+  --bs-secondary: var(--cyber-secondary);
+  --bs-secondary-rgb: var(--cyber-secondary-rgb);
+  --bs-secondary-text: #ffffff;
+
+  /* Background Colors */
+  --bs-body-bg: var(--cyber-bg-primary);
+  --bs-body-color: var(--cyber-text-primary);
+  --bs-emphasis-color: #000000;
+
+  /* Border Colors */
+  --bs-border-color: #e2e8f0;
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+
+  /* Link Colors */
+  --bs-link-color: var(--cyber-primary);
+  --bs-link-hover-color: #009955;
+  --bs-link-decoration: none;
+
+  /* Card Styles */
+  --bs-card-bg: var(--cyber-bg-secondary);
+  --bs-card-border-color: #e2e8f0;
+  --bs-card-color: var(--cyber-text-primary);
+  --bs-card-cap-bg: rgba(0, 204, 106, 0.05);
+
+  /* Navbar Styles */
+  --bs-navbar-bg: var(--cyber-bg-secondary);
+  --bs-navbar-color: var(--cyber-text-secondary);
+  --bs-navbar-hover-color: var(--cyber-primary);
+  --bs-navbar-active-color: var(--cyber-primary);
+  --bs-navbar-brand-color: var(--cyber-primary);
+  --bs-navbar-toggler-border-color: #e2e8f0;
+
+  /* Form Controls */
+  --bs-input-bg: #ffffff;
+  --bs-input-color: var(--cyber-text-primary);
+  --bs-input-border-color: #e2e8f0;
+  --bs-input-focus-border-color: var(--cyber-primary);
+  --bs-input-focus-color: var(--cyber-text-primary);
+  --bs-input-placeholder-color: var(--cyber-text-muted);
+  --bs-form-select-bg: #ffffff;
+  --bs-form-select-color: var(--cyber-text-primary);
+
+  /* Dropdown */
+  --bs-dropdown-bg: #ffffff;
+  --bs-dropdown-color: var(--cyber-text-primary);
+  --bs-dropdown-border-color: #e2e8f0;
+  --bs-dropdown-link-color: var(--cyber-text-primary);
+  --bs-dropdown-link-hover-color: var(--cyber-primary);
+  --bs-dropdown-link-hover-bg: rgba(0, 204, 106, 0.1);
+
+  /* Modal */
+  --bs-modal-bg: #ffffff;
+  --bs-modal-color: var(--cyber-text-primary);
+  --bs-modal-border-color: #e2e8f0;
+
+  /* Alert */
+  --bs-alert-bg: #ffffff;
+  --bs-alert-color: var(--cyber-text-primary);
+  --bs-alert-border-color: #e2e8f0;
+}
+
+/* ============================================
+   CUSTOM CYBER COMPONENT STYLES
+   ============================================ */
+
+/* Tech Badge */
+.badge-tech {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--cyber-primary);
+  color: var(--cyber-primary);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.badge-tech:hover {
+  background: rgba(0, 255, 136, 0.2);
+  box-shadow: var(--cyber-shadow-glow);
+}
+
+[data-bs-theme="light"] .badge-tech {
+  background: rgba(0, 204, 106, 0.1);
+  border-color: var(--cyber-primary);
+}
+
+/* Cyber Button */
+.btn-cyber {
+  background: var(--cyber-gradient-primary);
+  border: none;
+  color: #000000;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cyber:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+  color: #000000;
+}
+
+.btn-cyber-outline {
+  background: transparent;
+  border: 2px solid var(--cyber-primary);
+  color: var(--cyber-primary);
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.btn-cyber-outline:hover {
+  background: var(--cyber-primary);
+  color: #000000;
+  box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+}
+
+/* Topic Tags */
+.topic-tag {
+  font-size: 0.75rem;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+.tag-ai {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--cyber-primary);
+  border: 1px solid var(--cyber-primary);
+}
+
+.tag-coding {
+  background: rgba(0, 217, 255, 0.15);
+  color: var(--cyber-secondary);
+  border: 1px solid var(--cyber-secondary);
+}
+
+.tag-framework {
+  background: rgba(255, 0, 255, 0.15);
+  color: var(--cyber-accent);
+  border: 1px solid var(--cyber-accent);
+}
+
+.tag-tech {
+  background: rgba(255, 165, 0, 0.15);
+  color: #ffa500;
+  border: 1px solid #ffa500;
+}
+
+/* Glow Text Effect */
+.glow-text {
+  text-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: var(--cyber-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Topic Card */
+.topic-card {
+  background: var(--cyber-bg-secondary);
+  border: 1px solid var(--cyber-border-color);
+  border-radius: 20px;
+  padding: 2rem;
+  height: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.topic-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--cyber-gradient-primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.topic-card:hover::before {
+  transform: scaleX(1);
+}
+
+.topic-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--cyber-primary);
+  box-shadow: 0 25px 50px -12px rgba(0, 255, 136, 0.15);
+}
+
+[data-bs-theme="light"] .topic-card {
+  border-color: #e2e8f0;
+}
+
+/* Topic Icon */
+.topic-icon {
+  width: 70px;
+  height: 70px;
+  background: rgba(0, 255, 136, 0.1);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--cyber-primary);
+}
+
+/* Code Snippet */
+.code-snippet {
+  background: var(--cyber-bg-code);
+  border: 1px solid var(--cyber-border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  font-family: 'Fira Code', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: var(--cyber-primary);
+  overflow-x: auto;
+}
+
+/* Stat Card */
+.stat-card {
+  background: linear-gradient(135deg, var(--cyber-bg-secondary), var(--cyber-bg-tertiary));
+  border: 1px solid var(--cyber-border-color);
+  border-radius: 20px;
+  padding: 2rem;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* Article Card */
+.article-card {
+  background: var(--cyber-bg-secondary);
+  border: 1px solid var(--cyber-border-color);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.article-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--cyber-primary);
+  box-shadow: 0 20px 40px rgba(0, 255, 136, 0.1);
+}
+
+/* Trending Badge */
+.trending-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, #ff0055, #ff00ff);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 255, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(255, 0, 255, 0.8); }
+}
+
+/* Floating Card */
+.floating-card {
+  background: var(--cyber-bg-secondary);
+  border: 1px solid var(--cyber-border-color);
+  border-radius: 24px;
+  box-shadow: var(--cyber-shadow-lg);
+  padding: 2rem;
+  margin-top: -60px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Hero Section */
+.hero-cyber {
+  background: var(--cyber-gradient-dark);
+  color: white;
+  padding: 100px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-cyber::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%2300ff88" fill-opacity="0.03"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>');
+  opacity: 0.5;
+}
+
+/* Newsletter Box */
+.newsletter-box {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 217, 255, 0.1));
+  border: 1px solid var(--cyber-primary);
+  border-radius: 24px;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.bg-cyber-primary {
+  background-color: var(--cyber-primary) !important;
+}
+
+.bg-cyber-secondary {
+  background-color: var(--cyber-secondary) !important;
+}
+
+.bg-cyber-accent {
+  background-color: var(--cyber-accent) !important;
+}
+
+.text-cyber-primary {
+  color: var(--cyber-primary) !important;
+}
+
+.text-cyber-secondary {
+  color: var(--cyber-secondary) !important;
+}
+
+.text-cyber-accent {
+  color: var(--cyber-accent) !important;
+}
+
+.border-cyber {
+  border-color: var(--cyber-border-color) !important;
+}
+
+/* ============================================
+   THEME TOGGLE BUTTON STYLES
+   ============================================ */
+
+.theme-toggle {
+  background: var(--cyber-bg-secondary);
+  border: 1px solid var(--cyber-border-color);
+  border-radius: 50px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cyber-text-primary);
+  font-weight: 500;
+}
+
+.theme-toggle:hover {
+  border-color: var(--cyber-primary);
+  box-shadow: var(--cyber-shadow-glow);
+}
+
+.theme-toggle i {
+  font-size: 1.2rem;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .hero-cyber {
+    padding: 60px 0;
+  }
+
+  .floating-card {
+    margin-top: -30px;
+    padding: 1.5rem;
+  }
+
+  .topic-card {
+    padding: 1.5rem;
+  }
+
+  .newsletter-box {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .hero-cyber::before,
+  .stat-card::after,
+  .trending-badge {
+    display: none !important;
+  }
+
+  .topic-card,
+  .article-card {
+    break-inside: avoid;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+/* Focus Visible */
+.btn-cyber:focus-visible,
+.btn-cyber-outline:focus-visible,
+.topic-card:focus-visible,
+.article-card:focus-visible {
+  outline: 3px solid var(--cyber-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn-cyber,
+  .btn-cyber-outline,
+  .topic-card,
+  .article-card,
+  .trending-badge,
+  .stat-card::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --cyber-border-color: rgba(0, 255, 136, 0.5);
+    --cyber-text-muted: #a0a8b8;
+  }
+
+  [data-bs-theme="light"] {
+    --cyber-border-color: rgba(0, 204, 106, 0.5);
+    --cyber-text-muted: #64748b;
+  }
+}

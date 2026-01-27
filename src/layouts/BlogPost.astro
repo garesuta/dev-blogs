@@ -12,74 +12,179 @@ type Props = CollectionEntry<'blog'>['data'];
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
 			main {
-				width: calc(100% - 2em);
+				width: 100%;
 				max-width: 100%;
 				margin: 0;
+				padding: 0;
 			}
+
 			.hero-image {
 				width: 100%;
+				background: var(--cyber-bg-secondary);
+				border-bottom: 1px solid var(--cyber-border-color);
+				overflow: hidden;
 			}
+
 			.hero-image img {
 				display: block;
 				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
+				max-height: 500px;
+				object-fit: cover;
 			}
+
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 3rem 2rem;
+				color: var(--cyber-text-primary);
 			}
+
 			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
+				margin-bottom: 2rem;
+				padding: 2rem 0;
 				text-align: center;
-				line-height: 1;
 			}
+
 			.title h1 {
-				margin: 0 0 0.5em 0;
+				font-size: 3rem;
+				font-weight: 800;
+				margin: 0 0 1rem 0;
+				background: var(--cyber-gradient-primary);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				line-height: 1.2;
 			}
+
 			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+				color: var(--cyber-text-secondary);
+				font-size: 1rem;
+				margin-bottom: 0.5rem;
 			}
+
 			.last-updated-on {
 				font-style: italic;
+				color: var(--cyber-text-muted);
+			}
+
+			.prose :global(h2),
+			.prose :global(h3),
+			.prose :global(h4) {
+				color: var(--cyber-text-primary);
+				margin-top: 2rem;
+				margin-bottom: 1rem;
+				font-weight: 700;
+			}
+
+			.prose :global(p) {
+				margin-bottom: 1.5rem;
+				line-height: 1.8;
+				color: var(--cyber-text-secondary);
+			}
+
+			.prose :global(a) {
+				color: var(--cyber-primary);
+				text-decoration: none;
+				border-bottom: 1px solid transparent;
+				transition: border-color 0.2s ease;
+			}
+
+			.prose :global(a:hover) {
+				border-bottom-color: var(--cyber-primary);
+			}
+
+			.prose :global(code) {
+				background: var(--cyber-bg-code);
+				color: var(--cyber-primary);
+				padding: 0.2em 0.5em;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+
+			.prose :global(pre) {
+				background: var(--cyber-bg-code);
+				border: 1px solid var(--cyber-border-color);
+				border-radius: 12px;
+				padding: 1.5rem;
+				overflow-x: auto;
+				margin: 1.5rem 0;
+			}
+
+			.prose :global(pre code) {
+				background: transparent;
+				padding: 0;
+				color: var(--cyber-text-primary);
+			}
+
+			.prose :global(blockquote) {
+				border-left: 4px solid var(--cyber-primary);
+				padding: 1rem 1.5rem;
+				margin: 1.5rem 0;
+				background: rgba(0, 255, 136, 0.05);
+				border-radius: 0 8px 8px 0;
+			}
+
+			.prose :global(img) {
+				max-width: 100%;
+				height: auto;
+				border-radius: 12px;
+				margin: 2rem 0;
+				box-shadow: var(--cyber-shadow-md);
+			}
+
+			.prose :global(hr) {
+				border: none;
+				border-top: 1px solid var(--cyber-border-color);
+				margin: 3rem 0;
+			}
+
+			.prose :global(ul),
+			.prose :global(ol) {
+				padding-left: 2rem;
+				margin-bottom: 1.5rem;
+				color: var(--cyber-text-secondary);
+			}
+
+			.prose :global(li) {
+				margin-bottom: 0.5rem;
+			}
+
+			@media (max-width: 768px) {
+				.prose {
+					padding: 2rem 1.5rem;
+				}
+
+				.title h1 {
+					font-size: 2rem;
+				}
 			}
 		</style>
 		<script>
-            import "bootstrap/dist/js/bootstrap.bundle.min.js";
-        </script>
+			import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+		</script>
 	</head>
 
 	<body>
 		<Header />
 		<main>
 			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
+				<div class="hero-image">{heroImage && <Image width={1200} height={500} src={heroImage} alt="" />}</div>
 				<div class="prose">
 					<div class="title">
 						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
+							<i class="bi bi-calendar3"></i> <FormattedDate date={pubDate} />
+							{updatedDate && (
+								<div class="last-updated-on">
+									Last updated: <FormattedDate date={updatedDate} />
+								</div>
+							)}
 						</div>
 						<h1>{title}</h1>
-						<hr />
 					</div>
 					<slot />
 				</div>
