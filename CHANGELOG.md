@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 ## [Unreleased]
 
 ### Added
+- **header**: Command bar redesign with skip-to-content link (WCAG 2.4.1)
+- **header**: Pill-style theme toggle with radiogroup ARIA pattern
+- **header**: GitHub icon in header actions bar
+- **header**: Mobile hamburger toggle with aria-expanded/aria-controls
+- **header**: HeaderLink component with icon prop and aria-current support
+- **testing**: Header component tests (21 tests), UserMenu tests (14 tests), ThemeSwitch tests (6 tests)
 - **composables**: useApiCall - generic loading/error/data pattern for API calls
 - **composables**: useDebouncedRef - debounced ref values with configurable delay
 - **composables**: useMessageTimeout - standardized auto-dismiss success/error messages
@@ -19,12 +25,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 - **docs**: Theme implementation logs and README-THEME.md documentation
 
 ### Changed
+- **header**: Replaced Bootstrap navbar with custom single-bar layout
+- **header**: Changed logo from `<h2>` to `<a>` (semantic fix)
+- **header**: Removed top bar utility strip (GitHub link moved to main header)
+- **components**: UserMenu pill-style trigger with extracted computed properties
 - **cli**: Added Claude Code skills for Vue best practices, Pinia, Vue Router, Vue testing, and VueUse
 - **components**: Updated BaseHead with inline theme script to prevent flash
 - **components**: Redesigned index.astro and BlogPost.astro with cyber theme
 - **config**: Added docs/mock_design/ to gitignore
 
 ### Fixed
+- **header**: Theme toggle button not working (inline onclick couldn't access module-scoped function)
 - **security**: Sanitize v-html content in AboutManager.vue with DOMPurify (XSS fix)
 - **ssr**: Add window access guards in LoginForm and RegisterForm for SSR safety
 - **theme**: localStorage only saves on user action (not page load)

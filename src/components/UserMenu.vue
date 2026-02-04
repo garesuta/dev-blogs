@@ -13,10 +13,18 @@ interface User {
 const user = ref<User | null>(null);
 const isLoading = ref(true);
 
-// Check if we're already in the editor/CMS area
 const isInEditorArea = computed(() => {
   if (typeof window === "undefined") return false;
   return window.location.pathname.startsWith("/editor");
+});
+
+const isAdminOrEditor = computed(() => {
+  const role = user.value?.role?.toLowerCase();
+  return role === "admin" || role === "editor";
+});
+
+const isAdmin = computed(() => {
+  return user.value?.role?.toLowerCase() === "admin";
 });
 
 onMounted(async () => {
@@ -70,72 +78,72 @@ function getRoleBadgeClass(role: string): string {
   <div v-else-if="user" class="user-menu-container">
     <!-- CMS Button for Admin/Editor (hidden when already in editor) -->
     <a
-      v-if="(user.role?.toLowerCase() === 'admin' || user.role?.toLowerCase() === 'editor') && !isInEditorArea"
+      v-if="isAdminOrEditor && !isInEditorArea"
       href="/editor/posts"
-      class="btn btn-primary btn-sm d-inline-flex align-items-center gap-1 text-decoration-none"
+      class="btn-cms"
+      title="Open Content Management"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-      </svg>
-      <span class="d-none d-sm-inline">CMS</span>
+      <i class="bi bi-pencil-square"></i>
+      <span>CMS</span>
     </a>
 
     <!-- User Dropdown -->
     <div class="dropdown">
-    <button
-      class="btn btn-link dropdown-toggle d-flex align-items-center gap-2 text-decoration-none"
-      type="button"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-    >
-      <div v-if="user.image" class="user-avatar">
-        <img :src="user.image" :alt="user.name" />
-      </div>
-      <div v-else class="user-avatar-placeholder">
-        {{ getInitials(user.name) }}
-      </div>
-      <span class="d-none d-md-inline">{{ user.name }}</span>
-    </button>
-
-    <ul class="dropdown-menu dropdown-menu-end">
-      <li class="dropdown-header">
-        <div class="fw-bold">{{ user.name }}</div>
-        <small class="text-muted">{{ user.email }}</small>
-        <div class="mt-1">
-          <span class="badge" :class="getRoleBadgeClass(user.role)">
-            {{ user.role }}
-          </span>
+      <button
+        class="user-trigger"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="user-trigger__name d-none d-md-inline">{{ user.name }}</span>
+        <div v-if="user.image" class="user-trigger__avatar">
+          <img :src="user.image" :alt="user.name" />
         </div>
-      </li>
-      <li><hr class="dropdown-divider" /></li>
-      <li>
-        <a class="dropdown-item" href="/profile">
-          <i class="bi bi-person me-2"></i>Profile
-        </a>
-      </li>
-      <li v-if="user.role?.toLowerCase() === 'admin' || user.role?.toLowerCase() === 'editor'">
-        <a class="dropdown-item" href="/editor">
-          <i class="bi bi-pencil me-2"></i>Editor
-        </a>
-      </li>
-      <li v-if="user.role?.toLowerCase() === 'admin'">
-        <a class="dropdown-item" href="/admin">
-          <i class="bi bi-gear me-2"></i>Admin
-        </a>
-      </li>
-      <li><hr class="dropdown-divider" /></li>
-      <li>
-        <button class="dropdown-item text-danger" @click="handleSignOut">
-          <i class="bi bi-box-arrow-right me-2"></i>Sign Out
-        </button>
-      </li>
-    </ul>
+        <div v-else class="user-trigger__avatar">
+          {{ getInitials(user.name) }}
+        </div>
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li class="dropdown-header">
+          <div class="fw-bold">{{ user.name }}</div>
+          <small class="text-muted">{{ user.email }}</small>
+          <div class="mt-1">
+            <span class="badge" :class="getRoleBadgeClass(user.role)">
+              {{ user.role }}
+            </span>
+          </div>
+        </li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <a class="dropdown-item" href="/profile">
+            <i class="bi bi-person me-2"></i>Profile
+          </a>
+        </li>
+        <li v-if="isAdminOrEditor">
+          <a class="dropdown-item" href="/editor">
+            <i class="bi bi-pencil me-2"></i>Editor
+          </a>
+        </li>
+        <li v-if="isAdmin">
+          <a class="dropdown-item" href="/admin">
+            <i class="bi bi-gear me-2"></i>Admin
+          </a>
+        </li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <button class="dropdown-item text-danger" @click="handleSignOut">
+            <i class="bi bi-box-arrow-right me-2"></i>Sign Out
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
 
-  <div v-else class="auth-links d-flex gap-2">
-    <a href="/login" class="btn btn-outline-primary btn-sm">Sign In</a>
-    <a href="/register" class="btn btn-primary btn-sm">Sign Up</a>
+  <div v-else class="auth-buttons">
+    <a href="/login" class="btn-auth-signin">Sign In</a>
+    <a href="/register" class="btn-auth-signup">Sign Up</a>
   </div>
 </template>
 
@@ -143,36 +151,122 @@ function getRoleBadgeClass(role: string): string {
 .user-menu-container {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
-.user-avatar {
-  width: 32px;
-  height: 32px;
+/* --- CMS Button --- */
+.btn-cms {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 8px;
+  color: var(--cyber-primary);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-cms:hover {
+  background: rgba(0, 255, 136, 0.15);
+  border-color: var(--cyber-primary);
+  color: var(--cyber-primary);
+}
+
+/* --- User Trigger (pill) --- */
+.user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 12px;
+  background: transparent;
+  border: 1px solid var(--cyber-border-color, rgba(0, 255, 136, 0.1));
+  border-radius: 24px;
+  color: var(--cyber-text-primary, #e0e6ed);
+  cursor: pointer;
+  transition: border-color 0.2s;
+  text-decoration: none;
+}
+
+.user-trigger:hover {
+  border-color: var(--cyber-border-hover, rgba(0, 255, 136, 0.3));
+}
+
+.user-trigger__name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.user-trigger__avatar {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
+  background: var(--cyber-gradient-primary, linear-gradient(135deg, #00ff88, #00d9ff));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #000;
   overflow: hidden;
 }
 
-.user-avatar img {
+.user-trigger__avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.user-avatar-placeholder {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #6c757d;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-}
-
 .dropdown-toggle::after {
   display: none;
+}
+
+/* --- Auth Buttons --- */
+.auth-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-auth-signin {
+  padding: 6px 14px;
+  border: 1px solid var(--cyber-border-color, rgba(0, 255, 136, 0.1));
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cyber-text-primary, #e0e6ed);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-auth-signin:hover {
+  border-color: var(--cyber-primary, #00ff88);
+  color: var(--cyber-primary, #00ff88);
+}
+
+.btn-auth-signup {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--cyber-gradient-primary, linear-gradient(135deg, #00ff88, #00d9ff));
+  color: #000;
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn-auth-signup:hover {
+  opacity: 0.9;
+  color: #000;
+}
+
+@media (max-width: 575px) {
+  .btn-cms span {
+    display: none;
+  }
 }
 </style>

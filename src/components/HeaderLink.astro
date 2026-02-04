@@ -1,24 +1,78 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-type Props = HTMLAttributes<'a'>;
+interface Props extends HTMLAttributes<'a'> {
+	icon?: string;
+}
 
-const { href, class: className, ...props } = Astro.props;
+const { href, class: className, icon, ...props } = Astro.props;
 const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
 const subpath = pathname.match(/[^\/]+/g);
 const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 ---
 
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
+<a
+	href={href}
+	class:list={[className, { active: isActive }]}
+	{...(isActive ? { 'aria-current': 'page' } : {})}
+	{...props}
+>
+	{icon && <i class={`bi ${icon}`} aria-hidden="true"></i>}
 	<slot />
 </a>
 <style>
 	a {
-		display: inline-block;
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 8px 16px;
+		color: var(--cyber-text-secondary);
 		text-decoration: none;
+		font-size: 0.875rem;
+		font-weight: 500;
+		border-radius: 8px;
+		transition: color 0.2s, background 0.2s;
 	}
+
+	a:hover {
+		color: var(--cyber-text-primary);
+		background: rgba(255, 255, 255, 0.05);
+	}
+
 	a.active {
-		font-weight: bolder;
-		text-decoration: underline;
+		color: var(--cyber-primary);
+		background: rgba(0, 255, 136, 0.08);
+	}
+
+	a.active::after {
+		content: '';
+		position: absolute;
+		bottom: -1px;
+		left: 16px;
+		right: 16px;
+		height: 2px;
+		background: var(--cyber-primary);
+		border-radius: 2px;
+	}
+
+	a i {
+		font-size: 1rem;
+	}
+
+	@media (max-width: 991px) {
+		a {
+			width: 100%;
+			padding: 12px 16px;
+			border-radius: 8px;
+		}
+
+		a.active::after {
+			display: none;
+		}
+
+		a.active {
+			background: rgba(0, 255, 136, 0.1);
+		}
 	}
 </style>
