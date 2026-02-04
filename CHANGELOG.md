@@ -19,6 +19,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 - **docs**: Theme implementation logs and README-THEME.md documentation
 
 ### Changed
+- **cli**: Added Claude Code skills for Vue best practices, Pinia, Vue Router, Vue testing, and VueUse
 - **components**: Updated BaseHead with inline theme script to prevent flash
 - **components**: Redesigned index.astro and BlogPost.astro with cyber theme
 - **config**: Added docs/mock_design/ to gitignore
