@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 ## [Unreleased]
 
 ### Added
+- **composables**: useApiCall - generic loading/error/data pattern for API calls
+- **composables**: useDebouncedRef - debounced ref values with configurable delay
+- **composables**: useMessageTimeout - standardized auto-dismiss success/error messages
+- **composables**: useBootstrapModal - Bootstrap modal lifecycle management with shallowRef
+- **composables**: useFormValidation - Zod schema integration with touched-field pattern
+- **testing**: 36 unit tests for all composables (100% passing)
 - **theme**: Cyber tech dark/light theme with CSS custom properties
 - **theme**: Theme switcher with localStorage persistence (best practice flow)
 - **theme**: Theme toggle buttons in Header and Footer components
@@ -18,6 +24,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 - **config**: Added docs/mock_design/ to gitignore
 
 ### Fixed
+- **security**: Sanitize v-html content in AboutManager.vue with DOMPurify (XSS fix)
+- **ssr**: Add window access guards in LoginForm and RegisterForm for SSR safety
 - **theme**: localStorage only saves on user action (not page load)
 - **tests**: Fixed accessibility attribute tests for theme toggle
 - **tests**: Fixed touch target size test for jsdom compatibility

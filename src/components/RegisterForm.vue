@@ -85,7 +85,7 @@ async function handleSubmit() {
       error.value = result.error.message || "Registration failed";
     } else {
       // Success - redirect to home page
-      window.location.href = "/";
+      if (typeof window !== "undefined") window.location.href = "/";
     }
   } catch (err) {
     error.value = "An unexpected error occurred";

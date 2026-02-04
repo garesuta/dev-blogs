@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
+import DOMPurify from "dompurify";
 
 // State
 const isLoading = ref(true);
@@ -85,6 +86,11 @@ async function saveSettings() {
 function resetForm() {
   loadSettings();
 }
+
+// Sanitized HTML for preview
+const sanitizedContent = computed(() =>
+  DOMPurify.sanitize(formData.value.content || '<p class="text-muted">No content yet...</p>')
+);
 
 // Initialize
 onMounted(() => {
@@ -185,7 +191,7 @@ onMounted(() => {
             <label class="form-label mb-0">Content Preview</label>
           </div>
           <div class="preview-container p-3 border rounded bg-light">
-            <div v-html="formData.content || '<p class=\'text-muted\'>No content yet...</p>'"></div>
+            <div v-html="sanitizedContent"></div>
           </div>
         </div>
 
