@@ -62,76 +62,61 @@ const recentPosts = allPosts.slice(0, 3);
 			</div>
 		</section>
 
-		<!-- Quick Stats -->
+		<!-- What You'll Find Here -->
 		<div class="container" style="margin-top: -40px; position: relative; z-index: 10;">
 			<div class="floating-card">
 				<div class="row g-4">
-					<div class="col-lg-3">
+					<div class="col-lg-3 col-md-6">
 						<div class="stat-card">
-							<div class="d-flex justify-content-between align-items-start mb-3">
-								<div>
-									<div
-										class="stat-value"
-										style="font-size: 2.5rem; font-weight: 800; background: var(--cyber-gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
-									>
-										{allPosts.length}+
-									</div>
-									<div style="color: var(--cyber-text-secondary);">Articles Published</div>
+							<div class="d-flex align-items-center gap-3 mb-3">
+								<div class="pillar-icon" style="background: rgba(var(--cyber-primary-rgb, 0, 194, 255), 0.1);">
+									<i class="bi bi-code-slash fs-4" style="color: var(--cyber-primary);"></i>
 								</div>
-								<i class="bi bi-file-code fs-1" style="color: var(--cyber-primary);"></i>
+								<div
+									class="fw-bold"
+									style="font-size: 1.5rem; background: var(--cyber-gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
+								>
+									{allPosts.length}+
+								</div>
 							</div>
-							<small style="color: var(--cyber-text-muted);">In-depth tutorials & insights</small>
+							<h5 class="fw-bold mb-2">Web Dev Deep Dives</h5>
+							<p style="color: var(--cyber-text-secondary); margin-bottom: 0; font-size: 0.9rem;">Frontend & backend tutorials with production-ready patterns</p>
 						</div>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-3 col-md-6">
 						<div class="stat-card">
-							<div class="d-flex justify-content-between align-items-start mb-3">
-								<div>
-									<div
-										class="stat-value"
-										style="font-size: 2.5rem; font-weight: 800; background: var(--cyber-gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
-									>
-										100%
-									</div>
-									<div style="color: var(--cyber-text-secondary);">Performance</div>
+							<div class="d-flex align-items-center gap-3 mb-3">
+								<div class="pillar-icon" style="background: rgba(var(--cyber-secondary-rgb, 106, 255, 150), 0.1);">
+									<i class="bi bi-briefcase fs-4" style="color: var(--cyber-secondary);"></i>
 								</div>
-								<i class="bi bi-speedometer2 fs-1" style="color: var(--cyber-secondary);"></i>
+								<div style="color: var(--cyber-text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Business</div>
 							</div>
-							<small style="color: var(--cyber-text-muted);">Lighthouse Score</small>
+							<h5 class="fw-bold mb-2">Dev Career & Business</h5>
+							<p style="color: var(--cyber-text-secondary); margin-bottom: 0; font-size: 0.9rem;">Freelancing, client work, and thinking like a dev entrepreneur</p>
 						</div>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-3 col-md-6">
 						<div class="stat-card">
-							<div class="d-flex justify-content-between align-items-start mb-3">
-								<div>
-									<div
-										class="stat-value"
-										style="font-size: 2.5rem; font-weight: 800; background: var(--cyber-gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
-									>
-										2024
-									</div>
-									<div style="color: var(--cyber-text-secondary);">Updated Weekly</div>
+							<div class="d-flex align-items-center gap-3 mb-3">
+								<div class="pillar-icon" style="background: rgba(var(--cyber-accent-rgb, 255, 107, 107), 0.1);">
+									<i class="bi bi-lightbulb fs-4" style="color: var(--cyber-accent);"></i>
 								</div>
-								<i class="bi bi-calendar-check fs-1" style="color: var(--cyber-accent);"></i>
+								<div style="color: var(--cyber-text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Tips</div>
 							</div>
-							<small style="color: var(--cyber-text-muted);">Fresh content always</small>
+							<h5 class="fw-bold mb-2">Lessons from Work</h5>
+							<p style="color: var(--cyber-text-secondary); margin-bottom: 0; font-size: 0.9rem;">Real-world tips and battle-tested advice from the trenches</p>
 						</div>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-3 col-md-6">
 						<div class="stat-card">
-							<div class="d-flex justify-content-between align-items-start mb-3">
-								<div>
-									<div
-										class="stat-value"
-										style="font-size: 2.5rem; font-weight: 800; background: var(--cyber-gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
-									>
-										Free
-									</div>
-									<div style="color: var(--cyber-text-secondary);">Open Source</div>
+							<div class="d-flex align-items-center gap-3 mb-3">
+								<div class="pillar-icon" style="background: rgba(var(--cyber-warning-rgb, 255, 199, 0), 0.1);">
+									<i class="bi bi-stack fs-4" style="color: var(--cyber-warning);"></i>
 								</div>
-								<i class="bi bi-github fs-1" style="color: var(--cyber-warning);"></i>
+								<div style="color: var(--cyber-text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Full-Stack</div>
 							</div>
-							<small style="color: var(--cyber-text-muted);">Code examples included</small>
+							<h5 class="fw-bold mb-2">Full-Stack Craft</h5>
+							<p style="color: var(--cyber-text-secondary); margin-bottom: 0; font-size: 0.9rem;">From database design to pixel-perfect UI implementation</p>
 						</div>
 					</div>
 				</div>

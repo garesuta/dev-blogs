@@ -584,6 +584,28 @@ html[data-bs-theme="dark"] body {
   height: 100%;
   position: relative;
   overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeSlideUp 0.6s ease forwards;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--cyber-primary);
+  box-shadow: 0 20px 40px rgba(0, 255, 136, 0.1);
+}
+
+.floating-card .row > *:nth-child(1) .stat-card { animation-delay: 0.1s; }
+.floating-card .row > *:nth-child(2) .stat-card { animation-delay: 0.25s; }
+.floating-card .row > *:nth-child(3) .stat-card { animation-delay: 0.4s; }
+.floating-card .row > *:nth-child(4) .stat-card { animation-delay: 0.55s; }
+
+@keyframes fadeSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .stat-card::after {
@@ -600,6 +622,22 @@ html[data-bs-theme="dark"] body {
 @keyframes pulse {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.6; }
+}
+
+/* Pillar Icon */
+.pillar-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover .pillar-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 /* Article Card */
@@ -752,6 +790,22 @@ html[data-bs-theme="dark"] body {
 
   .newsletter-box {
     padding: 2rem 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-card {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .stat-card:hover {
+    transform: none;
+  }
+
+  .stat-card:hover .pillar-icon {
+    transform: none;
   }
 }
 
