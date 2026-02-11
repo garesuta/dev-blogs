@@ -4,6 +4,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 
 ## [Unreleased]
 
+### Added
+- **homepage**: "What You'll Find Here" value pillar cards (Web Dev Deep Dives, Dev Career & Business, Lessons from Work, Full-Stack Craft)
+- **homepage**: Staggered fade-slide-up entrance animations and hover effects for pillar cards with prefers-reduced-motion support
+
+### Fixed
+- **auth**: Google login button invisible on dark theme — replaced `btn-outline-dark` with theme-aware `.google-btn`
+- **auth**: Login and register card containers using hardcoded white background — replaced with `.login-card` using CSS variables
+
 ### Changed
 - **theme**: Replace 200+ hardcoded hex colors with CSS variables across all pages, layouts, and Vue components for full light/dark theme support
 - **theme**: Add ~50 new CSS variables (surfaces, neutrals, status colors, form inputs, editor styles) with both dark and light theme values

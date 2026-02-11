@@ -28,7 +28,7 @@ function getRedirectUrl(): string {
 <template>
   <button
     type="button"
-    class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2"
+    class="btn google-btn w-100 d-flex align-items-center justify-content-center gap-2"
     @click="handleGoogleSignIn"
     :disabled="isLoading"
   >
@@ -64,3 +64,27 @@ function getRedirectUrl(): string {
     <span>{{ isLoading ? "Redirecting..." : "Continue with Google" }}</span>
   </button>
 </template>
+
+<style scoped>
+.google-btn {
+  background: var(--cyber-surface);
+  border: 1px solid var(--cyber-border-color);
+  color: var(--cyber-text-primary);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.google-btn:hover:not(:disabled) {
+  background: var(--cyber-surface-hover);
+  border-color: var(--cyber-primary);
+  color: var(--cyber-text-primary);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+}
+
+.google-btn:disabled {
+  opacity: 0.6;
+  color: var(--cyber-text-muted);
+}
+</style>
