@@ -358,7 +358,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     width: 100%;
     max-width: 100%;
     padding: 0;
-    background: #f8f9fa;
+    background: var(--cyber-bg-primary);
     min-height: calc(100vh - 200px);
   }
 
@@ -374,7 +374,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--cyber-gradient-secondary);
     z-index: 0;
   }
 
@@ -395,8 +395,8 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 4px solid white;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border: 4px solid var(--cyber-surface);
+    box-shadow: var(--cyber-shadow-md);
     object-fit: cover;
   }
 
@@ -404,8 +404,8 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
+    background: var(--cyber-gradient-primary);
+    color: #000;
     font-size: 3rem;
     font-weight: 700;
   }
@@ -420,26 +420,26 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border: 2px solid white;
+    border: 2px solid var(--cyber-surface);
   }
 
   .role-admin {
-    background: #dc3545;
-    color: white;
+    background: var(--cyber-danger);
+    color: #fff;
   }
 
   .role-editor {
-    background: #ffc107;
-    color: #212529;
+    background: var(--cyber-warning);
+    color: var(--cyber-neutral-800);
   }
 
   .role-user {
-    background: #6c757d;
-    color: white;
+    background: var(--cyber-neutral-500);
+    color: #fff;
   }
 
   .profile-header-info {
-    color: white;
+    color: #fff;
     flex: 1;
   }
 
@@ -487,7 +487,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     height: 36px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.2);
-    color: white;
+    color: #fff;
     text-decoration: none;
     transition: all 0.2s ease;
   }
@@ -495,7 +495,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
   .social-link:hover {
     background: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
-    color: white;
+    color: #fff;
   }
 
   .social-link i {
@@ -503,19 +503,19 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
   }
 
   .verified-badge {
-    color: #90EE90;
+    color: var(--cyber-success);
   }
 
   .unverified-badge {
-    color: #ffc107;
+    color: var(--cyber-warning);
   }
 
   /* Profile Cards */
   .profile-card {
-    background: white;
+    background: var(--cyber-surface);
     border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    box-shadow: var(--cyber-shadow-sm);
   }
 
   @media (min-width: 992px) {
@@ -527,10 +527,10 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
   .profile-card-title {
     font-size: 1rem;
     font-weight: 600;
-    color: #495057;
+    color: var(--cyber-text-secondary);
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--cyber-neutral-200);
   }
 
   /* Sidebar */
@@ -544,7 +544,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
   }
 
   .sidebar-card {
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--cyber-neutral-200);
   }
 
   /* Info List */
@@ -559,7 +559,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     align-items: flex-start;
     gap: 0.75rem;
     padding: 0.75rem 0;
-    border-bottom: 1px solid #f1f3f4;
+    border-bottom: 1px solid var(--cyber-neutral-100);
   }
 
   .profile-info-list li:last-child {
@@ -575,12 +575,12 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    background: var(--cyber-info-bg);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    color: #667eea;
+    color: var(--cyber-secondary);
   }
 
   .info-content {
@@ -591,7 +591,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
   }
 
   .info-label {
-    color: #6c757d;
+    color: var(--cyber-text-muted);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -599,7 +599,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
 
   .info-value {
     font-weight: 600;
-    color: #212529;
+    color: var(--cyber-text-primary);
     font-size: 0.9rem;
   }
 
@@ -613,13 +613,13 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
   }
 
   .status-badge.status-active {
-    background: #d4edda;
-    color: #155724;
+    background: var(--cyber-success-bg);
+    color: var(--cyber-success-text);
   }
 
   .status-badge.status-pending {
-    background: #fff3cd;
-    color: #856404;
+    background: var(--cyber-warning-bg);
+    color: var(--cyber-warning-text);
   }
 
   /* Quick Actions */
@@ -635,8 +635,8 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     border-radius: 8px;
-    background: #f8f9fa;
-    color: #495057;
+    background: var(--cyber-bg-tertiary);
+    color: var(--cyber-text-secondary);
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -645,8 +645,8 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
   }
 
   .quick-action-btn:hover {
-    background: #667eea;
-    color: white;
+    background: var(--cyber-primary);
+    color: #000;
     transform: translateX(4px);
   }
 
@@ -654,7 +654,7 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
     font-size: 1.1rem;
     width: 20px;
     text-align: center;
-    color: #667eea;
+    color: var(--cyber-secondary);
   }
 
   .quick-action-btn i:last-child {
@@ -664,24 +664,24 @@ const hasSocialLinks = fullUser.website || fullUser.twitter || fullUser.github |
 
   .quick-action-btn:hover i:first-child,
   .quick-action-btn:hover i:last-child {
-    color: white;
+    color: #000;
     opacity: 1;
   }
 
   .quick-action-btn.btn-admin {
-    background: linear-gradient(135deg, #dc354515 0%, #fd7e1415 100%);
+    background: var(--cyber-danger-bg);
   }
 
   .quick-action-btn.btn-admin i:first-child {
-    color: #dc3545;
+    color: var(--cyber-danger);
   }
 
   .quick-action-btn.btn-admin:hover i:first-child {
-    color: white;
+    color: #fff;
   }
 
   .quick-action-btn.btn-admin:hover {
-    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    background: var(--cyber-danger);
   }
 
   /* Responsive */

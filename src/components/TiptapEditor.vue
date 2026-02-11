@@ -45,7 +45,7 @@ const Figure = Node.create({
   renderHTML({ node, HTMLAttributes }) {
     return [
       'figure',
-      { class: 'image-figure', style: 'margin: 1.5rem 0; text-align: center; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem; overflow: hidden;' },
+      { class: 'image-figure', style: 'margin: 1.5rem 0; text-align: center; background: var(--cyber-bg-tertiary); border: 1px solid var(--cyber-neutral-200); border-radius: 12px; padding: 1rem; overflow: hidden;' },
       [
         'img',
         mergeAttributes(HTMLAttributes, {
@@ -76,7 +76,7 @@ const Figcaption = Node.create({
       'figcaption',
       {
         class: 'figure-caption',
-        style: 'margin-top: 0.75rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #6b7280; text-align: center; background: #ffffff; border: 1px dashed #d1d5db; border-radius: 6px; min-height: 1.5rem; cursor: text;',
+        style: 'margin-top: 0.75rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; color: var(--cyber-text-muted); text-align: center; background: var(--cyber-editor-bg); border: 1px dashed #d1d5db; border-radius: 6px; min-height: 1.5rem; cursor: text;',
         'data-placeholder': 'Click to add caption...',
       },
       0,
@@ -146,10 +146,10 @@ const TableOfContents = Node.create({
     const items = node.attrs.items as { level: number; text: string; id: string }[];
 
     const levelStyles = [
-      { indent: '0', bullet: '8px', bulletColor: '#37352f', fontWeight: '600', fontSize: '0.95rem', color: '#37352f' },
-      { indent: '1.25rem', bullet: '6px', bulletColor: '#6b6b6b', fontWeight: '500', fontSize: '0.9rem', color: '#37352f' },
-      { indent: '2.5rem', bullet: '5px', bulletColor: '#9b9a97', fontWeight: '400', fontSize: '0.875rem', color: '#6b6b6b' },
-      { indent: '3.75rem', bullet: '4px', bulletColor: '#b4b4b4', fontWeight: '400', fontSize: '0.85rem', color: '#808080' },
+      { indent: '0', bullet: '8px', bulletColor: 'var(--cyber-editor-text)', fontWeight: '600', fontSize: '0.95rem', color: 'var(--cyber-editor-text)' },
+      { indent: '1.25rem', bullet: '6px', bulletColor: 'var(--cyber-text-muted)', fontWeight: '500', fontSize: '0.9rem', color: 'var(--cyber-editor-text)' },
+      { indent: '2.5rem', bullet: '5px', bulletColor: 'var(--cyber-editor-text-muted)', fontWeight: '400', fontSize: '0.875rem', color: 'var(--cyber-text-muted)' },
+      { indent: '3.75rem', bullet: '4px', bulletColor: 'var(--cyber-neutral-300)', fontWeight: '400', fontSize: '0.85rem', color: 'var(--cyber-text-muted)' },
     ];
 
     const listItems = items.map(item => {
@@ -175,10 +175,10 @@ const TableOfContents = Node.create({
 
     return [
       'div',
-      mergeAttributes({ class: 'toc-block', style: 'background: #f7f6f3; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem 1.5rem; margin: 1rem 0;' }),
+      mergeAttributes({ class: 'toc-block', style: 'background: var(--cyber-bg-tertiary); border: 1px solid var(--cyber-editor-divider); border-radius: 8px; padding: 1rem 1.5rem; margin: 1rem 0;' }),
       [
         'p',
-        { style: 'margin: 0 0 0.75rem 0; font-size: 0.95rem; color: #37352f;' },
+        { style: 'margin: 0 0 0.75rem 0; font-size: 0.95rem; color: var(--cyber-editor-text);' },
         ['strong', {}, 'Table of Contents'],
       ],
       [
@@ -1652,7 +1652,7 @@ defineExpose({
 <style>
 /* Notion-like Editor Styles */
 .notion-editor {
-  background: white;
+  background: var(--cyber-editor-bg);
   border-radius: 0.5rem;
   overflow: hidden;
 }
@@ -1668,8 +1668,8 @@ defineExpose({
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: #fafafa;
-  border-bottom: 1px solid #eee;
+  background: var(--cyber-bg-tertiary);
+  border-bottom: 1px solid var(--cyber-neutral-200);
   font-size: 0.8rem;
 }
 
@@ -1685,7 +1685,7 @@ defineExpose({
   min-height: 100%;
   font-size: 1rem;
   line-height: 1.7;
-  color: #37352f;
+  color: var(--cyber-editor-text);
 }
 
 .notion-editor-content:focus {
@@ -1696,7 +1696,7 @@ defineExpose({
 .notion-editor-content p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;
-  color: #9b9a97;
+  color: var(--cyber-editor-text-muted);
   pointer-events: none;
   height: 0;
 }
@@ -1747,20 +1747,20 @@ defineExpose({
 }
 
 .notion-editor-content .figure-caption:hover {
-  border-color: #9ca3af;
-  background-color: #f9fafb;
+  border-color: var(--cyber-neutral-400);
+  background-color: var(--cyber-bg-tertiary);
 }
 
 .notion-editor-content .figure-caption:focus-within {
-  border-color: #3b82f6;
+  border-color: var(--cyber-primary);
   border-style: solid;
-  background-color: #ffffff;
+  background-color: var(--cyber-editor-bg);
   outline: none;
 }
 
 .notion-editor-content .figure-caption:empty::before {
   content: 'Click to add caption...';
-  color: #9ca3af;
+  color: var(--cyber-neutral-400);
   font-style: italic;
   pointer-events: none;
 }
@@ -1786,25 +1786,25 @@ defineExpose({
 
 /* Blockquote */
 .notion-editor-content blockquote {
-  border-left: 3px solid #37352f;
+  border-left: 3px solid var(--cyber-editor-text);
   padding-left: 1rem;
   margin: 0.5rem 0;
-  color: #37352f;
+  color: var(--cyber-editor-text);
 }
 
 /* Code */
 .notion-editor-content code {
-  background-color: rgba(135, 131, 120, 0.15);
+  background-color: var(--cyber-editor-highlight);
   padding: 0.2em 0.4em;
   border-radius: 3px;
   font-size: 0.85em;
-  color: #eb5757;
+  color: var(--cyber-editor-code-text);
   font-family: "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
 .notion-editor-content pre {
-  background-color: #f7f6f3;
-  color: #37352f;
+  background-color: var(--cyber-bg-tertiary);
+  color: var(--cyber-editor-text);
   padding: 1rem;
   border-radius: 4px;
   overflow-x: auto;
@@ -1829,14 +1829,14 @@ defineExpose({
 
 /* Links */
 .notion-editor-content a {
-  color: #37352f;
+  color: var(--cyber-editor-text);
   text-decoration: underline;
   text-decoration-color: rgba(55, 53, 47, 0.4);
   transition: text-decoration-color 0.15s;
 }
 
 .notion-editor-content a:hover {
-  text-decoration-color: #37352f;
+  text-decoration-color: var(--cyber-editor-text);
 }
 
 /* Images */
@@ -1858,27 +1858,27 @@ defineExpose({
 
 .notion-editor-content th,
 .notion-editor-content td {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--cyber-editor-divider);
   padding: 0.5rem 0.75rem;
   text-align: left;
 }
 
 .notion-editor-content th {
-  background-color: #f7f6f3;
+  background-color: var(--cyber-bg-tertiary);
   font-weight: 500;
 }
 
 /* Horizontal rule */
 .notion-editor-content hr {
   border: none;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--cyber-editor-divider);
   margin: 1.5rem 0;
 }
 
 /* Table of Contents Block */
 .notion-editor-content .toc-block {
-  background: #f7f6f3;
-  border: 1px solid #e0e0e0;
+  background: var(--cyber-bg-tertiary);
+  border: 1px solid var(--cyber-editor-divider);
   border-radius: 8px;
   padding: 1rem 1.5rem;
   margin: 1rem 0;
@@ -1887,7 +1887,7 @@ defineExpose({
 .notion-editor-content .toc-title {
   margin: 0 0 0.75rem 0;
   font-size: 0.95rem;
-  color: #37352f;
+  color: var(--cyber-editor-text);
 }
 
 .notion-editor-content .toc-list {
@@ -1910,7 +1910,7 @@ defineExpose({
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #9b9a97;
+  background: var(--cyber-editor-text-muted);
   margin-right: 10px;
   flex-shrink: 0;
 }
@@ -1923,7 +1923,7 @@ defineExpose({
 .notion-editor-content .toc-list .toc-level-0::before {
   width: 8px;
   height: 8px;
-  background: #37352f;
+  background: var(--cyber-editor-text);
 }
 
 .notion-editor-content .toc-list .toc-level-0 a {
@@ -1938,7 +1938,7 @@ defineExpose({
 .notion-editor-content .toc-list .toc-level-1::before {
   width: 6px;
   height: 6px;
-  background: #6b6b6b;
+  background: var(--cyber-text-muted);
 }
 
 .notion-editor-content .toc-list .toc-level-1 a {
@@ -1953,13 +1953,13 @@ defineExpose({
 .notion-editor-content .toc-list .toc-level-2::before {
   width: 5px;
   height: 5px;
-  background: #9b9a97;
+  background: var(--cyber-editor-text-muted);
 }
 
 .notion-editor-content .toc-list .toc-level-2 a {
   font-weight: 400;
   font-size: 0.875rem;
-  color: #6b6b6b;
+  color: var(--cyber-text-muted);
 }
 
 .notion-editor-content .toc-list .toc-level-3 {
@@ -1969,33 +1969,33 @@ defineExpose({
 .notion-editor-content .toc-list .toc-level-3::before {
   width: 4px;
   height: 4px;
-  background: #b4b4b4;
+  background: var(--cyber-neutral-300);
 }
 
 .notion-editor-content .toc-list .toc-level-3 a {
   font-weight: 400;
   font-size: 0.85rem;
-  color: #808080;
+  color: var(--cyber-text-muted);
 }
 
 .notion-editor-content .toc-list a {
-  color: #37352f;
+  color: var(--cyber-editor-text);
   text-decoration: none;
   transition: color 0.15s;
   cursor: pointer;
 }
 
 .notion-editor-content .toc-list a:hover {
-  color: #2563eb;
+  color: var(--cyber-editor-link);
   text-decoration: underline;
 }
 
 .notion-editor-content .toc-placeholder {
-  background: #fef3c7;
+  background: var(--cyber-warning-bg);
   border: 1px solid #f59e0b;
   border-radius: 4px;
   padding: 0.75rem 1rem;
-  color: #92400e;
+  color: var(--cyber-warning-text);
   font-size: 0.9rem;
 }
 
@@ -2003,8 +2003,8 @@ defineExpose({
 .floating-toolbar {
   position: fixed;
   display: flex;
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: var(--cyber-editor-menu-bg);
+  border: 1px solid var(--cyber-editor-menu-border);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   padding: 4px;
@@ -2018,21 +2018,21 @@ defineExpose({
   padding: 6px 10px;
   border-radius: 4px;
   cursor: pointer;
-  color: #37352f;
+  color: var(--cyber-editor-text);
   transition: background-color 0.15s;
 }
 
 .floating-toolbar button:hover {
-  background-color: #f1f1f0;
+  background-color: var(--cyber-editor-menu-hover);
 }
 
 .floating-toolbar button.is-active {
-  background-color: #e3e2e0;
+  background-color: var(--cyber-neutral-200);
 }
 
 .floating-toolbar .divider {
   width: 1px;
-  background: #e0e0e0;
+  background: var(--cyber-editor-divider);
   margin: 4px 4px;
 }
 
@@ -2041,8 +2041,8 @@ defineExpose({
   position: fixed;
   display: flex;
   flex-wrap: wrap;
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: var(--cyber-editor-menu-bg);
+  border: 1px solid var(--cyber-editor-menu-border);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   padding: 4px;
@@ -2057,13 +2057,13 @@ defineExpose({
   padding: 6px 8px;
   border-radius: 4px;
   cursor: pointer;
-  color: #37352f;
+  color: var(--cyber-editor-text);
   transition: background-color 0.15s;
   font-size: 0.85rem;
 }
 
 .table-toolbar button:hover:not(:disabled) {
-  background-color: #f1f1f0;
+  background-color: var(--cyber-editor-menu-hover);
 }
 
 .table-toolbar button:disabled {
@@ -2072,21 +2072,21 @@ defineExpose({
 }
 
 .table-toolbar button.btn-danger:hover:not(:disabled) {
-  background-color: #fee2e2;
-  color: #dc2626;
+  background-color: var(--cyber-danger-bg);
+  color: var(--cyber-danger);
 }
 
 .table-toolbar .divider {
   width: 1px;
-  background: #e0e0e0;
+  background: var(--cyber-editor-divider);
   margin: 4px 2px;
 }
 
 /* Slash Command Menu */
 .slash-menu {
   position: fixed;
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: var(--cyber-editor-menu-bg);
+  border: 1px solid var(--cyber-editor-menu-border);
   border-radius: 8px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
   width: 320px;
@@ -2097,7 +2097,7 @@ defineExpose({
 
 .slash-menu-header {
   padding: 8px 12px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--cyber-neutral-200);
 }
 
 .slash-menu-items {
@@ -2120,7 +2120,7 @@ defineExpose({
 
 .slash-menu-item:hover,
 .slash-menu-item.selected {
-  background-color: #f1f1f0;
+  background-color: var(--cyber-editor-menu-hover);
 }
 
 .slash-menu-icon {
@@ -2129,10 +2129,10 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f7f6f3;
+  background: var(--cyber-bg-tertiary);
   border-radius: 4px;
   font-size: 1.1rem;
-  color: #37352f;
+  color: var(--cyber-editor-text);
   flex-shrink: 0;
 }
 
@@ -2145,12 +2145,12 @@ defineExpose({
 .slash-menu-title {
   font-weight: 500;
   font-size: 0.9rem;
-  color: #37352f;
+  color: var(--cyber-editor-text);
 }
 
 .slash-menu-desc {
   font-size: 0.8rem;
-  color: #9b9a97;
+  color: var(--cyber-editor-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2158,10 +2158,10 @@ defineExpose({
 
 /* Keyboard shortcut styling */
 kbd {
-  background-color: #f7f6f3;
+  background-color: var(--cyber-bg-tertiary);
   border-radius: 3px;
-  border: 1px solid #e0e0e0;
-  color: #37352f;
+  border: 1px solid var(--cyber-editor-divider);
+  color: var(--cyber-editor-text);
   display: inline-block;
   font-size: 0.75em;
   font-weight: 500;
@@ -2203,13 +2203,13 @@ kbd {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  color: #9b9a97;
+  color: var(--cyber-editor-handle);
   transition: all 0.15s;
 }
 
 .block-handle-btn:hover {
-  background: #f1f1f0;
-  color: #37352f;
+  background: var(--cyber-editor-handle-hover-bg);
+  color: var(--cyber-editor-text);
 }
 
 .block-handle-btn i {
@@ -2222,8 +2222,8 @@ kbd {
   top: 100%;
   left: 0;
   margin-top: 4px;
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: var(--cyber-editor-menu-bg);
+  border: 1px solid var(--cyber-editor-menu-border);
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   min-width: 180px;
@@ -2241,14 +2241,14 @@ kbd {
   padding: 4px 12px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #9b9a97;
+  color: var(--cyber-editor-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .block-options-divider {
   height: 1px;
-  background: #e0e0e0;
+  background: var(--cyber-editor-divider);
   margin: 4px 8px;
 }
 
@@ -2262,23 +2262,23 @@ kbd {
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.85rem;
-  color: #37352f;
+  color: var(--cyber-editor-text);
   text-align: left;
   transition: background-color 0.1s;
 }
 
 .block-options-item:hover {
-  background: #f1f1f0;
+  background: var(--cyber-editor-menu-hover);
 }
 
 .block-options-item i {
-  color: #9b9a97;
+  color: var(--cyber-editor-text-muted);
   width: 16px;
   text-align: center;
 }
 
 .block-options-section:first-child .block-options-item:first-of-type:hover i {
-  color: #eb5757;
+  color: var(--cyber-editor-code-text);
 }
 
 /* Responsive */

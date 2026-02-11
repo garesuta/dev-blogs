@@ -245,8 +245,8 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: var(--cyber-bg-tertiary);
+  border: 1px solid var(--cyber-neutral-200);
   border-radius: 20px;
   padding: 0.375rem 0.75rem;
   font-size: 0.8125rem;
@@ -255,19 +255,19 @@ onMounted(() => {
 }
 
 .tag-chip:hover {
-  background: #e2e8f0;
-  border-color: #cbd5e1;
+  background: var(--cyber-neutral-200);
+  border-color: var(--cyber-neutral-300);
   padding-right: 0.5rem;
 }
 
 .tag-icon {
-  color: #64748b;
+  color: var(--cyber-neutral-400);
   flex-shrink: 0;
 }
 
 .tag-name {
   font-weight: 500;
-  color: #475569;
+  color: var(--cyber-text-secondary);
   white-space: nowrap;
 }
 
@@ -302,21 +302,21 @@ onMounted(() => {
 }
 
 .tag-action-btn.edit {
-  color: #64748b;
+  color: var(--cyber-neutral-400);
 }
 
 .tag-action-btn.edit:hover {
-  background: #dbeafe;
-  color: #2563eb;
+  background: var(--cyber-info-bg);
+  color: var(--cyber-secondary);
 }
 
 .tag-action-btn.delete {
-  color: #64748b;
+  color: var(--cyber-neutral-400);
 }
 
 .tag-action-btn.delete:hover {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--cyber-danger-bg);
+  color: var(--cyber-danger);
 }
 
 /* Mobile: always show actions */

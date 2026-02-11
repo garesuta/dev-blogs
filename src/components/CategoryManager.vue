@@ -711,14 +711,14 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   border-radius: 8px;
-  border: 2px solid #dee2e6;
+  border: 2px solid var(--cyber-neutral-200);
   pointer-events: none;
   transition: all 0.15s ease;
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 .color-picker-wrapper:hover .color-picker-preview {
-  border-color: #adb5bd;
+  border-color: var(--cyber-neutral-300);
   transform: scale(1.05);
 }
 
@@ -738,22 +738,22 @@ onMounted(() => {
 }
 
 .color-preset.active {
-  border-color: #212529;
-  box-shadow: 0 0 0 1px white, 0 0 0 3px #212529;
+  border-color: var(--cyber-text-primary);
+  box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--cyber-text-primary);
 }
 
 .icon-preview {
   width: 48px;
   height: 48px;
-  border: 2px dashed #dee2e6;
+  border: 2px dashed var(--cyber-neutral-200);
   border-radius: 8px;
   font-size: 1.5rem;
   flex-shrink: 0;
 }
 
 .icon-picker-panel {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
+  background: var(--cyber-bg-tertiary);
+  border: 1px solid var(--cyber-neutral-200);
   border-radius: 8px;
   padding: 1rem;
   max-height: 400px;
@@ -768,9 +768,9 @@ onMounted(() => {
 .icon-btn {
   width: 36px;
   height: 36px;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--cyber-neutral-200);
   border-radius: 6px;
-  background: white;
+  background: var(--cyber-surface);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -781,16 +781,16 @@ onMounted(() => {
 }
 
 .icon-btn:hover {
-  background: #e9ecef;
-  border-color: #adb5bd;
+  background: var(--cyber-neutral-200);
+  border-color: var(--cyber-neutral-300);
   transform: scale(1.1);
 }
 
 
 .icon-btn.active {
-  background: #0d6efd;
-  border-color: #0d6efd;
-  color: white;
+  background: var(--cyber-primary);
+  border-color: var(--cyber-primary);
+  color: #fff;
 }
 
 .category-icon {
@@ -805,15 +805,15 @@ onMounted(() => {
 .icon-tooltip-fixed {
   position: fixed;
   transform: translateX(-50%) translateY(-100%);
-  background: #212529;
-  color: white;
+  background: var(--cyber-neutral-800);
+  color: #fff;
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 0.75rem;
   white-space: nowrap;
   z-index: 999999;
   pointer-events: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--cyber-shadow-sm);
   animation: tooltipFadeIn 0.1s ease;
 }
 
@@ -824,7 +824,7 @@ onMounted(() => {
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: #212529;
+  border-top-color: var(--cyber-neutral-800);
 }
 
 @keyframes tooltipFadeIn {

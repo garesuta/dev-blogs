@@ -50,7 +50,7 @@ const recentPosts = allPosts.slice(0, 3);
 							<div style="color: var(--cyber-text-muted);">// Latest tech insights</div>
 							<br />
 							<div>const <span style="color: var(--cyber-secondary);">blog</span> = {'{'}</div>
-							<div style="padding-left: 1.5rem;">focus: [<span style="color: #ffa500;">'AI'</span>, <span style="color: #ffa500;">'Coding'</span>, <span style="color: #ffa500;">'Frameworks'</span>],</div>
+							<div style="padding-left: 1.5rem;">focus: [<span style="color: var(--cyber-warning);">'AI'</span>, <span style="color: var(--cyber-warning);">'Coding'</span>, <span style="color: var(--cyber-warning);">'Frameworks'</span>],</div>
 							<div style="padding-left: 1.5rem;">mission: <span style="color: var(--cyber-primary);">'Sharing knowledge'</span>,</div>
 							<div style="padding-left: 1.5rem;">updated: <span style="color: var(--cyber-secondary);">new Date()</span></div>
 							<div>{'}'};</div>
@@ -129,7 +129,7 @@ const recentPosts = allPosts.slice(0, 3);
 									</div>
 									<div style="color: var(--cyber-text-secondary);">Open Source</div>
 								</div>
-								<i class="bi bi-github fs-1" style="color: #ffa500;"></i>
+								<i class="bi bi-github fs-1" style="color: var(--cyber-warning);"></i>
 							</div>
 							<small style="color: var(--cyber-text-muted);">Code examples included</small>
 						</div>
@@ -235,31 +235,6 @@ const recentPosts = allPosts.slice(0, 3);
 			</section>
 		)}
 
-		<!-- Newsletter Section -->
-		<section class="py-5">
-			<div class="container py-4">
-				<div class="newsletter-box text-center">
-					<div class="position-relative">
-						<h2 class="fw-bold mb-3 display-5">Never Miss an Article</h2>
-						<p class="lead mb-4 opacity-75">Join our community and start creating amazing content today.</p>
-						<div class="row justify-content-center">
-							<div class="col-lg-6">
-								<div class="input-group mb-3">
-									<input
-										type="email"
-										class="form-control"
-										placeholder="developer@example.com"
-										aria-label="Email address"
-									/>
-									<button class="btn btn-cyber" type="button">Subscribe <i class="bi bi-send"></i></button>
-								</div>
-								<small style="color: var(--cyber-text-muted);">No spam, unsubscribe anytime. Weekly digest only.</small>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
 
 		<Footer />
 	</body>

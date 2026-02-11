@@ -26,7 +26,6 @@ import UserMenu from './UserMenu.vue';
 		</button>
 
 		<nav id="main-nav" class="header-nav" aria-label="Main navigation">
-			<HeaderLink href="/" class="header-nav__link" icon="bi-house">Home</HeaderLink>
 			<HeaderLink href="/blog" class="header-nav__link" icon="bi-journal-text">Blog</HeaderLink>
 			<HeaderLink href="/about" class="header-nav__link" icon="bi-person">About</HeaderLink>
 		</nav>
@@ -42,26 +41,13 @@ import UserMenu from './UserMenu.vue';
 				<i class="bi bi-github"></i>
 			</a>
 
-			<div class="theme-switch" role="radiogroup" aria-label="Theme selection">
-				<button
-					class="theme-switch__option"
-					role="radio"
-					aria-checked="false"
-					aria-label="Light mode"
-					data-theme="light"
-				>
-					<i class="bi bi-sun-fill"></i>
-				</button>
-				<button
-					class="theme-switch__option active"
-					role="radio"
-					aria-checked="true"
-					aria-label="Dark mode"
-					data-theme="dark"
-				>
-					<i class="bi bi-moon-fill"></i>
-				</button>
-			</div>
+			<button
+				class="theme-toggle-btn"
+				aria-label="Toggle theme"
+				onclick="toggleCyberTheme()"
+			>
+				<i class="bi bi-sun-fill"></i>
+			</button>
 
 			<div class="auth-section">
 				<UserMenu client:load />
@@ -71,39 +57,26 @@ import UserMenu from './UserMenu.vue';
 </header>
 
 <script is:inline>
-	// Update pill toggle UI to reflect current theme
-	function updateThemeSwitch(theme) {
-		document.querySelectorAll('.theme-switch__option').forEach(function(opt) {
-			var isTarget = opt.getAttribute('data-theme') === theme;
-			opt.classList.toggle('active', isTarget);
-			opt.setAttribute('aria-checked', isTarget ? 'true' : 'false');
+	// Sync all toggle button icons to reflect current theme
+	function syncThemeIcons(theme) {
+		document.querySelectorAll('.theme-toggle-btn, .theme-toggle').forEach(function(btn) {
+			var icon = btn.querySelector('i');
+			var text = btn.querySelector('.theme-text');
+			if (icon) {
+				icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+			}
+			if (text) {
+				text.textContent = theme === 'dark' ? 'Dark' : 'Light';
+			}
 		});
 	}
 
-	// Attach click handlers to theme switch buttons
-	document.querySelectorAll('.theme-switch__option').forEach(function(btn) {
-		btn.addEventListener('click', function() {
-			var theme = this.getAttribute('data-theme');
-			var current = document.documentElement.getAttribute('data-bs-theme');
-			if (theme && theme !== current) {
-				// Apply theme
-				document.documentElement.setAttribute('data-bs-theme', theme);
-				// Save preference
-				try { localStorage.setItem('cyber-theme-preference', theme); } catch(e) {}
-				// Update pill UI
-				updateThemeSwitch(theme);
-				// Dispatch event for other components
-				window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: theme } }));
-			}
-		});
-	});
+	// Sync on load
+	syncThemeIcons(document.documentElement.getAttribute('data-bs-theme') || 'dark');
 
-	// Sync pill UI on load (theme may already be set by BaseHead)
-	updateThemeSwitch(document.documentElement.getAttribute('data-bs-theme') || 'dark');
-
-	// Listen for theme changes from other sources (e.g. system preference)
+	// Listen for theme changes from any source
 	window.addEventListener('themechange', function(e) {
-		updateThemeSwitch(e.detail.theme);
+		syncThemeIcons(e.detail.theme);
 	});
 </script>
 
@@ -227,37 +200,26 @@ import UserMenu from './UserMenu.vue';
 		align-items: center;
 	}
 
-	/* --- Theme Switch (Pill Toggle) --- */
-	.theme-switch {
-		display: flex;
-		align-items: center;
-		background: var(--cyber-bg-tertiary);
-		border: 1px solid var(--cyber-border-color);
-		border-radius: 20px;
-		padding: 2px;
-		cursor: pointer;
-		gap: 0;
-	}
-
-	.theme-switch__option {
+	/* --- Theme Toggle Button --- */
+	.theme-toggle-btn {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 28px;
-		height: 28px;
-		border-radius: 50%;
-		border: none;
+		width: 32px;
+		height: 32px;
+		border-radius: 8px;
+		border: 1px solid var(--cyber-border-color);
 		background: transparent;
 		color: var(--cyber-text-secondary);
-		font-size: 0.8rem;
+		font-size: 1rem;
 		cursor: pointer;
-		transition: all 0.2s;
+		transition: color 0.2s, background 0.2s, border-color 0.2s;
 	}
 
-	.theme-switch__option.active {
-		background: var(--cyber-primary);
-		color: #000;
-		box-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+	.theme-toggle-btn:hover {
+		color: var(--cyber-primary);
+		border-color: var(--cyber-primary);
+		background: rgba(0, 255, 136, 0.1);
 	}
 
 	/* --- Mobile --- */
@@ -298,7 +260,7 @@ import UserMenu from './UserMenu.vue';
 
 	/* --- Reduced Motion --- */
 	@media (prefers-reduced-motion: reduce) {
-		.theme-switch__option,
+		.theme-toggle-btn,
 		.header-actions__github,
 		.skip-link {
 			animation: none !important;

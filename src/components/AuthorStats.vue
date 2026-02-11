@@ -45,21 +45,21 @@ const memberDate = computed(() => {
 
 <style scoped>
 .author-stats-card {
-  background: white;
+  background: var(--cyber-surface);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  border: 1px solid #e9ecef;
+  box-shadow: var(--cyber-shadow-sm);
+  border: 1px solid var(--cyber-neutral-200);
   margin-bottom: 1rem;
 }
 
 .stats-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--cyber-text-secondary);
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--cyber-neutral-200);
 }
 
 .stats-grid {
@@ -72,14 +72,14 @@ const memberDate = computed(() => {
 .stat-item {
   text-align: center;
   padding: 1rem 0.5rem;
-  background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+  background: var(--cyber-info-bg);
   border-radius: 10px;
 }
 
 .stat-value {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #667eea;
+  color: var(--cyber-secondary);
   line-height: 1;
   margin-bottom: 0.25rem;
 }
@@ -90,7 +90,7 @@ const memberDate = computed(() => {
 
 .stat-label {
   font-size: 0.75rem;
-  color: #6c757d;
+  color: var(--cyber-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
@@ -99,12 +99,12 @@ const memberDate = computed(() => {
 .member-since {
   text-align: center;
   font-size: 0.85rem;
-  color: #6c757d;
+  color: var(--cyber-text-muted);
   padding-top: 0.75rem;
-  border-top: 1px dashed #e9ecef;
+  border-top: 1px dashed var(--cyber-neutral-200);
 }
 
 .member-since i {
-  color: #667eea;
+  color: var(--cyber-secondary);
 }
 </style>

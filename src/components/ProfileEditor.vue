@@ -409,10 +409,10 @@ async function saveProfile() {
 .editor-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--cyber-text-secondary);
   margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--cyber-neutral-200);
 }
 
 .toast-message {
@@ -427,15 +427,15 @@ async function saveProfile() {
 }
 
 .toast-message.success {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background: var(--cyber-success-bg);
+  color: var(--cyber-success-text);
+  border: 1px solid var(--cyber-success);
 }
 
 .toast-message.error {
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background: var(--cyber-danger-bg);
+  color: var(--cyber-danger-text);
+  border: 1px solid var(--cyber-danger);
 }
 
 .slide-fade-enter-active,
@@ -452,18 +452,18 @@ async function saveProfile() {
 .form-section {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--cyber-neutral-200);
 }
 
 .section-title {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--cyber-text-secondary);
   margin-bottom: 0.25rem;
 }
 
 .section-description {
-  color: #6c757d;
+  color: var(--cyber-text-muted);
   font-size: 0.85rem;
   margin: 0 0 1.25rem;
 }
@@ -475,7 +475,7 @@ async function saveProfile() {
 .form-label-custom {
   display: block;
   font-weight: 600;
-  color: #212529;
+  color: var(--cyber-text-primary);
   margin-bottom: 0.25rem;
   font-size: 0.95rem;
 }
@@ -486,7 +486,7 @@ async function saveProfile() {
 }
 
 .form-description {
-  color: #6c757d;
+  color: var(--cyber-text-muted);
   font-size: 0.85rem;
   margin: 0 0 0.75rem;
 }
@@ -504,11 +504,11 @@ async function saveProfile() {
   width: 100%;
   padding: 0.75rem 1rem;
   padding-right: 4rem;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--cyber-neutral-200);
   border-radius: 10px;
   font-size: 1rem;
   transition: all 0.2s ease;
-  background: #f8f9fa;
+  background: var(--cyber-bg-tertiary);
 }
 
 .form-textarea {
@@ -520,17 +520,17 @@ async function saveProfile() {
 
 .form-input:focus {
   outline: none;
-  border-color: #667eea;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--cyber-secondary);
+  background: var(--cyber-surface);
+  box-shadow: 0 0 0 3px var(--cyber-input-focus-shadow);
 }
 
 .form-input::placeholder {
-  color: #adb5bd;
+  color: var(--cyber-neutral-300);
 }
 
 .form-input.input-error {
-  border-color: #dc3545;
+  border-color: var(--cyber-danger);
 }
 
 .form-input.input-error:focus {
@@ -545,13 +545,13 @@ async function saveProfile() {
 .input-prefix {
   display: flex;
   align-items: center;
-  background: #e9ecef;
+  background: var(--cyber-neutral-200);
   padding: 0 0.75rem;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--cyber-neutral-200);
   border-right: none;
   border-radius: 10px 0 0 10px;
   font-size: 0.875rem;
-  color: #6c757d;
+  color: var(--cyber-text-muted);
   white-space: nowrap;
 }
 
@@ -566,7 +566,7 @@ async function saveProfile() {
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.75rem;
-  color: #adb5bd;
+  color: var(--cyber-neutral-300);
   font-weight: 500;
 }
 
@@ -578,19 +578,19 @@ async function saveProfile() {
 }
 
 .char-counter.near-limit {
-  color: #ffc107;
+  color: var(--cyber-warning);
 }
 
 .form-hint {
   margin: 0.5rem 0 0;
   font-size: 0.8rem;
-  color: #6c757d;
+  color: var(--cyber-text-muted);
 }
 
 .form-error {
   margin: 0.5rem 0 0;
   font-size: 0.8rem;
-  color: #dc3545;
+  color: var(--cyber-danger);
 }
 
 /* Toggle Switch */
@@ -600,9 +600,9 @@ async function saveProfile() {
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
+  background: var(--cyber-bg-tertiary);
   border-radius: 10px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--cyber-neutral-200);
 }
 
 .toggle-info {
@@ -611,12 +611,12 @@ async function saveProfile() {
 
 .toggle-label {
   font-weight: 600;
-  color: #212529;
+  color: var(--cyber-text-primary);
   font-size: 0.95rem;
 }
 
 .toggle-description {
-  color: #6c757d;
+  color: var(--cyber-text-muted);
   font-size: 0.85rem;
   margin: 0.25rem 0 0;
 }
@@ -642,7 +642,7 @@ async function saveProfile() {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--cyber-toggle-track);
   transition: 0.3s;
   border-radius: 28px;
 }
@@ -654,14 +654,14 @@ async function saveProfile() {
   width: 22px;
   left: 3px;
   bottom: 3px;
-  background-color: white;
+  background-color: var(--cyber-toggle-handle);
   transition: 0.3s;
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .toggle-switch input:checked + .toggle-slider {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--cyber-secondary) 0%, #764ba2 100%);
 }
 
 .toggle-switch input:checked + .toggle-slider:before {
@@ -673,7 +673,7 @@ async function saveProfile() {
   justify-content: flex-end;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--cyber-neutral-200);
 }
 
 .save-btn {
@@ -681,7 +681,7 @@ async function saveProfile() {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--cyber-secondary) 0%, #764ba2 100%);
   color: white;
   border: none;
   border-radius: 10px;
@@ -694,7 +694,7 @@ async function saveProfile() {
 
 .save-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px var(--cyber-input-focus-shadow);
 }
 
 .save-btn:disabled {

@@ -9,7 +9,7 @@ const today = new Date();
 				<h5 class="fw-bold mb-3">
 					<i class="bi bi-terminal-fill text-cyber-primary"></i> Tech Blog
 				</h5>
-				<p class="text-white-50">
+				<p class="footer-text">
 					A modern blog platform sharing insights on AI, coding, frameworks, and the future of technology.
 				</p>
 				<div class="social-links">
@@ -31,13 +31,10 @@ const today = new Date();
 				<h6 class="fw-bold mb-3">Navigation</h6>
 				<ul class="list-unstyled">
 					<li class="mb-2">
-						<a href="/" class="text-white-50 text-decoration-none">Home</a>
+						<a href="/blog" class="footer-text text-decoration-none">Blog</a>
 					</li>
 					<li class="mb-2">
-						<a href="/blog" class="text-white-50 text-decoration-none">Blog</a>
-					</li>
-					<li class="mb-2">
-						<a href="/about" class="text-white-50 text-decoration-none">About</a>
+						<a href="/about" class="footer-text text-decoration-none">About</a>
 					</li>
 				</ul>
 			</div>
@@ -45,22 +42,22 @@ const today = new Date();
 				<h6 class="fw-bold mb-3">Topics</h6>
 				<ul class="list-unstyled">
 					<li class="mb-2">
-						<a href="#" class="text-white-50 text-decoration-none">Artificial Intelligence</a>
+						<a href="#" class="footer-text text-decoration-none">Artificial Intelligence</a>
 					</li>
 					<li class="mb-2">
-						<a href="#" class="text-white-50 text-decoration-none">Web Development</a>
+						<a href="#" class="footer-text text-decoration-none">Web Development</a>
 					</li>
 					<li class="mb-2">
-						<a href="#" class="text-white-50 text-decoration-none">Frameworks</a>
+						<a href="#" class="footer-text text-decoration-none">Frameworks</a>
 					</li>
 				</ul>
 			</div>
 			<div class="col-lg-4">
 				<h6 class="fw-bold mb-3">Theme</h6>
-				<p class="text-white-50 small mb-3">Toggle between dark and light themes:</p>
+				<p class="footer-text small mb-3">Toggle between dark and light themes:</p>
 				<div class="d-flex gap-2">
 					<button class="theme-toggle" onclick="toggleCyberTheme()">
-						<i class="bi bi-moon-fill"></i>
+						<i class="bi bi-sun-fill"></i>
 						<span class="theme-text">Dark</span>
 					</button>
 				</div>
@@ -68,11 +65,11 @@ const today = new Date();
 		</div>
 		<hr class="my-4 border-secondary" />
 		<div class="d-flex justify-content-between align-items-center flex-wrap">
-			<p class="text-white-50 mb-0">&copy; {today.getFullYear()} Tech Blog. All rights reserved.</p>
+			<p class="footer-text mb-0">&copy; {today.getFullYear()} Tech Blog. All rights reserved.</p>
 			<div class="d-flex gap-3">
-				<a href="#" class="text-white-50 text-decoration-none">Privacy</a>
-				<a href="#" class="text-white-50 text-decoration-none">Terms</a>
-				<a href="/rss.xml" class="text-white-50 text-decoration-none">RSS</a>
+				<a href="#" class="footer-text text-decoration-none">Privacy</a>
+				<a href="#" class="footer-text text-decoration-none">Terms</a>
+				<a href="/rss.xml" class="footer-text text-decoration-none">RSS</a>
 			</div>
 		</div>
 	</div>
@@ -86,9 +83,13 @@ const today = new Date();
 <style>
 	footer {
 		background: var(--cyber-bg-code);
-		color: #fff;
+		color: var(--cyber-text-primary);
 		padding: 4rem 0 2rem;
 		border-top: 1px solid var(--cyber-border-color);
+	}
+
+	:global([data-bs-theme="light"]) footer {
+		background: var(--cyber-bg-tertiary);
 	}
 
 	footer a {
@@ -97,6 +98,11 @@ const today = new Date();
 
 	footer a:hover {
 		color: var(--cyber-primary) !important;
+	}
+
+	.footer-text {
+		color: var(--cyber-text-secondary);
+		text-decoration: none;
 	}
 
 	.social-links {

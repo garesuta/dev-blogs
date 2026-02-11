@@ -102,7 +102,7 @@ const remainingPosts = posts.slice(1);
       <!-- Featured Post -->
       {featuredPost && !categoryFilter && (
         <section class="mb-5">
-          <article class="card border-0 bg-light overflow-hidden">
+          <article class="card border-0 overflow-hidden" style="background: var(--cyber-bg-tertiary);">
             <div class="row g-0">
               {featuredPost.heroImage && (
                 <div class="col-lg-6">
@@ -121,7 +121,7 @@ const remainingPosts = posts.slice(1);
                     Latest
                   </span>
                   <h2 class="card-title h3 mb-3">
-                    <a href={`/blog/${featuredPost.slug}`} class="text-decoration-none text-dark">
+                    <a href={`/blog/${featuredPost.slug}`} class="text-decoration-none text-body">
                       {featuredPost.title}
                     </a>
                   </h2>
@@ -238,7 +238,7 @@ const remainingPosts = posts.slice(1);
                   )}
                   <div class="card-body d-flex flex-column">
                     <h3 class="h5 card-title">
-                      <a href={`/blog/${post.slug}`} class="text-decoration-none text-dark stretched-link">
+                      <a href={`/blog/${post.slug}`} class="text-decoration-none text-body stretched-link">
                         {post.title}
                       </a>
                     </h3>
@@ -275,7 +275,7 @@ const remainingPosts = posts.slice(1);
       }
       .hover-lift:hover {
         transform: translateY(-4px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        box-shadow: var(--cyber-shadow-md) !important;
       }
     </style>
   </body>

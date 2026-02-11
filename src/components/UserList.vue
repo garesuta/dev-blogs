@@ -211,8 +211,8 @@ function getRoleBadgeClass(role: string): string {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #6c757d;
-  color: white;
+  background: var(--cyber-avatar-bg);
+  color: var(--cyber-avatar-text);
   display: flex;
   align-items: center;
   justify-content: center;

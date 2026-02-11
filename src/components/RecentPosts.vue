@@ -94,16 +94,16 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
 .posts-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--cyber-text-secondary);
   margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--cyber-neutral-200);
 }
 
 .empty-state {
   text-align: center;
   padding: 2rem;
-  color: #6c757d;
+  color: var(--cyber-text-muted);
 }
 
 .empty-state i {
@@ -122,8 +122,8 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--cyber-secondary) 0%, var(--cyber-accent) 100%);
+  color: #fff;
   border-radius: 8px;
   text-decoration: none;
   font-size: 0.9rem;
@@ -133,8 +133,8 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
 
 .create-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-  color: white;
+  box-shadow: var(--cyber-shadow-md);
+  color: #fff;
 }
 
 .posts-list {
@@ -149,7 +149,7 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
+  background: var(--cyber-bg-tertiary);
   border-radius: 10px;
   text-decoration: none;
   transition: all 0.2s ease;
@@ -157,8 +157,8 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
 }
 
 .post-item:hover {
-  background: #fff;
-  border-color: #667eea;
+  background: var(--cyber-surface);
+  border-color: var(--cyber-secondary);
   transform: translateX(4px);
 }
 
@@ -170,7 +170,7 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
 .post-title {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #212529;
+  color: var(--cyber-text-primary);
   margin: 0 0 0.25rem;
   white-space: nowrap;
   overflow: hidden;
@@ -194,13 +194,13 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
 }
 
 .status-published {
-  background: #d4edda;
-  color: #155724;
+  background: var(--cyber-success-bg);
+  color: var(--cyber-success-text);
 }
 
 .post-date {
   font-size: 0.8rem;
-  color: #6c757d;
+  color: var(--cyber-text-muted);
 }
 
 .post-actions {
@@ -217,23 +217,23 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  background: white;
-  color: #6c757d;
+  background: var(--cyber-surface);
+  color: var(--cyber-text-muted);
   text-decoration: none;
   transition: all 0.2s ease;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--cyber-neutral-200);
 }
 
 .action-btn:hover {
-  background: #667eea;
-  color: white;
-  border-color: #667eea;
+  background: var(--cyber-secondary);
+  color: #fff;
+  border-color: var(--cyber-secondary);
 }
 
 .posts-footer {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--cyber-neutral-200);
   text-align: right;
 }
 
@@ -243,9 +243,9 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--cyber-secondary) 0%, var(--cyber-accent) 100%);
   border-radius: 10px;
-  color: white;
+  color: #fff;
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 600;
@@ -255,6 +255,6 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
 
 .see-all-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--cyber-shadow-md);
 }
 </style>

@@ -99,7 +99,7 @@ const contentHtml = processContentForDisplay(post.content);
         font-style: italic;
       }
       .prose :global(pre) {
-        background: #1e1e1e;
+        background: var(--cyber-editor-code-bg);
         padding: 1rem;
         border-radius: 8px;
         overflow-x: auto;
@@ -123,8 +123,8 @@ const contentHtml = processContentForDisplay(post.content);
         width: 64px;
         height: 64px;
         border-radius: 50%;
-        background: #6c757d;
-        color: white;
+        background: var(--cyber-avatar-bg);
+        color: var(--cyber-avatar-text);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -134,8 +134,8 @@ const contentHtml = processContentForDisplay(post.content);
       }
       /* Table of Contents styles */
       .prose :global(.toc-block) {
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
+        background: var(--cyber-bg-tertiary);
+        border: 1px solid var(--cyber-neutral-200);
         border-radius: 8px;
         padding: 1rem 1.5rem;
         margin: 1.5rem 0;
@@ -143,7 +143,7 @@ const contentHtml = processContentForDisplay(post.content);
       .prose :global(.toc-title) {
         margin: 0 0 0.75rem 0;
         font-size: 1rem;
-        color: #495057;
+        color: var(--cyber-text-secondary);
       }
       .prose :global(.toc-list) {
         list-style: none;
@@ -161,7 +161,7 @@ const contentHtml = processContentForDisplay(post.content);
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: #9b9a97;
+        background: var(--cyber-neutral-400);
         margin-right: 10px;
         flex-shrink: 0;
       }
@@ -172,7 +172,7 @@ const contentHtml = processContentForDisplay(post.content);
       .prose :global(.toc-list .toc-level-0::before) {
         width: 8px;
         height: 8px;
-        background: #495057;
+        background: var(--cyber-text-secondary);
       }
       .prose :global(.toc-list .toc-level-0 a) {
         font-weight: 600;
@@ -184,7 +184,7 @@ const contentHtml = processContentForDisplay(post.content);
       .prose :global(.toc-list .toc-level-1::before) {
         width: 6px;
         height: 6px;
-        background: #6c757d;
+        background: var(--cyber-neutral-500);
       }
       .prose :global(.toc-list .toc-level-1 a) {
         font-weight: 500;
@@ -196,12 +196,12 @@ const contentHtml = processContentForDisplay(post.content);
       .prose :global(.toc-list .toc-level-2::before) {
         width: 5px;
         height: 5px;
-        background: #adb5bd;
+        background: var(--cyber-neutral-300);
       }
       .prose :global(.toc-list .toc-level-2 a) {
         font-weight: 400;
         font-size: 0.9rem;
-        color: #6c757d;
+        color: var(--cyber-text-muted);
       }
       .prose :global(.toc-list .toc-level-3) {
         padding-left: 3.75rem;
@@ -209,28 +209,28 @@ const contentHtml = processContentForDisplay(post.content);
       .prose :global(.toc-list .toc-level-3::before) {
         width: 4px;
         height: 4px;
-        background: #ced4da;
+        background: var(--cyber-neutral-200);
       }
       .prose :global(.toc-list .toc-level-3 a) {
         font-weight: 400;
         font-size: 0.85rem;
-        color: #868e96;
+        color: var(--cyber-text-muted);
       }
       .prose :global(.toc-list a) {
-        color: #495057;
+        color: var(--cyber-text-secondary);
         text-decoration: none;
         transition: color 0.15s;
       }
       .prose :global(.toc-list a:hover) {
-        color: #0d6efd;
+        color: var(--cyber-primary);
         text-decoration: underline;
       }
       .prose :global(.toc-placeholder) {
-        background: #fff3cd;
-        border: 1px solid #ffc107;
+        background: var(--cyber-warning-bg);
+        border: 1px solid var(--cyber-warning);
         border-radius: 4px;
         padding: 0.75rem 1rem;
-        color: #856404;
+        color: var(--cyber-warning-text);
       }
       /* Smooth scroll for anchor links */
       :global(html) {

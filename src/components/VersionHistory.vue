@@ -292,11 +292,12 @@ onMounted(() => {
 }
 
 .list-group-item.active {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: var(--cyber-primary);
+  border-color: var(--cyber-primary);
+  color: #000;
 }
 
 .list-group-item.active .text-muted {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(0, 0, 0, 0.6) !important;
 }
 </style>

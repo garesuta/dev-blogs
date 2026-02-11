@@ -714,10 +714,10 @@ onMounted(() => {
 
 /* Toolbar styles */
 .toolbar {
-  background-color: #f8f9fa;
+  background-color: var(--cyber-bg-tertiary);
   padding: 1rem;
   border-radius: 0.5rem;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--cyber-neutral-200);
 }
 
 .search-wrapper {
@@ -745,7 +745,7 @@ onMounted(() => {
 .table-responsive {
   flex: 1;
   border-radius: 0.5rem;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--cyber-neutral-200);
   overflow: hidden;
 }
 
@@ -754,13 +754,13 @@ onMounted(() => {
 }
 
 .table thead th {
-  border-bottom: 2px solid #dee2e6;
-  background-color: #f8f9fa;
+  border-bottom: 2px solid var(--cyber-neutral-200);
+  background-color: var(--cyber-bg-tertiary);
   font-weight: 600;
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.025em;
-  color: #495057;
+  color: var(--cyber-text-secondary);
 }
 
 .table tbody tr {
@@ -769,8 +769,8 @@ onMounted(() => {
 }
 
 .table tbody tr:hover {
-  background-color: #f8f9fa;
-  border-left-color: #0d6efd;
+  background-color: var(--cyber-bg-tertiary);
+  border-left-color: var(--cyber-primary);
 }
 
 .table tbody tr:last-child td {
@@ -811,13 +811,13 @@ onMounted(() => {
 /* Relative date styling */
 .date-relative {
   cursor: help;
-  border-bottom: 1px dotted #adb5bd;
+  border-bottom: 1px dotted var(--cyber-neutral-300);
   padding-bottom: 1px;
   transition: border-color 0.15s ease;
 }
 
 .date-relative:hover {
-  border-bottom-color: #6c757d;
+  border-bottom-color: var(--cyber-text-muted);
 }
 
 /* Sortable headers */
@@ -828,7 +828,7 @@ onMounted(() => {
 }
 
 .sortable:hover {
-  background-color: #e9ecef;
+  background-color: var(--cyber-neutral-200);
 }
 
 .sortable-content {
@@ -845,7 +845,7 @@ onMounted(() => {
 
 .sort-indicator.active {
   opacity: 1;
-  color: #0d6efd;
+  color: var(--cyber-primary);
 }
 
 .sortable:hover .sort-indicator {
@@ -855,7 +855,7 @@ onMounted(() => {
 /* Pagination */
 .pagination-wrapper {
   padding-top: 1rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--cyber-neutral-200);
 }
 
 .pagination .page-link {
@@ -873,15 +873,15 @@ onMounted(() => {
 }
 
 .pagination .page-item:not(.disabled):not(.active) .page-link:hover {
-  background-color: #e9ecef;
+  background-color: var(--cyber-neutral-200);
   transform: translateY(-1px);
 }
 
 /* Empty state enhancements */
 .text-center.py-5 {
-  background-color: #f8f9fa;
+  background-color: var(--cyber-bg-tertiary);
   border-radius: 0.5rem;
-  border: 1px dashed #dee2e6;
+  border: 1px dashed var(--cyber-neutral-200);
 }
 
 /* Modal enhancements */

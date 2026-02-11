@@ -100,15 +100,15 @@ const { title, description, image = FallbackImage } = Astro.props;
 
   // Update button icons and text
   function updateToggleButtons(theme) {
-    const toggleButtons = document.querySelectorAll('.theme-toggle');
+    const toggleButtons = document.querySelectorAll('.theme-toggle-btn, .theme-toggle');
     toggleButtons.forEach(button => {
       const icon = button.querySelector('i');
       const text = button.querySelector('.theme-text');
       if (theme === THEMES.DARK) {
-        if (icon) icon.className = 'bi bi-moon-fill';
+        if (icon) icon.className = 'bi bi-sun-fill';
         if (text) text.textContent = 'Dark';
       } else {
-        if (icon) icon.className = 'bi bi-sun-fill';
+        if (icon) icon.className = 'bi bi-moon-fill';
         if (text) text.textContent = 'Light';
       }
     });
