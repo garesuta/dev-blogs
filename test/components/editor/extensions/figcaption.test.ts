@@ -6,7 +6,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { Node } from '@tiptap/core';
-import Figcaption from '../../../src/components/editor/extensions/figcaption';
+import Figcaption from '../extensions/figcaption';
 
 describe('Figcaption Extension', () => {
   it('should create a figcaption node with correct name and group', () => {
