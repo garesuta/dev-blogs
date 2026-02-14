@@ -17,7 +17,7 @@ const ALLOWED_PROTOCOLS = ['http:', 'https:'];
 /**
  * Validate and sanitize image source URL
  */
-function validateImageSrc(src: string | null): string | null {
+function validateImageSrc(src: string | null | undefined): string | null {
   if (!src) return null;
 
   try {
@@ -31,7 +31,7 @@ function validateImageSrc(src: string | null): string | null {
 /**
  * Sanitize alt text to prevent XSS
  */
-function sanitizeAltText(alt: string | null): string {
+function sanitizeAltText(alt: string | null | undefined): string {
   if (!alt) return '';
   // Escape HTML entities
   const div = document.createElement('div');

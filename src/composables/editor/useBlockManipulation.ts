@@ -7,7 +7,7 @@
  * to prevent layout thrashing and jank.
  */
 
-import { ref, onUnmounted, type Ref, RefObject } from 'vue';
+import { ref, onUnmounted, type Ref } from 'vue';
 import type { Editor } from '@tiptap/core';
 
 interface UseBlockManipulationOptions {
@@ -24,11 +24,16 @@ interface BlockManipulationReturn {
   closeOptions: () => void;
   deleteBlock: () => void;
   duplicateBlock: () => void;
-  turnInto: (blockType: string) => void;
+  turnInto: (blockType: BlockType) => void;
   insertImage: () => void;
   insertTable: () => void;
   insertDivider: () => void;
   insertToc: () => void;
+  // Event handlers
+  handleEditorMouseMove: (event: MouseEvent) => void;
+  handleEditorMouseLeave: () => void;
+  handleMouseEnter: () => void;
+  handleMouseLeave: () => void;
 }
 
 type BlockType =
@@ -60,7 +65,7 @@ export function useBlockManipulation(options: UseBlockManipulationOptions): Bloc
    * Throttle state for requestAnimationFrame
    */
   let rafId: number | null = null;
-  let pendingPosition = { top: 0, left: 0 };
+  let pendingPosition = { top: 0, left: 0, x: 0, y: 0 };
 
   /**
    * Handle editor mouse move with throttling
@@ -85,8 +90,8 @@ export function useBlockManipulation(options: UseBlockManipulationOptions): Bloc
     // Get position from mouse coordinates
     // PERF: Batch position calculation within RAF frame
     pendingPosition = {
-      x: event.clientX,
-      y: event.clientY,
+      top: event.clientY,
+      left: event.clientX,
     };
 
     if (!rafId) {
