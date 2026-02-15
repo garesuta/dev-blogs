@@ -34,8 +34,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   // Set user and session in locals
-  context.locals.user = session?.user ?? null;
-  context.locals.session = session?.session ?? null;
+  context.locals.user = session?.user ?? null as any;
+  context.locals.session = session?.session ?? null as any;
 
   // Check if route requires authentication
   const isProtectedRoute = protectedRoutes.some((route) =>

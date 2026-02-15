@@ -7,7 +7,7 @@
  * to prevent layout thrashing from frequent DOM reads.
  */
 
-import { ref, computed, type Ref, type ComputedRef, onSelectionUpdate } from 'vue';
+import { ref, computed, watch, type Ref, type ComputedRef } from 'vue';
 import type { Editor } from '@tiptap/core';
 
 interface UseToolbarPositioningOptions {
@@ -48,8 +48,7 @@ export function useToolbarPositioning(options: UseToolbarPositioningOptions): To
     if (!editor.value) return { top: 0, left: 0 };
 
     try {
-      const { view } = editor.value;
-      const coords = view.coordsAtPos(pos);
+      const coords = (editor.value as any).view.coordsAtPos(pos);
       return { top: coords.top, left: coords.left };
     } catch {
       return { top: 0, left: 0 };
@@ -93,24 +92,40 @@ export function useToolbarPositioning(options: UseToolbarPositioningOptions): To
    * Listen to selection updates for toolbar positioning
    * PERF: This callback is already throttled by Tiptap
    */
-  onSelectionUpdate(
+  watch(
     () => editor.value,
-    ({ editor: ed }) => {
-      const { state, view } = ed;
-      const { selection } = state;
-      const { from, empty } = selection;
-
-      // Check if cursor is in a table
-      const isInTable = ed.isActive('table');
-
-      if (isInTable) {
-        const coords = view.coordsAtPos(from);
-        updateTableToolbar(coords);
+    (ed) => {
+      if (!ed) {
         showFloating.value = false;
-      } else {
         showTable.value = false;
-        updateFloatingToolbar(from, selection.to, empty);
+        return;
       }
+
+      // Listen to Tiptap's onSelectionUpdate
+      const off = ed.on('selectionUpdate', ({ view }: any) => {
+        const state = view.state;
+        const { selection } = state;
+        const { from, empty } = selection;
+
+        // Check if cursor is in a table
+        const isInTable = ed.isActive('table');
+
+        if (isInTable) {
+          const coords = view.coordsAtPos(from);
+          updateTableToolbar(coords);
+          showFloating.value = false;
+        } else {
+          showTable.value = false;
+          updateFloatingToolbar(from, selection.to, empty);
+        }
+      });
+
+      // Cleanup on editor change
+      return () => {
+        if (typeof off === 'function') {
+          (off as any)();
+        }
+      };
     }
   );
 

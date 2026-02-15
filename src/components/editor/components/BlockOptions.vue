@@ -16,16 +16,7 @@ interface BlockOptionsProps {
 
 const props = defineProps<BlockOptionsProps>();
 
-const emit = defineEmits<{
-  delete: () => void;
-  duplicate: () => void;
-  turnInto: (type: string) => void;
-  insertImage: () => void;
-  insertTable: () => void;
-  insertDivider: () => void;
-  insertToc: () => void;
-  close: () => void;
-}>();
+const emit = defineEmits(['delete', 'duplicate', 'turnInto', 'insertImage', 'insertTable', 'insertDivider', 'insertToc', 'close']);
 
 const blockTypes = [
   { id: 'paragraph', label: 'Text', icon: 'bi-type-paragraph' },

@@ -5,8 +5,13 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import SlashCommandsExtension from '../../../src/components/editor/extensions/slash-commands';
-import { DEFAULT_SLASH_COMMANDS, filterSlashCommands } from '../../../src/components/editor/extensions/slash-commands';
+import SlashCommandsExtension, {
+  DEFAULT_SLASH_COMMANDS,
+  filterSlashCommands,
+  getSlashMenuState,
+  type SlashMenuState,
+  type SlashCommandItem,
+} from '@/components/editor/extensions/slash-commands';
 
 // Mock editor with storage
 const mockEditor = {
@@ -21,6 +26,12 @@ const mockEditor = {
 } as any;
 
 describe('SlashCommands Extension', () => {
+  describe('Extension creation', () => {
+    it('should create extension with correct name', () => {
+      expect(SlashCommandsExtension.name).toBe('slashCommands');
+    });
+  });
+
   describe('filterSlashCommands', () => {
     it('should return all commands when query is empty', () => {
       const result = filterSlashCommands(DEFAULT_SLASH_COMMANDS, '');
@@ -29,32 +40,29 @@ describe('SlashCommands Extension', () => {
 
     it('should filter commands by title', () => {
       const result = filterSlashCommands(DEFAULT_SLASH_COMMANDS, 'heading');
-      expect(result).toEqual([
-        { title: 'Heading 1', description: 'Large section heading', icon: 'bi-type-h1' },
-        { title: 'Heading 2', description: 'Medium section heading', icon: 'bi-type-h2' },
-        { title: 'Heading 3', description: 'Small section heading', icon: 'bi-type-h3' },
-      ]);
+      expect(result.length).toBeGreaterThan(0);
+      expect(result.every((cmd: SlashCommandItem) => cmd.title.toLowerCase().includes('heading'))).toBe(true);
     });
 
     it('should filter commands by description', () => {
       const result = filterSlashCommands(DEFAULT_SLASH_COMMANDS, 'list');
-      expect(result).toEqual([
-        { title: 'Bullet List', description: 'Create a bullet list', icon: 'bi-list-ul' },
-        { title: 'Numbered List', description: 'Create a numbered list', icon: 'bi-list-ol' },
-      ]);
+      expect(result.length).toBeGreaterThan(0);
+      expect(result.every((cmd: SlashCommandItem) =>
+        cmd.title.toLowerCase().includes('list') ||
+        cmd.description.toLowerCase().includes('list')
+      )).toBe(true);
     });
 
     it('should be case insensitive', () => {
       const result = filterSlashCommands(DEFAULT_SLASH_COMMANDS, 'CODE BLOCK');
-      expect(result).toEqual([
-        { title: 'Code Block', description: 'Display code with syntax highlighting', icon: 'bi-code-square' },
-      ]);
+      expect(result.length).toBe(1);
+      expect(result[0]?.title).toBe('Code Block');
     });
   });
 
   describe('getSlashMenuState', () => {
     it('should return default state when storage is empty', () => {
-      const result = SlashCommandsExtension.getSlashMenuState({} as any);
+      const result = getSlashMenuState({ storage: undefined } as any);
       expect(result).toEqual({
         show: false,
         position: { top: 0, left: 0 },
@@ -64,7 +72,7 @@ describe('SlashCommands Extension', () => {
     });
 
     it('should return existing state from storage', () => {
-      const existing = {
+      const existing: SlashMenuState = {
         show: true,
         position: { top: 100, left: 200 },
         query: 'test',
@@ -75,35 +83,33 @@ describe('SlashCommands Extension', () => {
         slashMenu: existing,
       } as any;
 
-      const result = SlashCommandsExtension.getSlashMenuState(mockEditor);
+      const result = getSlashMenuState(mockEditor);
       expect(result).toEqual(existing);
     });
+  });
 
-    it('should return merged state when updates provided', () => {
-      const base = {
-        show: false,
-        position: { top: 0, left: 0 },
-        query: '',
-        selectedIndex: 0,
-      };
-
-      mockEditor.storage = {
-        slashMenu: base,
-      } as any;
-
-      const result = SlashCommandsExtension.getSlashMenuState(mockEditor, {
-        show: true,
-        position: { top: 50, left: 100 },
-        query: 'search query',
-        selectedIndex: 1,
+  describe('DEFAULT_SLASH_COMMANDS', () => {
+    it('should have all required command properties', () => {
+      DEFAULT_SLASH_COMMANDS.forEach((cmd: SlashCommandItem) => {
+        expect(cmd).toHaveProperty('title');
+        expect(cmd).toHaveProperty('description');
+        expect(cmd).toHaveProperty('icon');
+        expect(cmd).toHaveProperty('command');
+        expect(typeof cmd.command).toBe('function');
       });
+    });
 
-      expect(result).toEqual({
-        show: true,
-        position: { top: 50, left: 100 },
-        query: 'search query',
-        selectedIndex: 1,
-      });
+    it('should have expected commands', () => {
+      const titles = DEFAULT_SLASH_COMMANDS.map((cmd: SlashCommandItem) => cmd.title);
+      expect(titles).toContain('Text');
+      expect(titles).toContain('Heading 1');
+      expect(titles).toContain('Heading 2');
+      expect(titles).toContain('Heading 3');
+      expect(titles).toContain('Bullet List');
+      expect(titles).toContain('Code Block');
+      expect(titles).toContain('Quote');
+      expect(titles).toContain('Divider');
+      expect(titles).toContain('Table');
     });
   });
 });

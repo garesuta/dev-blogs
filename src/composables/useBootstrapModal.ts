@@ -10,6 +10,7 @@ export function useBootstrapModal(modalRef: Ref<HTMLElement | null>) {
   const modalInstance = shallowRef<ModalInstance | null>(null)
 
   onMounted(async () => {
+    // @ts-expect-error - bootstrap has no type definitions
     const { Modal } = await import('bootstrap')
     if (modalRef.value) {
       modalInstance.value = new Modal(modalRef.value) as unknown as ModalInstance

@@ -38,6 +38,7 @@ describe('useBootstrapModal', () => {
     await flushPromises()
 
     // Modal should have been created since ref is bound
+    // @ts-expect-error - bootstrap module has no type definitions
     expect((await import('bootstrap')).Modal).toBeDefined()
   })
 

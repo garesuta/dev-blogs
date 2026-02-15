@@ -82,8 +82,10 @@ export function useSlashMenu(options: UseSlashMenuOptions): SlashMenuReturn {
    * Close the slash menu
    */
   function close(): void {
-    resetSlashMenuState(editor.value);
-    syncFromEditor();
+    if (editor.value) {
+      resetSlashMenuState(editor.value);
+      syncFromEditor();
+    }
   }
 
   /**

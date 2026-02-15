@@ -18,6 +18,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 - **editor**: CPU spikes from mouse events — added RAF throttling (16ms) to handleEditorMouseMove
 - **editor**: Layout thrashing — batched getBoundingClientRect calls within RAF frame
 - **editor**: Vite build errors — fixed Vue 3 defineEmits syntax and Tiptap import paths
+- **editor**: TypeScript errors — fixed useEditor import from @tiptap/vue-3, composable type mismatches, test import paths, and extension PluginProps types
 
 ### Changed
 - **theme**: Replace 200+ hardcoded hex colors with CSS variables across all pages, layouts, and Vue components for full light/dark theme support

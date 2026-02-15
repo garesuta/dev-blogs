@@ -20,7 +20,7 @@ const props = defineProps<SlashMenuProps>();
 const emit = defineEmits<{
   select: (command: SlashCommandItem) => void;
   hover: (index: number) => void;
-  close: [];
+  close: () => void;
 }>();
 
 /**

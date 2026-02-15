@@ -8,7 +8,8 @@
  * to maintain clean separation between Tiptap extensions and Vue components.
  */
 
-import { Extension, PluginKey, Plugin, Transaction, EditorState } from '@tiptap/core';
+import { Extension } from '@tiptap/core';
+import { Plugin, PluginKey } from '@tiptap/pm/state';
 import type { Editor } from '@tiptap/core';
 
 // Type declaration for extension storage
@@ -19,7 +20,7 @@ declare module "@tiptap/core" {
 
   // Types for the Plugin props
   interface PluginProps {
-    handleKeyDown(view, event): boolean;
+    handleKeyDown(view: any, event: any): boolean;
   }
 }
 
@@ -36,7 +37,7 @@ const SLASH_MENU_STORAGE_KEY = 'slashMenu';
 /**
  * Interface for slash menu state (stored in editor.storage)
  */
-interface SlashMenuState {
+export interface SlashMenuState {
   show: boolean;
   position: { top: number; left: number };
   query: string;
@@ -193,13 +194,12 @@ export default Extension.create({
       new Plugin({
         key: SLASH_COMMANDS_PLUGIN_KEY,
         props: {
-          handleKeyDown(view, event): boolean {
-            const editor = view.state;
-            const { selection } = editor;
+          handleKeyDown(view: any, event: any): boolean {
+            const state = view.state;
+            const { selection } = state;
 
             // Open menu on "/"
-            if (event.key === "/" && !getSlashMenuState(editor).show) {
-              const { selection } = state;
+            if (event.key === "/" && !getSlashMenuState(view).show) {
               const { $from } = selection;
 
               // Only show at start of empty block or after space
@@ -207,7 +207,7 @@ export default Extension.create({
               if (textBefore === "" || textBefore.endsWith(" ")) {
                 // Get cursor position for menu
                 const coords = view.coordsAtPos(selection.from);
-                updateSlashMenuState(editor, {
+                updateSlashMenuState(view, {
                   position: {
                     top: coords.bottom + 8,
                     left: coords.left,
@@ -221,20 +221,20 @@ export default Extension.create({
             }
 
             // Handle menu navigation
-            const slashState = getSlashMenuState(editor);
+            const slashState = getSlashMenuState(view);
             if (slashState.show) {
               const filteredCommands = filterSlashCommands(DEFAULT_SLASH_COMMANDS, slashState.query);
 
               if (event.key === "ArrowDown") {
                 event.preventDefault();
-                updateSlashMenuState(editor, {
+                updateSlashMenuState(view, {
                   selectedIndex: Math.min(slashState.selectedIndex + 1, filteredCommands.length - 1),
                 });
                 return true;
               }
               if (event.key === "ArrowUp") {
                 event.preventDefault();
-                updateSlashMenuState(editor, {
+                updateSlashMenuState(view, {
                   selectedIndex: Math.max(slashState.selectedIndex - 1, 0),
                 });
                 return true;
@@ -243,25 +243,24 @@ export default Extension.create({
                 event.preventDefault();
                 const command = filteredCommands[slashState.selectedIndex];
                 if (command) {
-                  command.command(editor);
-                  resetSlashMenuState(editor);
+                  command.command(view);
+                  resetSlashMenuState(view);
                 }
                 return true;
               }
               if (event.key === "Escape") {
                 event.preventDefault();
-                resetSlashMenuState(editor);
+                resetSlashMenuState(view);
                 return true;
               }
               if (event.key === "Backspace") {
                 // Check if we should close menu
-                const { selection } = state;
                 const { $from } = selection;
                 const textBefore = $from.parent.textContent.slice(0, $from.parentOffset);
 
                 // Close if backspacing the "/"
                 if (textBefore === "/" || !textBefore.includes("/")) {
-                  resetSlashMenuState(editor);
+                  resetSlashMenuState(view);
                 }
               }
             }

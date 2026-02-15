@@ -17,7 +17,7 @@ interface UseBlockManipulationOptions {
 
 interface BlockManipulationReturn {
   showHandle: Ref<boolean>;
-  handlePosition: Ref<{ top: number }>;
+  handlePosition: Ref<{ top: number; left: number; x: number; y: number }>;
   currentBlockPos: Ref<number | null>;
   showOptions: Ref<boolean>;
   isHoveringHandle: Ref<boolean>;
@@ -53,7 +53,7 @@ export function useBlockManipulation(options: UseBlockManipulationOptions): Bloc
 
   // Template refs
   const showHandle = ref(false);
-  const handlePosition = ref({ top: 0 });
+  const handlePosition = ref({ top: 0, left: 0, x: 0, y: 0 });
   const currentBlockPos = ref<number | null>(null);
   const showOptions = ref(false);
   const isHoveringHandle = ref(false);
@@ -92,6 +92,8 @@ export function useBlockManipulation(options: UseBlockManipulationOptions): Bloc
     pendingPosition = {
       top: event.clientY,
       left: event.clientX,
+      x: event.clientX,
+      y: event.clientY,
     };
 
     if (!rafId) {
@@ -135,6 +137,9 @@ export function useBlockManipulation(options: UseBlockManipulationOptions): Bloc
           // Position relative to editor wrapper
           handlePosition.value = {
             top: coords.top - editorRect.top + window.scrollY,
+            left: coords.left - editorRect.left,
+            x: 0,
+            y: 0,
           };
           currentBlockPos.value = nodeStart;
           showHandle.value = true;

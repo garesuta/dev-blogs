@@ -5,7 +5,8 @@
   Uses computed properties for active states to prevent unnecessary re-renders.
 -->
 <script setup lang="ts">
-import type { Ref } from 'vue';
+import { computed, type Ref } from 'vue';
+import type { Editor } from '@tiptap/core';
 
 interface FloatingToolbarProps {
   editor: Ref<Editor | null>;
@@ -13,9 +14,12 @@ interface FloatingToolbarProps {
   position: Ref<{ top: number; left: number }>;
 }
 
+// Type assertion for Tiptap Editor - it has chain() method but type definitions are incomplete
+type TiptapEditor = Editor & { chain(): any };
+
 const props = defineProps<FloatingToolbarProps>();
 const emit = defineEmits<{
-  close: [];
+  close: () => void;
 }>();
 
 // Computed properties for active states
@@ -33,7 +37,6 @@ const isBlockquote = computed(() => props.editor.value?.isActive('blockquote') ?
 const isCode = computed(() => props.editor.value?.isActive('codeBlock') ?? false);
 const isLink = computed(() => props.editor.value?.isActive('link') ?? false);
 
-import type { Editor } from '@tiptap/core';
 </script>
 
 <template>
