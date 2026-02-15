@@ -17,14 +17,14 @@ interface BlockOptionsProps {
 const props = defineProps<BlockOptionsProps>();
 
 const emit = defineEmits<{
-  delete: [];
-  duplicate: [];
-  turnInto: [type: string]: void;
-  insertImage: [];
-  insertTable: [];
-  insertDivider: [];
-  insertToc: [];
-  close: [];
+  delete: () => void;
+  duplicate: () => void;
+  turnInto: (type: string) => void;
+  insertImage: () => void;
+  insertTable: () => void;
+  insertDivider: () => void;
+  insertToc: () => void;
+  close: () => void;
 }>();
 
 const blockTypes = [

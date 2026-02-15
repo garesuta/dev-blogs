@@ -17,9 +17,9 @@ interface LinkModalProps {
 const props = defineProps<LinkModalProps>();
 
 const emit = defineEmits<{
-  confirm: [url: string]: void;
-  remove: [];
-  close: [];
+  confirm: (url: string) => void;
+  remove: () => void;
+  close: () => void;
 }>();
 
 const urlInput = ref(props.currentUrl.value);

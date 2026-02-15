@@ -17,7 +17,7 @@ import {
   filterSlashCommands,
   DEFAULT_SLASH_COMMANDS,
   type SlashCommandItem,
-} from '../components/editor/extensions/slash-commands';
+} from '../../components/editor/extensions/slash-commands';
 
 interface UseSlashMenuOptions {
   editor: Ref<Editor | null>;

@@ -17,6 +17,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 - **editor**: Extension XSS vulnerabilities — added URI sanitization for Figure and TableOfContents extensions
 - **editor**: CPU spikes from mouse events — added RAF throttling (16ms) to handleEditorMouseMove
 - **editor**: Layout thrashing — batched getBoundingClientRect calls within RAF frame
+- **editor**: Vite build errors — fixed Vue 3 defineEmits syntax and Tiptap import paths
 
 ### Changed
 - **theme**: Replace 200+ hardcoded hex colors with CSS variables across all pages, layouts, and Vue components for full light/dark theme support

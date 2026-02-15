@@ -5,7 +5,7 @@
   Filters commands based on user input.
 -->
 <script setup lang="ts">
-import type { Ref, type ComputedRef } from 'vue';
+import { type Ref, type ComputedRef } from 'vue';
 import type { SlashCommandItem } from '../../extensions/slash-commands';
 
 interface SlashMenuProps {
@@ -18,8 +18,8 @@ interface SlashMenuProps {
 const props = defineProps<SlashMenuProps>();
 
 const emit = defineEmits<{
-  select: [command: SlashCommandItem]: void;
-  hover: [index: number]: void;
+  select: (command: SlashCommandItem) => void;
+  hover: (index: number) => void;
   close: [];
 }>();
 

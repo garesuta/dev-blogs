@@ -8,9 +8,8 @@
  * to maintain clean separation between Tiptap extensions and Vue components.
  */
 
-import { Extension, Plugin, PluginKey } from "@tiptap/core";
-import type { Transaction, EditorState } from "@tiptap/pm/state";
-import type { Editor } from "@tiptap/core";
+import { Extension, PluginKey, Plugin, Transaction, EditorState } from '@tiptap/core';
+import type { Editor } from '@tiptap/core';
 
 // Type declaration for extension storage
 declare module "@tiptap/core" {
