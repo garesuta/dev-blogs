@@ -3,146 +3,220 @@ const today = new Date();
 ---
 
 <footer>
-	<div class="container">
-		<div class="row g-4">
-			<div class="col-lg-4">
-				<h5 class="fw-bold mb-3">
-					<i class="bi bi-terminal-fill text-cyber-primary"></i> Tech Blog
-				</h5>
-				<p class="footer-text">
-					A modern blog platform sharing insights on AI, coding, frameworks, and the future of technology.
-				</p>
-				<div class="social-links">
-					<a href="https://m.webtoo.ls/@astro" target="_blank" aria-label="Follow on Mastodon">
-						<i class="bi bi-mastodon fs-4"></i>
-					</a>
-					<a href="https://twitter.com/astrodotbuild" target="_blank" aria-label="Follow on Twitter">
-						<i class="bi bi-twitter-x fs-4"></i>
-					</a>
-					<a href="https://github.com/withastro/astro" target="_blank" aria-label="View on GitHub">
-						<i class="bi bi-github fs-4"></i>
-					</a>
-					<a href="https://github.com/withastro/astro" target="_blank" aria-label="Join on Discord">
-						<i class="bi bi-discord fs-4"></i>
-					</a>
+		<div class="footer-container">
+			<div class="footer-content">
+				<div class="footer-brand">
+					<div class="footer-logo">
+						<i class="bi bi-terminal-fill"></i>
+						<span>{SITE_TITLE}</span>
+					</div>
+					<p class="footer-description">
+						A modern blog platform sharing insights on AI, coding, frameworks, and the future of technology.
+					</p>
+				</div>
+				<div class="footer-links">
+					<div class="footer-section">
+						<h4 class="footer-heading">Navigation</h4>
+						<ul class="footer-nav">
+							<li>
+								<a href="/blog" class="footer-link">Blog</a>
+							</li>
+							<li>
+								<a href="/about" class="footer-link">About</a>
+							</li>
+						</ul>
+					</div>
+					<div class="footer-section">
+						<h4 class="footer-heading">Topics</h4>
+						<ul class="footer-nav">
+							<li>
+								<span class="footer-link disabled">Artificial Intelligence</span>
+							</li>
+							<li>
+								<span class="footer-link disabled">Web Development</span>
+							</li>
+							<li>
+								<span class="footer-link disabled">Frameworks</span>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
-			<div class="col-lg-2">
-				<h6 class="fw-bold mb-3">Navigation</h6>
-				<ul class="list-unstyled">
-					<li class="mb-2">
-						<a href="/blog" class="footer-text text-decoration-none">Blog</a>
-					</li>
-					<li class="mb-2">
-						<a href="/about" class="footer-text text-decoration-none">About</a>
-					</li>
-				</ul>
-			</div>
-			<div class="col-lg-2">
-				<h6 class="fw-bold mb-3">Topics</h6>
-				<ul class="list-unstyled">
-					<li class="mb-2">
-						<a href="#" class="footer-text text-decoration-none">Artificial Intelligence</a>
-					</li>
-					<li class="mb-2">
-						<a href="#" class="footer-text text-decoration-none">Web Development</a>
-					</li>
-					<li class="mb-2">
-						<a href="#" class="footer-text text-decoration-none">Frameworks</a>
-					</li>
-				</ul>
-			</div>
-			<div class="col-lg-4">
-				<h6 class="fw-bold mb-3">Theme</h6>
-				<p class="footer-text small mb-3">Toggle between dark and light themes:</p>
-				<div class="d-flex gap-2">
-					<button class="theme-toggle" onclick="toggleCyberTheme()">
-						<i class="bi bi-sun-fill"></i>
-						<span class="theme-text">Dark</span>
-					</button>
-				</div>
+			<div class="footer-bottom">
+				<p class="footer-copyright">&copy; {today.getFullYear()} {SITE_TITLE}. All rights reserved.</p>
+				<a href="/rss.xml" class="footer-rss">RSS Feed</a>
 			</div>
 		</div>
-		<hr class="my-4 border-secondary" />
-		<div class="d-flex justify-content-between align-items-center flex-wrap">
-			<p class="footer-text mb-0">&copy; {today.getFullYear()} Tech Blog. All rights reserved.</p>
-			<div class="d-flex gap-3">
-				<a href="#" class="footer-text text-decoration-none">Privacy</a>
-				<a href="#" class="footer-text text-decoration-none">Terms</a>
-				<a href="/rss.xml" class="footer-text text-decoration-none">RSS</a>
-			</div>
-		</div>
-	</div>
-</footer>
+	</footer>
 
 <!-- Bootstrap JS -->
 <script>
 	import "bootstrap/dist/js/bootstrap.bundle.min.js";
 </script>
 
-<style>
-	footer {
-		background: var(--cyber-bg-code);
-		color: var(--cyber-text-primary);
-		padding: 4rem 0 2rem;
-		border-top: 1px solid var(--cyber-border-color);
-	}
-
-	:global([data-bs-theme="light"]) footer {
-		background: var(--cyber-bg-tertiary);
-	}
-
-	footer a {
-		transition: color 0.2s ease;
-	}
-
-	footer a:hover {
-		color: var(--cyber-primary) !important;
-	}
-
-	.footer-text {
-		color: var(--cyber-text-secondary);
-		text-decoration: none;
-	}
-
-	.social-links {
-		display: flex;
-		justify-content: flex-start;
-		gap: 1rem;
-		margin-top: 1rem;
-	}
-
-	.social-links a {
-		color: var(--cyber-text-secondary);
-		text-decoration: none;
-		transition: color 0.2s ease;
-	}
-
-	.social-links a:hover {
-		color: var(--cyber-primary);
-	}
-
-	footer h5,
-	footer h6 {
-		color: var(--cyber-text-primary);
-	}
-
-	footer ul {
-		padding-left: 0;
-		list-style: none;
-	}
-
-	footer li {
-		margin-bottom: 0.5rem;
-	}
-
-	@media (max-width: 768px) {
+	<style>
 		footer {
-			padding: 3rem 0 2rem;
+			background: var(--cyber-bg-code);
+			color: var(--cyber-text-primary);
+			padding: 4rem 1.5rem 2rem;
+			border-top: 1px solid var(--cyber-border-color);
 		}
 
-		.social-links {
-			justify-content: center;
+		:global([data-bs-theme="light"]) footer {
+			background: var(--cyber-bg-tertiary);
 		}
-	}
-</style>
+
+		.footer-container {
+			max-width: 1400px;
+			margin: 0 auto;
+		}
+
+		.footer-content {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 3rem;
+			margin-bottom: 3rem;
+		}
+
+		@media (min-width: 768px) {
+			.footer-content {
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+
+		.footer-brand {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.footer-logo {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			font-size: 1.25rem;
+			font-weight: 700;
+			color: var(--cyber-text-primary);
+			background: var(--cyber-gradient-primary);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+		}
+
+		.footer-logo i {
+			background: var(--cyber-gradient-primary);
+			color: #000;
+			width: 32px;
+			height: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: var(--radius-md);
+			font-size: 1rem;
+		}
+
+		.footer-description {
+			color: var(--cyber-text-secondary);
+			line-height: 1.6;
+			max-width: 400px;
+			margin: 0;
+		}
+
+		.footer-links {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		@media (min-width: 640px) {
+			.footer-links {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		.footer-section {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.footer-heading {
+			font-size: 0.875rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			color: var(--cyber-text-primary);
+			margin: 0;
+		}
+
+		.footer-nav {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.footer-link {
+			color: var(--cyber-text-secondary);
+			text-decoration: none;
+			font-size: 0.9375rem;
+			transition: color var(--motion-duration-normal) var(--motion-ease);
+		}
+
+		.footer-link:hover {
+			color: var(--cyber-primary);
+			text-decoration: none;
+		}
+
+		.footer-link.disabled {
+			color: var(--cyber-text-muted);
+			cursor: default;
+		}
+
+		.footer-link.disabled:hover {
+			color: var(--cyber-text-muted);
+		}
+
+		.footer-bottom {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			padding-top: 2rem;
+			border-top: 1px solid var(--cyber-border-color);
+		}
+
+		@media (min-width: 640px) {
+			.footer-bottom {
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+			}
+		}
+
+		.footer-copyright {
+			color: var(--cyber-text-secondary);
+			font-size: 0.875rem;
+			margin: 0;
+		}
+
+		.footer-rss {
+			color: var(--cyber-primary);
+			text-decoration: none;
+			font-size: 0.875rem;
+			font-weight: 500;
+			transition: color var(--motion-duration-normal) var(--motion-ease);
+		}
+
+		.footer-rss:hover {
+			color: var(--cyber-primary-hover);
+			text-decoration: underline;
+		}
+
+		@media (max-width: 768px) {
+			footer {
+				padding: 3rem 1.5rem 2rem;
+			}
+		}
+	</style>

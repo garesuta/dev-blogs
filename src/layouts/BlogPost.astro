@@ -51,14 +51,24 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 
 			.title h1 {
-				font-size: 3rem;
+				font-size: 2.5rem;
 				font-weight: 800;
 				margin: 0 0 1rem 0;
-				background: var(--cyber-gradient-primary);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-				background-clip: text;
+				color: var(--cyber-text-primary);
 				line-height: 1.2;
+				letter-spacing: -0.02em;
+			}
+
+			@media (min-width: 768px) {
+				.title h1 {
+					font-size: 3rem;
+				}
+			}
+
+			@media (min-width: 1024px) {
+				.title h1 {
+					font-size: 3.5rem;
+				}
 			}
 
 			.date {
@@ -82,9 +92,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 
 			.prose :global(p) {
-				margin-bottom: 1.5rem;
-				line-height: 1.8;
+				margin-bottom: 1.75rem;
+				line-height: 1.75;
 				color: var(--cyber-text-secondary);
+				font-size: 1.0625rem;
 			}
 
 			.prose :global(a) {
@@ -101,18 +112,19 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.prose :global(code) {
 				background: var(--cyber-bg-code);
 				color: var(--cyber-primary);
-				padding: 0.2em 0.5em;
-				border-radius: 4px;
-				font-size: 0.9em;
+				padding: 0.25em 0.5em;
+				border-radius: var(--radius-sm);
+				font-size: 0.875em;
+				font-family: var(--font-mono);
 			}
 
 			.prose :global(pre) {
 				background: var(--cyber-bg-code);
 				border: 1px solid var(--cyber-border-color);
-				border-radius: 12px;
+				border-radius: var(--radius-lg);
 				padding: 1.5rem;
 				overflow-x: auto;
-				margin: 1.5rem 0;
+				margin: 2rem 0;
 			}
 
 			.prose :global(pre code) {
@@ -124,43 +136,51 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.prose :global(blockquote) {
 				border-left: 4px solid var(--cyber-primary);
 				padding: 1rem 1.5rem;
-				margin: 1.5rem 0;
-				background: rgba(0, 255, 136, 0.05);
-				border-radius: 0 8px 8px 0;
+				margin: 2rem 0;
+				background: var(--cyber-primary-light);
+				border-radius: 0 var(--radius-md) var(--radius-md) 0;
+				font-style: italic;
+				color: var(--cyber-text-secondary);
+				line-height: 1.6;
 			}
 
 			.prose :global(img) {
 				max-width: 100%;
 				height: auto;
-				border-radius: 12px;
-				margin: 2rem 0;
+				border-radius: var(--radius-lg);
+				margin: 2.5rem 0;
 				box-shadow: var(--cyber-shadow-md);
 			}
 
 			.prose :global(hr) {
 				border: none;
 				border-top: 1px solid var(--cyber-border-color);
-				margin: 3rem 0;
+				margin: 4rem 0;
 			}
 
 			.prose :global(ul),
 			.prose :global(ol) {
-				padding-left: 2rem;
-				margin-bottom: 1.5rem;
+				padding-left: 1.5rem;
+				margin-bottom: 1.75rem;
 				color: var(--cyber-text-secondary);
+				line-height: 1.6;
 			}
 
 			.prose :global(li) {
-				margin-bottom: 0.5rem;
+				margin-bottom: 0.75rem;
 			}
 
 			@media (max-width: 768px) {
 				.prose {
-					padding: 2rem 1.5rem;
+					padding: 1.5rem 1rem;
 				}
 
 				.title h1 {
 					font-size: 2rem;
+				}
+
+				.prose :global(p) {
+					font-size: 1rem;
 				}
 			}
 		</style>

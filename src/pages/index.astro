@@ -22,198 +22,136 @@ const recentPosts = allPosts.slice(0, 3);
 	<body>
 		<Header />
 
-		<!-- Hero Section -->
-		<section class="hero-cyber">
-			<div class="container position-relative">
-				<div class="row align-items-center">
-					<div class="col-lg-7">
-						<span class="badge-tech mb-3">
-							<i class="bi bi-cpu-fill"></i> Tech Insights for Developers
-						</span>
-						<h1 class="display-3 fw-bold mb-4 glow-text">
-							Exploring the <span class="gradient-text">Future</span> of Technology
-						</h1>
-						<p class="lead mb-5" style="color: var(--cyber-text-secondary); font-size: 1.2rem;">
-							Deep dives into AI, machine learning, modern frameworks, and cutting-edge development practices. Stay ahead of the curve.
-						</p>
-						<div class="d-flex gap-3 flex-wrap">
-							<a href="/blog" class="btn btn-cyber btn-lg">
-								<i class="bi bi-book"></i> Read Blog
-							</a>
-							<a href="/about" class="btn btn-cyber-outline btn-lg">
-								<i class="bi bi-person-circle"></i> About Me
-							</a>
-						</div>
+		<!-- Hero Section - Asymmetric Split -->
+		<section class="hero-section">
+			<div class="hero-container">
+				<div class="hero-content">
+					<h1 class="hero-title">
+						Exploring the Future of Technology
+					</h1>
+					<p class="hero-subtitle">
+						Deep dives into AI, machine learning, modern frameworks, and cutting-edge development practices. Stay ahead of the curve.
+					</p>
+					<div class="hero-ctas">
+						<a href="/blog" class="hero-cta hero-cta-primary">
+							Read Blog
+						</a>
+						<a href="/about" class="hero-cta hero-cta-secondary">
+							About Me
+						</a>
 					</div>
-					<div class="col-lg-5 d-none d-lg-block">
-						<div class="code-snippet">
-							<div style="color: var(--cyber-text-muted);">// Latest tech insights</div>
-							<br />
-							<div>const <span style="color: var(--cyber-secondary);">blog</span> = {'{'}</div>
-							<div style="padding-left: 1.5rem;">focus: [<span style="color: var(--cyber-warning);">'AI'</span>, <span style="color: var(--cyber-warning);">'Coding'</span>, <span style="color: var(--cyber-warning);">'Frameworks'</span>],</div>
-							<div style="padding-left: 1.5rem;">mission: <span style="color: var(--cyber-primary);">'Sharing knowledge'</span>,</div>
-							<div style="padding-left: 1.5rem;">updated: <span style="color: var(--cyber-secondary);">new Date()</span></div>
-							<div>{'}'};</div>
-							<br />
-							<div style="color: var(--cyber-text-muted);">// Stay curious, keep coding</div>
-						</div>
+				</div>
+				<div class="hero-visual">
+					<div class="code-block">
+						<div class="code-comment">// Latest tech insights</div>
+						<div class="code-line"><span class="code-keyword">const</span> <span class="code-variable">blog</span> = <span class="code-punctuation">{'{'}</span></div>
+						<div class="code-line"><span class="code-indent"></span>focus: [<span class="code-string">'AI'</span>, <span class="code-string">'Coding'</span>, <span class="code-string">'Frameworks'</span>],</div>
+						<div class="code-line"><span class="code-indent"></span>mission: <span class="code-string">'Sharing knowledge'</span>,</div>
+						<div class="code-line"><span class="code-indent"></span>updated: <span class="code-function">new Date()</span></div>
+						<div class="code-line"><span class="code-punctuation">{'}'};</span></div>
+						<div class="code-comment">// Stay curious, keep coding</div>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- What You'll Find Here -->
-		<div class="container" style="margin-top: -40px; position: relative; z-index: 10;">
-			<div class="floating-card">
-				<div class="row g-4">
-					<div class="col-lg-3 col-md-6">
-						<div class="stat-card">
-							<div class="d-flex align-items-center gap-3 mb-3">
-								<div class="pillar-icon" style="background: rgba(var(--cyber-primary-rgb, 0, 194, 255), 0.1);">
-									<i class="bi bi-code-slash fs-4" style="color: var(--cyber-primary);"></i>
-								</div>
-								<div
-									class="fw-bold"
-									style="font-size: 1.5rem; background: var(--cyber-gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
-								>
-									{allPosts.length}+
-								</div>
-							</div>
-							<h5 class="fw-bold mb-2">Web Dev Deep Dives</h5>
-							<p style="color: var(--cyber-text-secondary); margin-bottom: 0; font-size: 0.9rem;">Frontend & backend tutorials with production-ready patterns</p>
-						</div>
+		<!-- Stats Section - 4-Column Grid -->
+		<section class="stats-section">
+			<div class="stats-container">
+				<div class="stat-item">
+					<div class="stat-icon">
+						<i class="bi bi-code-slash"></i>
 					</div>
-					<div class="col-lg-3 col-md-6">
-						<div class="stat-card">
-							<div class="d-flex align-items-center gap-3 mb-3">
-								<div class="pillar-icon" style="background: rgba(var(--cyber-secondary-rgb, 106, 255, 150), 0.1);">
-									<i class="bi bi-briefcase fs-4" style="color: var(--cyber-secondary);"></i>
-								</div>
-								<div style="color: var(--cyber-text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Business</div>
-							</div>
-							<h5 class="fw-bold mb-2">Dev Career & Business</h5>
-							<p style="color: var(--cyber-text-secondary); margin-bottom: 0; font-size: 0.9rem;">Freelancing, client work, and thinking like a dev entrepreneur</p>
-						</div>
+					<div class="stat-number">{allPosts.length}+</div>
+					<h3 class="stat-title">Web Dev Deep Dives</h3>
+					<p class="stat-description">Frontend and backend tutorials with production-ready patterns</p>
+				</div>
+				<div class="stat-item">
+					<div class="stat-icon">
+						<i class="bi bi-briefcase"></i>
 					</div>
-					<div class="col-lg-3 col-md-6">
-						<div class="stat-card">
-							<div class="d-flex align-items-center gap-3 mb-3">
-								<div class="pillar-icon" style="background: rgba(var(--cyber-accent-rgb, 255, 107, 107), 0.1);">
-									<i class="bi bi-lightbulb fs-4" style="color: var(--cyber-accent);"></i>
-								</div>
-								<div style="color: var(--cyber-text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Tips</div>
-							</div>
-							<h5 class="fw-bold mb-2">Lessons from Work</h5>
-							<p style="color: var(--cyber-text-secondary); margin-bottom: 0; font-size: 0.9rem;">Real-world tips and battle-tested advice from the trenches</p>
-						</div>
+					<div class="stat-label">Business</div>
+					<h3 class="stat-title">Dev Career and Business</h3>
+					<p class="stat-description">Freelancing, client work, and thinking like a dev entrepreneur</p>
+				</div>
+				<div class="stat-item">
+					<div class="stat-icon">
+						<i class="bi bi-lightbulb"></i>
 					</div>
-					<div class="col-lg-3 col-md-6">
-						<div class="stat-card">
-							<div class="d-flex align-items-center gap-3 mb-3">
-								<div class="pillar-icon" style="background: rgba(var(--cyber-warning-rgb, 255, 199, 0), 0.1);">
-									<i class="bi bi-stack fs-4" style="color: var(--cyber-warning);"></i>
-								</div>
-								<div style="color: var(--cyber-text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Full-Stack</div>
-							</div>
-							<h5 class="fw-bold mb-2">Full-Stack Craft</h5>
-							<p style="color: var(--cyber-text-secondary); margin-bottom: 0; font-size: 0.9rem;">From database design to pixel-perfect UI implementation</p>
-						</div>
+					<div class="stat-label">Tips</div>
+					<h3 class="stat-title">Lessons from Work</h3>
+					<p class="stat-description">Real-world tips and battle-tested advice from the trenches</p>
+				</div>
+				<div class="stat-item">
+					<div class="stat-icon">
+						<i class="bi bi-stack"></i>
 					</div>
+					<div class="stat-label">Full-Stack</div>
+					<h3 class="stat-title">Full-Stack Craft</h3>
+					<p class="stat-description">From database design to pixel-perfect UI implementation</p>
 				</div>
 			</div>
-		</div>
+		</section>
 
-		<!-- Topics Section -->
-		<section class="py-5">
-			<div class="container py-5">
-				<div class="text-center mb-5">
-					<span class="badge-tech mb-3">Explore Topics</span>
-					<h2 class="fw-bold display-5 mb-3">What I Write About</h2>
-					<p class="lead" style="color: var(--cyber-text-secondary);">Deep technical content across modern development stacks</p>
-				</div>
-				<div class="row g-4">
-					<div class="col-lg-3">
-						<div class="topic-card">
-							<div class="topic-icon">
-								<i class="bi bi-robot"></i>
-							</div>
-							<h5 class="fw-bold mb-3">Artificial Intelligence</h5>
-							<p style="color: var(--cyber-text-secondary); margin-bottom: 0;">LLMs, transformers, neural networks, and practical AI applications.</p>
-						</div>
+		<!-- Topics Section - Different Layout Family -->
+		<section class="topics-section">
+			<div class="topics-container">
+				<h2 class="section-heading">What I Write About</h2>
+				<p class="section-subheading">Deep technical content across modern development stacks</p>
+				<div class="topics-grid">
+					<div class="topic-item">
+						<div class="topic-emoji">🤖</div>
+						<h3 class="topic-heading">Artificial Intelligence</h3>
+						<p class="topic-description">LLMs, transformers, neural networks, and practical AI applications</p>
 					</div>
-					<div class="col-lg-3">
-						<div class="topic-card">
-							<div class="topic-icon">
-								<i class="bi bi-code-square"></i>
-							</div>
-							<h5 class="fw-bold mb-3">Modern Coding</h5>
-							<p style="color: var(--cyber-text-secondary); margin-bottom: 0;">Best practices, clean code, design patterns, and algorithms.</p>
-						</div>
+					<div class="topic-item">
+						<div class="topic-emoji">💻</div>
+						<h3 class="topic-heading">Modern Coding</h3>
+						<p class="topic-description">Best practices, clean code, design patterns, and algorithms</p>
 					</div>
-					<div class="col-lg-3">
-						<div class="topic-card">
-							<div class="topic-icon">
-								<i class="bi bi-layers-fill"></i>
-							</div>
-							<h5 class="fw-bold mb-3">Frameworks</h5>
-							<p style="color: var(--cyber-text-secondary); margin-bottom: 0;">React, Vue, Astro, Next.js, and emerging frontend tech.</p>
-						</div>
+					<div class="topic-item">
+						<div class="topic-emoji">⚡</div>
+						<h3 class="topic-heading">Frameworks</h3>
+						<p class="topic-description">React, Vue, Astro, Next.js, and emerging frontend tech</p>
 					</div>
-					<div class="col-lg-3">
-						<div class="topic-card">
-							<div class="topic-icon">
-								<i class="bi bi-hdd-network"></i>
-							</div>
-							<h5 class="fw-bold mb-3">Infrastructure</h5>
-							<p style="color: var(--cyber-text-secondary); margin-bottom: 0;">Cloud, DevOps, Docker, Kubernetes, and deployment strategies.</p>
-						</div>
+					<div class="topic-item">
+						<div class="topic-emoji">🔧</div>
+						<h3 class="topic-heading">Infrastructure</h3>
+						<p class="topic-description">Cloud, DevOps, Docker, Kubernetes, and deployment strategies</p>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- Latest Posts Section -->
+		<!-- Latest Posts Section - Another Layout Family -->
 		{recentPosts.length > 0 && (
-			<section class="py-5">
-				<div class="container py-5">
-					<div class="d-flex justify-content-between align-items-center mb-5">
-						<div>
-							<span class="badge-tech mb-2">Fresh Content</span>
-							<h2 class="fw-bold display-5">Latest Articles</h2>
-							<p class="lead" style="color: var(--cyber-text-secondary); margin-bottom: 0;">Stay updated with the latest in tech</p>
-						</div>
-						<a href="/blog" class="btn btn-cyber-outline btn-lg">View All <i class="bi bi-arrow-right-circle"></i></a>
+			<section class="posts-section">
+				<div class="posts-container">
+					<div class="posts-header">
+						<h2 class="section-heading">Latest Articles</h2>
+						<p class="section-subheading">Stay updated with the latest in tech</p>
+						<a href="/blog" class="view-all-link">View All Posts</a>
 					</div>
-					<div class="row g-4">
+					<div class="posts-grid">
 						{recentPosts.map((post) => (
-							<div class="col-lg-4" key={post.id}>
-								<div class="article-card h-100">
-									<div class="card-body p-4">
-										<div class="d-flex justify-content-between align-items-center mb-3">
-											<span class="topic-tag tag-coding">Tech</span>
-											<span class="text-muted" style="color: var(--cyber-text-muted);">
-												<i class="bi bi-clock"></i>{' '}
-												5 min read
-											</span>
-										</div>
-										<h5 class="fw-bold mb-3">{post.data.title}</h5>
-										<p style="color: var(--cyber-text-secondary); margin-bottom: 1rem;" class="text-truncate">
-											{post.data.description}
-										</p>
-										<div class="d-flex justify-content-between align-items-center">
-											<small style="color: var(--cyber-text-muted);">
-												<i class="bi bi-calendar3"></i>{' '}
-												{new Date(post.data.pubDate).toLocaleDateString('en-US', {
-													month: 'short',
-													day: 'numeric',
-													year: 'numeric'
-												})}
-											</small>
-											<a href={`/blog/${post.slug}/`} class="btn btn-cyber btn-sm">Read</a>
-										</div>
-									</div>
+							<article class="post-card" key={post.id}>
+								<div class="post-meta">
+									<span class="post-tag">Tech</span>
+									<span class="post-read-time">5 min read</span>
 								</div>
-							</div>
+								<h3 class="post-title">
+									<a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+								</h3>
+								<p class="post-description">{post.data.description}</p>
+								<div class="post-footer">
+									<time class="post-date">{new Date(post.data.pubDate).toLocaleDateString('en-US', {
+										month: 'short',
+										day: 'numeric',
+										year: 'numeric'
+									})}</time>
+									<a href={`/blog/${post.slug}/`} class="post-link">Read</a>
+								</div>
+							</article>
 						))}
 					</div>
 				</div>
@@ -225,11 +163,501 @@ const recentPosts = allPosts.slice(0, 3);
 	</body>
 </html>
 
-<style>
-	main {
-		width: 100%;
-		max-width: 100%;
-		margin: 0;
-		padding: 0;
-	}
-</style>
+	<style>
+		main {
+			width: 100%;
+			max-width: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		/* Hero Section - Asymmetric Split */
+		.hero-section {
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			padding: 6rem 1.5rem 4rem;
+			background: var(--cyber-bg-primary);
+		}
+
+		.hero-container {
+			max-width: 1400px;
+			margin: 0 auto;
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 4rem;
+			align-items: center;
+		}
+
+		@media (min-width: 1024px) {
+			.hero-container {
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+
+		.hero-content {
+			padding-right: 2rem;
+		}
+
+		.hero-title {
+			font-size: 2.5rem;
+			font-weight: 800;
+			line-height: 1.1;
+			margin-bottom: 1.5rem;
+			color: var(--cyber-text-primary);
+			letter-spacing: -0.02em;
+		}
+
+		@media (min-width: 768px) {
+			.hero-title {
+				font-size: 3.5rem;
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.hero-title {
+				font-size: 4.5rem;
+			}
+		}
+
+		.hero-subtitle {
+			font-size: 1.125rem;
+			line-height: 1.6;
+			color: var(--cyber-text-secondary);
+			margin-bottom: 2rem;
+			max-width: 600px;
+		}
+
+		.hero-ctas {
+			display: flex;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.hero-cta {
+			display: inline-flex;
+			align-items: center;
+			padding: 0.875rem 1.75rem;
+			border-radius: 0.5rem;
+			font-weight: 600;
+			font-size: 1rem;
+			text-decoration: none;
+			transition: all var(--motion-duration-normal) var(--motion-ease);
+			border: none;
+			cursor: pointer;
+		}
+
+		.hero-cta-primary {
+			background: var(--cyber-primary);
+			color: #000;
+		}
+
+		.hero-cta-primary:hover {
+			background: var(--cyber-primary-hover);
+			transform: translateY(-1px);
+		}
+
+		.hero-cta-secondary {
+			background: transparent;
+			color: var(--cyber-text-primary);
+			border: 1px solid var(--cyber-border-color);
+		}
+
+		.hero-cta-secondary:hover {
+			background: var(--cyber-surface);
+			border-color: var(--cyber-border-hover);
+			color: var(--cyber-primary);
+			transform: translateY(-1px);
+		}
+
+		.hero-visual {
+			display: none;
+		}
+
+		@media (min-width: 1024px) {
+			.hero-visual {
+				display: block;
+			}
+		}
+
+		/* Code Block Styling */
+		.code-block {
+			background: var(--cyber-bg-code);
+			border: 1px solid var(--cyber-border-color);
+			border-radius: var(--radius-lg);
+			padding: 1.5rem;
+			font-family: var(--font-mono);
+			font-size: 0.875rem;
+			line-height: 1.6;
+			overflow-x: auto;
+			box-shadow: var(--cyber-shadow-lg);
+		}
+
+		.code-comment {
+			color: var(--cyber-text-muted);
+			margin-bottom: 0.5rem;
+		}
+
+		.code-line {
+			margin-bottom: 0.25rem;
+		}
+
+		.code-keyword {
+			color: #ff7b72;
+		}
+
+		.code-variable {
+			color: #79c0ff;
+		}
+
+		.code-string {
+			color: #a5d6ff;
+		}
+
+		.code-function {
+			color: #d2a8ff;
+		}
+
+		.code-punctuation {
+			color: var(--cyber-text-secondary);
+		}
+
+		.code-indent {
+			padding-left: 1.5rem;
+		}
+
+		/* Stats Section */
+		.stats-section {
+			padding: 4rem 1.5rem;
+			background: var(--cyber-bg-secondary);
+			margin-top: -2rem;
+			position: relative;
+			z-index: 10;
+		}
+
+		.stats-container {
+			max-width: 1400px;
+			margin: 0 auto;
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		@media (min-width: 768px) {
+			.stats-container {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.stats-container {
+				grid-template-columns: repeat(4, 1fr);
+			}
+		}
+
+		.stat-item {
+			padding: 1.5rem;
+			background: var(--cyber-surface);
+			border-radius: var(--radius-lg);
+			transition: all var(--motion-duration-normal) var(--motion-ease);
+		}
+
+		.stat-item:hover {
+			background: var(--cyber-surface-hover);
+			transform: translateY(-2px);
+			box-shadow: var(--cyber-shadow-md);
+		}
+
+		.stat-icon {
+			width: 48px;
+			height: 48px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: var(--cyber-primary-light);
+			border-radius: var(--radius-md);
+			color: var(--cyber-primary);
+			font-size: 1.5rem;
+			margin-bottom: 1rem;
+		}
+
+		.stat-number {
+			font-size: 2.5rem;
+			font-weight: 800;
+			background: var(--cyber-gradient-primary);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			line-height: 1;
+			margin-bottom: 0.5rem;
+		}
+
+		.stat-label {
+			font-size: 0.75rem;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			color: var(--cyber-text-muted);
+			margin-bottom: 0.5rem;
+		}
+
+		.stat-title {
+			font-size: 1.125rem;
+			font-weight: 700;
+			color: var(--cyber-text-primary);
+			margin-bottom: 0.5rem;
+			line-height: 1.3;
+		}
+
+		.stat-description {
+			font-size: 0.875rem;
+			color: var(--cyber-text-secondary);
+			line-height: 1.5;
+			margin: 0;
+		}
+
+		/* Topics Section */
+		.topics-section {
+			padding: 6rem 1.5rem;
+			background: var(--cyber-bg-primary);
+		}
+
+		.topics-container {
+			max-width: 1400px;
+			margin: 0 auto;
+			text-align: center;
+		}
+
+		.section-heading {
+			font-size: 2.5rem;
+			font-weight: 800;
+			color: var(--cyber-text-primary);
+			margin-bottom: 1rem;
+			letter-spacing: -0.02em;
+		}
+
+		@media (min-width: 768px) {
+			.section-heading {
+				font-size: 3rem;
+			}
+		}
+
+		.section-subheading {
+			font-size: 1.125rem;
+			color: var(--cyber-text-secondary);
+			margin-bottom: 3rem;
+			max-width: 600px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.topics-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+			text-align: left;
+		}
+
+		@media (min-width: 768px) {
+			.topics-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.topics-grid {
+				grid-template-columns: repeat(4, 1fr);
+			}
+		}
+
+		.topic-item {
+			padding: 2rem 1.5rem;
+			background: var(--cyber-surface);
+			border-radius: var(--radius-lg);
+			transition: all var(--motion-duration-normal) var(--motion-ease);
+			border: 1px solid transparent;
+		}
+
+		.topic-item:hover {
+			background: var(--cyber-surface-hover);
+			border-color: var(--cyber-border-hover);
+			transform: translateY(-2px);
+			box-shadow: var(--cyber-shadow-md);
+		}
+
+		.topic-emoji {
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+		}
+
+		.topic-heading {
+			font-size: 1.25rem;
+			font-weight: 700;
+			color: var(--cyber-text-primary);
+			margin-bottom: 0.75rem;
+			line-height: 1.3;
+		}
+
+		.topic-description {
+			font-size: 0.9375rem;
+			color: var(--cyber-text-secondary);
+			line-height: 1.5;
+			margin: 0;
+		}
+
+		/* Posts Section */
+		.posts-section {
+			padding: 6rem 1.5rem;
+			background: var(--cyber-bg-secondary);
+		}
+
+		.posts-container {
+			max-width: 1400px;
+			margin: 0 auto;
+		}
+
+		.posts-header {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			margin-bottom: 3rem;
+		}
+
+		@media (min-width: 768px) {
+			.posts-header {
+				flex-direction: row;
+				align-items: flex-end;
+				justify-content: space-between;
+			}
+		}
+
+		.view-all-link {
+			color: var(--cyber-primary);
+			text-decoration: none;
+			font-weight: 600;
+			transition: color var(--motion-duration-fast) var(--motion-ease);
+		}
+
+		.view-all-link:hover {
+			color: var(--cyber-primary-hover);
+			text-decoration: underline;
+		}
+
+		.posts-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		@media (min-width: 768px) {
+			.posts-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.posts-grid {
+				grid-template-columns: repeat(3, 1fr);
+			}
+		}
+
+		.post-card {
+			padding: 1.5rem;
+			background: var(--cyber-surface);
+			border-radius: var(--radius-lg);
+			transition: all var(--motion-duration-normal) var(--motion-ease);
+			border: 1px solid transparent;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.post-card:hover {
+			background: var(--cyber-surface-hover);
+			border-color: var(--cyber-border-hover);
+			transform: translateY(-2px);
+			box-shadow: var(--cyber-shadow-md);
+		}
+
+		.post-meta {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 1rem;
+		}
+
+		.post-tag {
+			font-size: 0.75rem;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			padding: 0.25rem 0.5rem;
+			background: var(--cyber-primary-light);
+			color: var(--cyber-primary);
+			border-radius: var(--radius-sm);
+		}
+
+		.post-read-time {
+			font-size: 0.875rem;
+			color: var(--cyber-text-muted);
+		}
+
+		.post-title {
+			font-size: 1.25rem;
+			font-weight: 700;
+			color: var(--cyber-text-primary);
+			margin-bottom: 0.75rem;
+			line-height: 1.3;
+		}
+
+		.post-title a {
+			color: var(--cyber-text-primary);
+			text-decoration: none;
+			transition: color var(--motion-duration-fast) var(--motion-ease);
+		}
+
+		.post-title a:hover {
+			color: var(--cyber-primary);
+		}
+
+		.post-description {
+			font-size: 0.9375rem;
+			color: var(--cyber-text-secondary);
+			line-height: 1.5;
+			margin-bottom: 1rem;
+			flex-grow: 1;
+		}
+
+		.post-footer {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: auto;
+		}
+
+		.post-date {
+			font-size: 0.875rem;
+			color: var(--cyber-text-muted);
+		}
+
+		.post-link {
+			color: var(--cyber-primary);
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 0.875rem;
+			transition: color var(--motion-duration-fast) var(--motion-ease);
+		}
+
+		.post-link:hover {
+			color: var(--cyber-primary-hover);
+			text-decoration: underline;
+		}
+
+		/* Reduced Motion Support */
+		@media (prefers-reduced-motion: reduce) {
+			.hero-cta,
+			.stat-item,
+			.topic-item,
+			.post-card {
+				transition: none;
+			}
+		}
+	</style>

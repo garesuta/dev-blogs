@@ -20,59 +20,66 @@ const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
 	{icon && <i class={`bi ${icon}`} aria-hidden="true"></i>}
 	<slot />
 </a>
-<style>
-	a {
-		position: relative;
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		padding: 8px 16px;
-		color: var(--cyber-text-secondary);
-		text-decoration: none;
-		font-size: 0.875rem;
-		font-weight: 500;
-		border-radius: 8px;
-		transition: color 0.2s, background 0.2s;
-	}
-
-	a:hover {
-		color: var(--cyber-text-primary);
-		background: rgba(255, 255, 255, 0.05);
-	}
-
-	a.active {
-		color: var(--cyber-primary);
-		background: rgba(0, 255, 136, 0.08);
-	}
-
-	a.active::after {
-		content: '';
-		position: absolute;
-		bottom: -1px;
-		left: 16px;
-		right: 16px;
-		height: 2px;
-		background: var(--cyber-primary);
-		border-radius: 2px;
-	}
-
-	a i {
-		font-size: 1rem;
-	}
-
-	@media (max-width: 991px) {
+	<style>
 		a {
-			width: 100%;
-			padding: 12px 16px;
-			border-radius: 8px;
+			position: relative;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.5rem 1rem;
+			color: var(--cyber-text-secondary);
+			text-decoration: none;
+			font-size: 0.9375rem;
+			font-weight: 500;
+			border-radius: var(--radius-md);
+			transition: all var(--motion-duration-normal) var(--motion-ease);
 		}
 
-		a.active::after {
-			display: none;
+		a:hover {
+			color: var(--cyber-text-primary);
+			background: var(--cyber-surface);
 		}
 
 		a.active {
-			background: rgba(0, 255, 136, 0.1);
+			color: var(--cyber-primary);
+			background: var(--cyber-primary-light);
+		}
+
+		a.active::after {
+			content: '';
+			position: absolute;
+			bottom: -1px;
+			left: 1rem;
+			right: 1rem;
+			height: 2px;
+			background: var(--cyber-primary);
+			border-radius: 1px;
+		}
+
+		a i {
+			font-size: 1rem;
+		}
+
+		@media (max-width: 991px) {
+			a {
+				width: 100%;
+				padding: 0.75rem 1rem;
+				border-radius: var(--radius-md);
+			}
+
+			a.active::after {
+				display: none;
+			}
+
+			a.active {
+				background: var(--cyber-primary-light);
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			a {
+				transition: none;
+			}
 		}
 	}
-</style>
+	</style>
