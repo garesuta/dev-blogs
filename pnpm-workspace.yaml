@@ -1,2 +1,12 @@
+allowBuilds:
+  esbuild: false
+  sharp: false
 ignoredBuiltDependencies:
   - esbuild
+minimumReleaseAgeExclude:
+  - '@astrojs/internal-helpers@0.10.1'
+  - '@astrojs/markdown-remark@7.2.1'
+  - '@astrojs/markdown-satteri@0.3.3'
+  - '@astrojs/mdx@7.0.2'
+  - '@astrojs/node@11.0.2'
+  - astro@7.0.6
