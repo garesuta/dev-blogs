@@ -180,6 +180,58 @@ const remainingPosts = posts.slice(1);
         </section>
       )}
 
+      <!-- Trending Content (Featured Section) -->
+      {!categoryFilter && (
+        <section class="mb-5" style="background: var(--cyber-bg-tertiary); border-radius: 12px; padding: 24px;">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 mb-0">
+              <i class="bi bi-fire text-danger me-2"></i>
+              Trending Now
+            </h2>
+            <span class="badge bg-secondary">Last 90 days</span>
+          </div>
+
+          {remainingPosts.length > 0 ? (
+            <div class="row g-3">
+              {remainingPosts.slice(0, 6).map((post) => (
+                <div class="col-6 col-md-4 col-lg-2">
+                  <a href={`/blog/${post.slug}`} class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-lift">
+                      {post.heroImage ? (
+                        <img
+                          src={post.heroImage}
+                          class="card-img-top"
+                          alt=""
+                          style="height: 120px; object-fit: cover;"
+                        />
+                      ) : (
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 120px;">
+                          <i class="bi bi-journal-text text-muted fs-1"></i>
+                        </div>
+                      )}
+                      <div class="card-body p-2">
+                        <h6 class="card-title small mb-1 text-truncate">{post.title}</h6>
+                        <small class="text-muted" style="font-size: 0.75rem;">
+                          {post.publishedAt ? (
+                            post.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                          ) : (
+                            'No date'
+                          )}
+                        </small>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div class="text-center py-4">
+              <p class="text-muted mb-0">No trending articles yet</p>
+            </div>
+          )}
+        </section>
+      )}
+
       <!-- Posts Grid -->
       <section class="posts-section">
         <h2 class="section-title">{categoryFilter ? 'Posts' : 'All Posts'}</h2>

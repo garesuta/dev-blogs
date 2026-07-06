@@ -2,6 +2,7 @@
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import UserMenu from './UserMenu.vue';
+import SearchModal from './SearchModal.vue';
 ---
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -31,6 +32,8 @@ import UserMenu from './UserMenu.vue';
 		</nav>
 
 		<div class="header-actions">
+			<SearchModal client:load />
+
 			<a
 				href="https://github.com/yourusername/yourrepo"
 				target="_blank"

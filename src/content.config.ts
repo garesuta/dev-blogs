@@ -16,6 +16,10 @@ const blog = defineCollection({
 			// Category/tag support for filtering
 			category: z.string().optional(), // matches category slug from DB
 			tags: z.array(z.string()).optional(),
+			// Optional fields for search and discovery
+			readingTime: z.number().optional(),
+			difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
+			series: z.string().optional(),
 		}),
 });
 

@@ -19,18 +19,35 @@ export const onRequest = defineMiddleware(async (context, next) => {
     headers: context.request.headers,
   });
 
-  // Debug: Log session info for protected routes
+  // Generate nonce for inline scripts
+  const nonce = crypto.randomUUID();
+  const csp = `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'`;
+
+  // Process the request
+  const response = await processRequest(context, next, session, pathname);
+  response.headers.set('Content-Security-Policy', csp);
+  return response;
+});
+
+async function processRequest(
+  context: any,
+  next: () => Promise<Response>,
+  session: any,
+  pathname: string
+): Promise<Response> {
+  // Debug: Log session info for protected routes (only in development)
   if (pathname.startsWith("/editor") || pathname.startsWith("/admin")) {
     const rawRole = session?.user?.role;
     const normalizedRole = ((rawRole as string) || "user").toLowerCase();
-    console.log("[Auth Debug]", {
-      pathname,
-      hasSession: !!session,
-      userId: session?.user?.id,
-      userEmail: session?.user?.email,
-      rawRole,
-      normalizedRole,
-    });
+    if (import.meta.env.DEV) {
+      console.log("[Auth Debug]", {
+        pathname,
+        hasSession: !!session,
+        userId: session?.user?.id,
+        rawRole,
+        normalizedRole,
+      });
+    }
   }
 
   // Set user and session in locals
@@ -69,4 +86,4 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   return next();
-});
+}

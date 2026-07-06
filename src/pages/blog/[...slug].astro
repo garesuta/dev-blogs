@@ -2,6 +2,7 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
+import RelatedArticles from '../../components/RelatedArticles.vue';
 import { db } from '../../lib/db';
 import { posts, users, categories } from '../../lib/schema';
 import { eq } from 'drizzle-orm';
@@ -332,6 +333,22 @@ const contentHtml = processContentForDisplay(post.content);
           )}
         </div>
       </article>
+
+      <!-- Related Articles Section -->
+      <section class="container py-4">
+        <RelatedArticles client:load
+          :current-article="{
+            id: post.slug,
+            title: post.title,
+            description: post.description,
+            category: post.categoryName,
+            heroImage: post.heroImage,
+            pubDate: post.publishedAt,
+            updatedDate: post.updatedAt
+          }"
+          :all-articles="[]"
+        />
+      </section>
     </main>
     <Footer />
   </body>
