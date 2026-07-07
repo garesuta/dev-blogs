@@ -201,27 +201,48 @@ watch(containerRef, (el) => {
 
 <template>
   <!-- v-once for static container structure -->
-  <div v-once class="search-results-container">
+  <div
+    v-once
+    class="search-results-container"
+  >
     <!-- Loading state -->
-    <div v-if="isSearching" class="search-loading-state">
-      <div class="spinner-border" role="status">
+    <div
+      v-if="isSearching"
+      class="search-loading-state"
+    >
+      <div
+        class="spinner-border"
+        role="status"
+      >
         <span class="visually-hidden">Searching...</span>
       </div>
     </div>
 
     <!-- Error state -->
-    <div v-if="searchError" class="search-error-state" role="alert">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div
+      v-if="searchError"
+      class="search-error-state"
+      role="alert"
+    >
+      <i class="bi bi-exclamation-triangle-fill me-2" />
       <span>{{ searchError }}</span>
     </div>
 
     <!-- Empty state -->
-    <div v-if="!isSearching && !hasResults && !searchError" class="search-empty-state">
-      <i class="bi bi-journal-x fs-1 text-muted mb-3 d-block"></i>
-      <h5 class="text-muted">No results found</h5>
+    <div
+      v-if="!isSearching && !hasResults && !searchError"
+      class="search-empty-state"
+    >
+      <i class="bi bi-journal-x fs-1 text-muted mb-3 d-block" />
+      <h5 class="text-muted">
+        No results found
+      </h5>
       <p class="text-muted">
         Try different keywords or
-        <a href="/blog" class="link">browse all articles</a>
+        <a
+          href="/blog"
+          class="link"
+        >browse all articles</a>
       </p>
     </div>
 
@@ -239,7 +260,10 @@ watch(containerRef, (el) => {
           Showing <strong>{{ displayResults.length }}</strong> of
           <strong>{{ totalCount }}</strong> results
         </span>
-        <span v-if="query" class="text-muted">
+        <span
+          v-if="query"
+          class="text-muted"
+        >
           for "{{ query }}"
         </span>
       </div>
@@ -248,15 +272,14 @@ watch(containerRef, (el) => {
       <div
         v-for="doc in displayResults"
         :key="doc.id"
+        v-memo="[doc.id, doc.title]"
         class="search-result-card"
-        @click="() => selectDocument(doc)"
         role="article"
         :tabindex="0"
+        @click="() => selectDocument(doc)"
         @keydown.enter="() => selectDocument(doc)"
       >
-        <!-- v-memo: Memoize based on doc.id and doc.title to prevent unnecessary re-renders -->
         <SearchResultCard
-          v-memo="[doc.id, doc.title]"
           :document="doc"
           :highlighted-title="getHighlightedTitle(doc.title)"
           :highlighted-description="getHighlightedDescription(doc.description)"
@@ -265,19 +288,25 @@ watch(containerRef, (el) => {
       </div>
 
       <!-- Load more button -->
-      <div v-if="hasMore" class="load-more-container mt-4 text-center">
+      <div
+        v-if="hasMore"
+        class="load-more-container mt-4 text-center"
+      >
         <button
-          @click="loadNextPage"
           class="btn btn-outline-primary"
           :disabled="isSearching"
+          @click="loadNextPage"
         >
           <span v-if="isSearching">
-            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            />
             Loading...
           </span>
           <span v-else>
             Load More Results
-            <i class="bi bi-chevron-down ms-2"></i>
+            <i class="bi bi-chevron-down ms-2" />
           </span>
         </button>
       </div>

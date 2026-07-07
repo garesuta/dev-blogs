@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { SearchDocument } from '@/types/search'
-import useRelatedArticles from '@/composables/useRelatedArticles'
+import { useRelatedArticles } from '@/composables/useRelatedArticles'
 
 interface Props {
   currentArticle: SearchDocument
@@ -39,11 +39,17 @@ const getDifficultyClass = (difficulty?: string) => {
 </script>
 
 <template>
-  <div v-if="hasTrending || hasRecentlyUpdated" class="trending-section mt-5">
+  <div
+    v-if="hasTrending || hasRecentlyUpdated"
+    class="trending-section mt-5"
+  >
     <!-- Trending Content -->
-    <div v-if="hasTrending" class="mb-5">
+    <div
+      v-if="hasTrending"
+      class="mb-5"
+    >
       <h3 class="mb-3">
-        <i class="bi bi-fire"></i> Trending Now
+        <i class="bi bi-fire" /> Trending Now
       </h3>
       <div class="list-group list-group-flush shadow-sm rounded border-0">
         <a
@@ -59,10 +65,16 @@ const getDifficultyClass = (difficulty?: string) => {
             <h6 class="mb-1">{{ article.title }}</h6>
             <p class="mb-1 text-muted small">{{ article.description }}</p>
             <div class="d-flex gap-2 align-items-center">
-              <span v-if="article.category" class="badge bg-info text-white small">
+              <span
+                v-if="article.category"
+                class="badge bg-info text-white small"
+              >
                 {{ article.category }}
               </span>
-              <span v-if="article.readingTime" class="text-muted small">
+              <span
+                v-if="article.readingTime"
+                class="text-muted small"
+              >
                 {{ article.readingTime }} min read
               </span>
               <span class="text-muted small">
@@ -70,15 +82,18 @@ const getDifficultyClass = (difficulty?: string) => {
               </span>
             </div>
           </div>
-          <i class="bi bi-chevron-right text-muted"></i>
+          <i class="bi bi-chevron-right text-muted" />
         </a>
       </div>
     </div>
 
     <!-- Recently Updated -->
-    <div v-if="hasRecentlyUpdated" class="mb-5">
+    <div
+      v-if="hasRecentlyUpdated"
+      class="mb-5"
+    >
       <h3 class="mb-3">
-        <i class="bi bi-clock-history"></i> Recently Updated
+        <i class="bi bi-clock-history" /> Recently Updated
       </h3>
       <div class="list-group list-group-flush shadow-sm rounded border-0">
         <a
@@ -95,7 +110,10 @@ const getDifficultyClass = (difficulty?: string) => {
               </h6>
               <p class="mb-1 text-muted small">{{ article.description }}</p>
               <div class="d-flex gap-2 align-items-center">
-                <span v-if="article.category" class="badge bg-info text-white small">
+                <span
+                  v-if="article.category"
+                  class="badge bg-info text-white small"
+                >
                   {{ article.category }}
                 </span>
                 <span class="text-muted small">
@@ -103,7 +121,7 @@ const getDifficultyClass = (difficulty?: string) => {
                 </span>
               </div>
             </div>
-            <i class="bi bi-arrow-right-circle text-muted"></i>
+            <i class="bi bi-arrow-right-circle text-muted" />
           </div>
         </a>
       </div>

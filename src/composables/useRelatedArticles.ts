@@ -23,7 +23,7 @@ export function useRelatedArticles(currentArticle: SearchDocument, allArticles: 
 
   // Get related articles based on multiple factors
   const relatedArticles = computed(() => {
-    if (!currentArticle || !fuse) return []
+    if (!currentArticle || !fuse.value) return []
 
     const rawResults = fuse.value.search('', {
       limit: 10,

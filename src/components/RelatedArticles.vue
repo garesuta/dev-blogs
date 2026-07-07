@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { SearchDocument } from '@/types/search'
-import useRelatedArticles from '@/composables/useRelatedArticles'
+import { useRelatedArticles } from '@/composables/useRelatedArticles'
 
 interface Props {
   currentArticle: SearchDocument
@@ -37,8 +37,13 @@ const getDifficultyClass = (difficulty?: string) => {
 </script>
 
 <template>
-  <div v-if="hasRelated" class="related-articles-section mt-5">
-    <h3 class="mb-3">You Might Also Like</h3>
+  <div
+    v-if="hasRelated"
+    class="related-articles-section mt-5"
+  >
+    <h3 class="mb-3">
+      You Might Also Like
+    </h3>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
       <div
         v-for="article in relatedArticles"
@@ -49,7 +54,10 @@ const getDifficultyClass = (difficulty?: string) => {
           :href="`/blog/${article.id}/`"
           class="text-decoration-none related-article-card"
         >
-          <div v-if="article.heroImage" class="card h-100 border-0 shadow-sm">
+          <div
+            v-if="article.heroImage"
+            class="card h-100 border-0 shadow-sm"
+          >
             <img
               :src="article.heroImage"
               :alt="article.title"
@@ -60,31 +68,52 @@ const getDifficultyClass = (difficulty?: string) => {
               <h5 class="card-title">{{ article.title }}</h5>
               <p class="card-text text-muted small">{{ article.description }}</p>
               <div class="d-flex gap-2 mb-2">
-                <span v-if="article.difficulty" :class="['badge', 'text-white', getDifficultyClass(article.difficulty)]">
+                <span
+                  v-if="article.difficulty"
+                  :class="['badge', 'text-white', getDifficultyClass(article.difficulty)]"
+                >
                   {{ article.difficulty }}
                 </span>
-                <span v-if="article.category" class="badge bg-info text-white">
+                <span
+                  v-if="article.category"
+                  class="badge bg-info text-white"
+                >
                   {{ article.category }}
                 </span>
-                <span v-if="article.readingTime" class="badge bg-light text-dark">
+                <span
+                  v-if="article.readingTime"
+                  class="badge bg-light text-dark"
+                >
                   {{ article.readingTime }} min
                 </span>
               </div>
               <small class="text-muted">{{ formatDate(article.pubDate) }}</small>
             </div>
           </div>
-          <div v-else class="card h-100 border-0 shadow-sm">
+          <div
+            v-else
+            class="card h-100 border-0 shadow-sm"
+          >
             <div class="card-body">
               <h5 class="card-title">{{ article.title }}</h5>
               <p class="card-text text-muted small">{{ article.description }}</p>
               <div class="d-flex gap-2 mb-2">
-                <span v-if="article.difficulty" :class="['badge', 'text-white', getDifficultyClass(article.difficulty)]">
+                <span
+                  v-if="article.difficulty"
+                  :class="['badge', 'text-white', getDifficultyClass(article.difficulty)]"
+                >
                   {{ article.difficulty }}
                 </span>
-                <span v-if="article.category" class="badge bg-info text-white">
+                <span
+                  v-if="article.category"
+                  class="badge bg-info text-white"
+                >
                   {{ article.category }}
                 </span>
-                <span v-if="article.readingTime" class="badge bg-light text-dark">
+                <span
+                  v-if="article.readingTime"
+                  class="badge bg-light text-dark"
+                >
                   {{ article.readingTime }} min
                 </span>
               </div>

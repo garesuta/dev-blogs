@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import SearchInput from './SearchInput.vue'
 import SearchResults from './SearchResults.vue'
-import useSearch from '@/composables/useSearch'
+import { useSearch } from '@/composables/useSearch'
 
 const isOpen = ref(false)
 const searchInputRef = ref<InstanceType<typeof SearchInput> | null>(null)
@@ -107,11 +107,11 @@ watch(query, (newQuery) => {
   <!-- Search Button in Header -->
   <button
     class="search-trigger-btn"
-    @click="openSearch"
     aria-label="Open search"
     title="Search (Cmd/Ctrl + K)"
+    @click="openSearch"
   >
-    <i class="bi bi-search"></i>
+    <i class="bi bi-search" />
   </button>
 
   <!-- Search Modal Overlay -->
@@ -129,15 +129,18 @@ watch(query, (newQuery) => {
         <div class="search-modal-content">
           <!-- Modal Header -->
           <div class="search-modal-header">
-            <h2 id="search-modal-title" class="search-modal-title">
-              <i class="bi bi-search me-2"></i>Search
+            <h2
+              id="search-modal-title"
+              class="search-modal-title"
+            >
+              <i class="bi bi-search me-2" />Search
             </h2>
             <button
               class="search-modal-close"
-              @click="closeSearch"
               aria-label="Close search"
+              @click="closeSearch"
             >
-              <i class="bi bi-x-lg"></i>
+              <i class="bi bi-x-lg" />
             </button>
           </div>
 
@@ -152,21 +155,35 @@ watch(query, (newQuery) => {
             />
 
             <!-- Loading State -->
-            <div v-if="loading" class="search-loading">
-              <div class="spinner-border text-primary" role="status">
+            <div
+              v-if="loading"
+              class="search-loading"
+            >
+              <div
+                class="spinner-border text-primary"
+                role="status"
+              >
                 <span class="visually-hidden">Loading...</span>
               </div>
-              <p class="mt-2 text-muted">Searching...</p>
+              <p class="mt-2 text-muted">
+                Searching...
+              </p>
             </div>
 
             <!-- Error State -->
-            <div v-else-if="error" class="search-error alert alert-danger">
-              <i class="bi bi-exclamation-triangle me-2"></i>
+            <div
+              v-else-if="error"
+              class="search-error alert alert-danger"
+            >
+              <i class="bi bi-exclamation-triangle me-2" />
               {{ error }}
             </div>
 
             <!-- Search Results -->
-            <div v-else-if="hasResults" class="search-results-container">
+            <div
+              v-else-if="hasResults"
+              class="search-results-container"
+            >
               <SearchResults
                 :results="results"
                 :query="query"
@@ -175,16 +192,34 @@ watch(query, (newQuery) => {
             </div>
 
             <!-- Empty State -->
-            <div v-else-if="query.trim()" class="search-empty">
-              <i class="bi bi-search mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
-              <p class="text-muted">No results found for "{{ query }}"</p>
-              <p class="text-muted small">Try different keywords or check your spelling</p>
+            <div
+              v-else-if="query.trim()"
+              class="search-empty"
+            >
+              <i
+                class="bi bi-search mb-3"
+                style="font-size: 3rem; opacity: 0.3;"
+              />
+              <p class="text-muted">
+                No results found for "{{ query }}"
+              </p>
+              <p class="text-muted small">
+                Try different keywords or check your spelling
+              </p>
             </div>
 
             <!-- Initial State -->
-            <div v-else class="search-placeholder">
-              <i class="bi bi-lightbulb mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
-              <p class="text-muted">Start typing to search articles</p>
+            <div
+              v-else
+              class="search-placeholder"
+            >
+              <i
+                class="bi bi-lightbulb mb-3"
+                style="font-size: 3rem; opacity: 0.3;"
+              />
+              <p class="text-muted">
+                Start typing to search articles
+              </p>
               <div class="search-hints mt-3">
                 <span class="badge bg-light text-muted">Try: "React"</span>
                 <span class="badge bg-light text-muted">Try: "TypeScript"</span>
