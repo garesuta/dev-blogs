@@ -44,7 +44,7 @@ describe('useLRUCache', () => {
   })
 
   it('should evict LRU entry when cache is full', () => {
-    const { get, set, has } = useLRUCache(2)
+    const { get, set, has, size } = useLRUCache(2)
 
     set('key1', 'value1')
     set('key2', 'value2')

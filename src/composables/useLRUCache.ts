@@ -1,7 +1,7 @@
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 
 export function useLRUCache<K, V>(maxSize = 50) {
-  const cache = ref<Map<K, V>>(new Map())
+  const cache = shallowRef(new Map<K, V>())
 
   function get(key: K): V | undefined {
     const value = cache.value.get(key)

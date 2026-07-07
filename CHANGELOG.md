@@ -11,6 +11,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 - **editor**: Add integration tests for TiptapEditor component and API endpoints (components, extensions, composables)
 
 ### Fixed
+- **types**: Clear all 78 `astro check` type errors across `src` and tests (search, composables, pages) — codebase now type-clean
+- **blog**: `RelatedArticles` used Vue directive syntax (`:current-article`) inside an Astro template, causing a build-breaking "unterminated string literal" parse error — switched to Astro `prop={{...}}` syntax
+- **editor**: `SaveStatusBar` props typed as `ComputedRef<...>` produced a no-overlap comparison error and the status bar rendered blank — corrected prop types to unwrapped values and wired missing `saveStatusText`/`saveStatusClass`
+- **editor**: CSS selector typo `:notion-status-bar` (pseudo-class) silently dropped the status-bar rule in production builds — fixed to `.notion-status-bar`
+- **search**: `useRelatedArticles` sorted result items by a non-existent `score` field (a no-op) — now sorts raw Fuse results before mapping
 - **security**: CSP nonce was never attached to script tags, blocking all inline scripts and killing Astro island hydration site-wide — replaced with `unsafe-inline` for script-src
 - **blog**: Homepage post links pointed to `/blog/undefined/` — posts now sourced from database (matching blog routes) instead of the markdown content collection
 - **ui**: Skip-link bottom edge peeking into view at the top of every page — hidden via `translateY(-100%)` instead of fixed offset
@@ -27,6 +32,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 - **editor**: TypeScript errors — fixed useEditor import from @tiptap/vue-3, composable type mismatches, test import paths, and extension PluginProps types
 
 ### Changed
+- **editor**: Remove dead `TiptapEditor.vue.backup` (2.3k-line stale duplicate carrying the same CSS typo)
 - **theme**: Replace 200+ hardcoded hex colors with CSS variables across all pages, layouts, and Vue components for full light/dark theme support
 - **theme**: Add ~50 new CSS variables (surfaces, neutrals, status colors, form inputs, editor styles) with both dark and light theme values
 - **header**: Consolidate two-button theme toggle into single icon-swapping button

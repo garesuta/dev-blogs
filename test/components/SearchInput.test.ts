@@ -1,25 +1,30 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import SearchInput from '@/components/SearchInput.vue'
 import { useSearchValidation } from '@/composables/useSearchValidation'
 
-// Mock composables
-vi.mock('@/composables/useSearchValidation', () => ({
-  useSearchValidation: vi.fn(() => ({
-    query: ref(''),
-    error: ref(null),
-    isValid: ref(true),
-    updateQuery: vi.fn(),
-    clearError: vi.fn(),
-    MAX_QUERY_LENGTH: 200,
-  })),
-}))
+// Mock composables (auto-mock, return value set per test in beforeEach)
+vi.mock('@/composables/useSearchValidation')
 
-const mockUseSearchValidation = vi.mocked('@/composables/useSearchValidation')
+const mockUseSearchValidation = {
+  query: ref(''),
+  error: ref<string | null>(null),
+  isValid: ref(true),
+  updateQuery: vi.fn(),
+  clearError: vi.fn(),
+  MAX_QUERY_LENGTH: 200,
+}
 
 describe('SearchInput Component', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockUseSearchValidation.query.value = ''
+    mockUseSearchValidation.error.value = null
+    mockUseSearchValidation.isValid.value = true
+    vi.mocked(useSearchValidation).mockReturnValue(
+      mockUseSearchValidation as unknown as ReturnType<typeof useSearchValidation>
+    )
   })
 
   it('should render correctly', () => {
@@ -107,8 +112,8 @@ describe('SearchInput Component', () => {
   it('should expose focus method', () => {
     const wrapper = mount(SearchInput)
 
-    expect(wrapper.vm.focus).toBeDefined()
-    expect(typeof wrapper.vm.focus).toBe('function')
+    expect((wrapper.vm as any).focus).toBeDefined()
+    expect(typeof (wrapper.vm as any).focus).toBe('function')
   })
 
   it('should display error message when validation fails', () => {
@@ -139,7 +144,7 @@ describe('SearchInput Component', () => {
     expect(container.exists()).toBe(true)
   })
 
-  it('should handle keyboard events', () => {
+  it('should handle keyboard events', async () => {
     const wrapper = mount(SearchInput)
 
     const input = wrapper.find('input[type="search"]')

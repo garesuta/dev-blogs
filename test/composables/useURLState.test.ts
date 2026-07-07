@@ -40,7 +40,7 @@ describe('useURLState', () => {
       tags: 'react',
     }
 
-    mockURLSearchParams.get.mockImplementation((key) => defaults[key])
+    mockURLSearchParams.get.mockImplementation((key: string) => defaults[key as keyof typeof defaults])
 
     const state = useURLState(defaults)
 
@@ -84,7 +84,7 @@ describe('useURLState', () => {
   })
 
   it('should remove URL parameter when value is set to undefined', () => {
-    const defaults = {
+    const defaults: Record<string, string | undefined> = {
       category: 'ai',
       tags: 'react',
     }
@@ -100,7 +100,7 @@ describe('useURLState', () => {
   })
 
   it('should handle deep object changes', () => {
-    const defaults = {
+    const defaults: Record<string, string | string[] | undefined> = {
       category: '',
       tags: undefined,
       difficulty: undefined,
@@ -122,7 +122,7 @@ describe('useURLState', () => {
   })
 
   it('should support optional parameters', () => {
-    const defaults = {
+    const defaults: Record<string, string | undefined> = {
       category: '',
       tags: '',
     }

@@ -27,17 +27,12 @@ export function useRelatedArticles(currentArticle: SearchDocument, allArticles: 
 
     const rawResults = fuse.value.search('', {
       limit: 10,
-      includeScore: true,
     })
 
+    // Sort by Fuse.js score ascending (lower = better match) before extracting items
     return rawResults
+      .sort((a, b) => (a.score ?? 0) - (b.score ?? 0))
       .map(result => result.item)
-      .sort((a, b) => {
-        // Primary: Tag similarity (from Fuse.js score, lower is better)
-        // The search returns objects with score property
-        // Sort by score ascending (lower score = better match)
-        return (a.score || 0) - (b.score || 0)
-      })
       .slice(0, 5) // Top 5 related
   })
 

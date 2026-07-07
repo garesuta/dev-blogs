@@ -90,7 +90,8 @@ describe('TiptapEditor Integration', () => {
     });
 
     it('has expected component name', () => {
-      expect(TiptapEditor.name || TiptapEditor.__name).toBeDefined();
+      const comp = TiptapEditor as { name?: string; __name?: string };
+      expect(comp.name || comp.__name).toBeDefined();
     });
   });
 

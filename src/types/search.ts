@@ -8,6 +8,8 @@ export interface SearchDocument {
   readonly tags: readonly string[]
   readonly category?: string
   readonly pubDate: Date
+  readonly updatedDate?: Date
+  readonly heroImage?: string
   readonly readingTime?: number
   readonly difficulty?: DifficultyLevel
 }

@@ -15,7 +15,7 @@ export function useReadingHistory() {
   const session = authClient.useSession()
 
   // Check if user is logged in
-  const isLoggedIn = computed(() => !!session?.user)
+  const isLoggedIn = computed(() => !!session.value?.data?.user)
 
   // Load history from localStorage
   function loadHistory() {
@@ -81,7 +81,7 @@ export function useReadingHistory() {
 
   // Clear history on logout
   watch(session, () => {
-    if (!session?.user) {
+    if (!session.value?.data?.user) {
       clearHistory()
     }
   })

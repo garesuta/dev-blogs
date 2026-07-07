@@ -336,17 +336,20 @@ const contentHtml = processContentForDisplay(post.content);
 
       <!-- Related Articles Section -->
       <section class="container py-4">
-        <RelatedArticles client:load
-          :current-article="{
+        <RelatedArticles
+          client:load
+          currentArticle={{
             id: post.slug,
             title: post.title,
             description: post.description,
-            category: post.categoryName,
-            heroImage: post.heroImage,
-            pubDate: post.publishedAt,
-            updatedDate: post.updatedAt
-          }"
-          :all-articles="[]"
+            body: post.content ?? '',
+            tags: [],
+            category: post.categoryName ?? undefined,
+            heroImage: post.heroImage ?? undefined,
+            pubDate: post.publishedAt ?? post.createdAt,
+            updatedDate: post.updatedAt ?? undefined,
+          }}
+          allArticles={[]}
         />
       </section>
     </main>

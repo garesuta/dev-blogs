@@ -18,7 +18,7 @@ vi.mock('dompurify', () => ({
   },
 }))
 
-const mockDOMPurify = vi.mocked('dompurify')
+const mockDOMPurify = vi.mocked(DOMPurify)
 
 describe('search.ts', () => {
   const mockDocuments: SearchDocument[] = [
@@ -169,7 +169,7 @@ describe('search.ts', () => {
       const results = await searchWithTimeout(index, 'react')
 
       expect(results).toBeInstanceOf(Array)
-      expect(mockDOMPurify.default.sanitize).not.toHaveBeenCalled() // Highlight only
+      expect(mockDOMPurify.sanitize).not.toHaveBeenCalled() // Highlight only
     })
 
     it('should return empty results for empty query', async () => {
@@ -292,13 +292,13 @@ describe('search.ts', () => {
       const result = highlightText('React Hooks Tutorial', '')
 
       expect(result).toBe('React Hooks Tutorial')
-      expect(mockDOMPurify.default.sanitize).not.toHaveBeenCalled()
+      expect(mockDOMPurify.sanitize).not.toHaveBeenCalled()
     })
 
     it('should highlight single word match', () => {
       const result = highlightText('React Hooks Tutorial', 'hooks')
 
-      expect(mockDOMPurify.default.sanitize).toHaveBeenCalledWith(
+      expect(mockDOMPurify.sanitize).toHaveBeenCalledWith(
         expect.stringContaining('mark'),
         expect.anything()
       )
@@ -308,7 +308,7 @@ describe('search.ts', () => {
     it('should highlight multiple word matches', () => {
       const result = highlightText('React Hooks Tutorial', 'react hooks')
 
-      expect(mockDOMPurify.default.sanitize).toHaveBeenCalled()
+      expect(mockDOMPurify.sanitize).toHaveBeenCalled()
       expect(result).toContain('react')
       expect(result).toContain('hooks')
     })
@@ -316,14 +316,14 @@ describe('search.ts', () => {
     it('should handle special regex characters in query', () => {
       const result = highlightText('React (Hooks) Tutorial', '(hooks)')
 
-      expect(mockDOMPurify.default.sanitize).toHaveBeenCalled()
+      expect(mockDOMPurify.sanitize).toHaveBeenCalled()
       expect(result).toContain('(hooks)')
     })
 
     it('should escape HTML in text', () => {
       const result = highlightText('React<script>alert(1)</script>Tutorial', 'script')
 
-      expect(mockDOMPurify.default.sanitize).toHaveBeenCalled()
+      expect(mockDOMPurify.sanitize).toHaveBeenCalled()
       expect(result).not.toContain('<script>')
     })
 

@@ -1,6 +1,6 @@
 import { ref, watch, onMounted } from 'vue'
 
-export function useURLState<T extends Record<string, string | undefined>>(
+export function useURLState<T extends Record<string, string | string[] | undefined>>(
   defaults: T
 ) {
   const params = new URLSearchParams(window.location.search)
@@ -19,7 +19,7 @@ export function useURLState<T extends Record<string, string | undefined>>(
     const url = new URL(window.location.href)
     Object.entries(newState).forEach(([key, value]) => {
       if (value) {
-        url.searchParams.set(key, value)
+        url.searchParams.set(key, String(value))
       } else {
         url.searchParams.delete(key)
       }

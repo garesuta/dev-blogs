@@ -137,7 +137,7 @@ describe('SearchResultCard Component', () => {
     const categoryBadge = badges.find(b => b.text() === 'frontend')
 
     expect(categoryBadge).toBeDefined()
-    expect(categoryBadge.classes()).toContain('bg-info')
+    expect(categoryBadge!.classes()).toContain('bg-info')
   })
 
   it('should render tags', () => {
@@ -219,7 +219,7 @@ describe('SearchResultCard Component', () => {
     await wrapper.find('.result-card').trigger('click')
 
     expect(wrapper.emitted('click')).toBeTruthy()
-    expect(wrapper.emitted('click')[0]).toEqual([mockDocument])
+    expect(wrapper.emitted('click')![0]).toEqual([mockDocument])
   })
 
   it('should emit click event on Enter key', async () => {
@@ -234,7 +234,7 @@ describe('SearchResultCard Component', () => {
     await wrapper.find('.result-card').trigger('keydown.enter')
 
     expect(wrapper.emitted('click')).toBeTruthy()
-    expect(wrapper.emitted('click')[0]).toEqual([mockDocument])
+    expect(wrapper.emitted('click')![0]).toEqual([mockDocument])
   })
 
   it('should have correct article URL', () => {

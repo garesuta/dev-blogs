@@ -266,6 +266,8 @@ defineExpose({
     <!-- Save status bar -->
     <SaveStatusBar
       :save-status="editorState.saveStatus"
+      :save-status-text="editorState.saveStatusText"
+      :save-status-class="editorState.saveStatusClass"
       :last-saved-at="editorState.lastSavedAt"
       :is-dirty="editorState.isDirty"
     />

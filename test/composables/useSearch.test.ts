@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import Fuse from 'fuse.js'
 import { useSearch } from '@/composables/useSearch'
 import type { SearchDocument } from '@/types/search'
 
@@ -7,7 +8,8 @@ vi.mock('fuse.js', () => ({
   default: vi.fn(),
 }))
 
-const mockFuse = vi.mocked('fuse.js')
+// Cast to a plain mock so the stub's partial return shape isn't checked against Fuse
+const mockFuse = vi.mocked(Fuse) as unknown as ReturnType<typeof vi.fn>
 
 describe('useSearch', () => {
   const mockDocuments: SearchDocument[] = [

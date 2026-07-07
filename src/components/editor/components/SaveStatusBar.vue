@@ -4,12 +4,12 @@
   Displays the save status with visual indicator.
 -->
 <script setup lang="ts">
-import { type ComputedRef } from 'vue';
-
 interface SaveStatusBarProps {
-  saveStatus: ComputedRef<"idle" | "saving" | "saved" | "error">;
-  lastSavedAt: ComputedRef<Date | null>;
-  isDirty: ComputedRef<boolean>;
+  saveStatus: "idle" | "saving" | "saved" | "error";
+  saveStatusText: string;
+  saveStatusClass: string;
+  lastSavedAt: Date | null;
+  isDirty: boolean;
 }
 
 const props = defineProps<SaveStatusBarProps>();
@@ -64,7 +64,7 @@ const props = defineProps<SaveStatusBarProps>();
   100% { transform: rotate(360deg); }
 }
 
-:notion-status-bar {
+.notion-status-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;

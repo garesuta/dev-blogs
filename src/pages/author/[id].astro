@@ -80,7 +80,7 @@ function formatDate(date: Date | null): string {
     <BaseHead
       title={`${displayName} - Author - ${SITE_TITLE}`}
       description={author.bio || `View posts by ${displayName}`}
-      image={author.image}
+      image={author.image ?? undefined}
     />
   </head>
   <body>

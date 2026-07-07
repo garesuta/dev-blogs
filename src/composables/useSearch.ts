@@ -47,7 +47,7 @@ export function useSearch(initialIndex: SearchDocument[]) {
       // Simulate async for better UX with loading state
       await Promise.resolve()
 
-      const searchResults = fuse.value.search<SearchDocument>(newQuery)
+      const searchResults = fuse.value.search(newQuery)
 
       results.value = searchResults.map(r => r.item)
     } catch (err) {

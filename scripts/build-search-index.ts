@@ -54,7 +54,7 @@ async function buildSearchIndex() {
     const readingTime = post.data.readingTime || estimateReadingTime(contentWithoutHtml)
 
     return {
-      id: post.slug,
+      id: post.id,
       title: post.data.title,
       description: post.data.description,
       body: contentWithoutHtml,

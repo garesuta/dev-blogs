@@ -22,12 +22,13 @@ const TARGET_INDEX_SIZE = 1 * 1024 * 1024 // 1MB in bytes
 export interface SearchResult {
   item: SearchDocument
   refIndex: number
-  score: number
+  score?: number
 }
 
 export interface SearchOptions {
-  query: string
+  query?: string
   limit?: number
+  timeout?: number
   filters?: {
     category?: string
     tags?: string[]
@@ -69,9 +70,9 @@ export function createSearchIndex(documents: SearchDocument[]): Fuse<SearchDocum
 export async function searchWithTimeout(
   fuse: Fuse<SearchDocument>,
   query: string,
-  options: SearchOptions = { query }
+  options: SearchOptions = {}
 ): Promise<SearchResult[]> {
-  const SEARCH_TIMEOUT_MS = 200
+  const SEARCH_TIMEOUT_MS = options.timeout ?? 200
 
   // Create abort controller
   const controller = new AbortController()
@@ -86,23 +87,24 @@ export async function searchWithTimeout(
 
     // Apply filters if provided
     let filteredResults = results
-    if (options.filters) {
+    const filters = options.filters
+    if (filters) {
       filteredResults = results.filter(result => {
         const item = result.item
 
         // Category filter
-        if (options.filters.category && item.category !== options.filters.category) {
+        if (filters.category && item.category !== filters.category) {
           return false
         }
 
         // Difficulty filter
-        if (options.filters.difficulty && item.difficulty !== options.filters.difficulty) {
+        if (filters.difficulty && item.difficulty !== filters.difficulty) {
           return false
         }
 
         // Tags filter (intersection)
-        if (options.filters.tags && options.filters.tags.length > 0) {
-          const hasAllTags = options.filters.tags.every(tag =>
+        if (filters.tags && filters.tags.length > 0) {
+          const hasAllTags = filters.tags.every(tag =>
             item.tags.includes(tag)
           )
           if (!hasAllTags) {

@@ -198,6 +198,7 @@ describe('useRelatedArticles', () => {
         title: 'Test',
         description: 'Test desc',
         body: 'Test body',
+        tags: [],
         pubDate: new Date(),
       },
     ]

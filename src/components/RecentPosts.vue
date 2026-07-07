@@ -6,8 +6,8 @@ interface Post {
   slug: string;
   title: string;
   status: string;
-  publishedAt: string | null;
-  createdAt: string;
+  publishedAt: Date | null;
+  createdAt: Date;
 }
 
 const props = defineProps<{
@@ -15,7 +15,7 @@ const props = defineProps<{
   totalCount: number;
 }>();
 
-function formatDate(dateStr: string | null): string {
+function formatDate(dateStr: string | Date | null): string {
   if (!dateStr) return "Draft";
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-US", {
