@@ -1,70 +1,101 @@
-# Astro Starter Kit: Blog
+# Astro Blog with CMS
+
+Astro blog with server-side rendering, Vue 3 islands, a database-backed CMS, and role-based authentication.
+
+## Stack
+
+- **Astro 7** (SSR, Node.js adapter) + **Vue 3** components
+- **Better Auth** — email/password + Google OAuth, RBAC (`user` / `editor` / `admin`)
+- **Drizzle ORM** + **Neon PostgreSQL**
+- **Bootstrap 5.3** styling, MDX support, Tiptap rich-text editor
+- **Vitest** for unit/component/integration tests
+
+## Getting Started
 
 ```sh
-pnpm create astro@latest -- --template blog
+pnpm install
+cp .env.example .env   # or create .env — see Environment below
+pnpm dev               # http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### Environment
 
-Features:
+```env
+DATABASE_URL=<neon-postgres-connection-string>
+BETTER_AUTH_SECRET=<random-32-char-string>
+BETTER_AUTH_URL=http://localhost:4321
+PUBLIC_BETTER_AUTH_URL=http://localhost:4321
+GOOGLE_CLIENT_ID=<from-google-console>      # optional, for Google login
+GOOGLE_CLIENT_SECRET=<from-google-console>  # optional
+```
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+### First admin
 
-## 🚀 Project Structure
+Accounts sign up with the `user` role. Promote the first admin directly in the database:
 
-Inside of your Astro project, you'll see the following folders and files:
+```sql
+UPDATE users SET role = 'admin' WHERE email = 'your@email.com';
+```
+
+After that, manage roles from `/admin/users`.
+
+## Content Management
+
+| Route | Access | Purpose |
+| :---- | :----- | :------ |
+| `/editor` | editor, admin | Content dashboard |
+| `/editor/posts` | editor, admin | Post list, create/edit/preview/version history |
+| `/admin/users` | admin | User roles and bans |
+| `/admin/taxonomy` | admin | Categories and tags |
+| `/admin/about` | admin | About page content |
+| `/admin/settings` | admin | Site title, description, social links, footer text |
+
+Site-wide details (header GitHub icon, footer blurb, social links) are stored in the `site_settings` table and editable at `/admin/settings` — no code changes needed.
+
+## Commands
+
+| Command | Action |
+| :------ | :----- |
+| `pnpm dev` | Dev server at `localhost:4321` |
+| `pnpm build` | Production build to `./dist/` |
+| `pnpm preview` | Preview production build |
+| `pnpm eslint .` | Lint (`--fix` to auto-fix) |
+| `pnpm astro check` | Type-check `.astro`/`.ts`/`.vue` files |
+| `pnpm test` | Tests in watch mode |
+| `pnpm test:run` | Tests once |
+| `pnpm test:coverage` | Coverage report |
+| `pnpm drizzle-kit generate` | Generate migrations from schema changes |
+| `pnpm drizzle-kit migrate` | Apply migrations |
+| `pnpm drizzle-kit studio` | Database GUI |
+
+## Project Structure
 
 ```text
-├── public/
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── components/       # Vue + Astro components (editor/ has Tiptap modules)
+│   ├── composables/      # Vue composables (search, history, related articles)
+│   ├── content/blog/     # Legacy markdown posts (live posts come from the DB)
+│   ├── layouts/          # BlogPost, AdminLayout
+│   ├── lib/              # auth, db, schema, permissions, site-settings
+│   ├── pages/            # Routes: blog, editor, admin, api
+│   ├── middleware.ts     # Route protection + CSP header
+│   └── styles/           # Global CSS + cyber theme
+├── test/                 # Vitest: unit, components, integration
+└── drizzle/              # Generated migrations
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
 
 ## Credit
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Started from the Astro blog template, based on [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+
+---
 
 change the claude subscription key and url in `hobbyproject/local_scripts/switch_claude.sh`
 
+```sh
 # API mode
 source switch_claude.sh api
 
 # Subscription mode
 source switch_claude.sh sub
+```
