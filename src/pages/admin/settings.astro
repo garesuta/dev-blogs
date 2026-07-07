@@ -1,0 +1,14 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import SiteSettingsManager from "../../components/SiteSettingsManager.vue";
+
+export const prerender = false;
+---
+
+<AdminLayout title="Site Settings">
+  <p class="text-muted mb-4">
+    Manage site-wide details like the title, social links, and footer text. Changes appear within a minute.
+  </p>
+
+  <SiteSettingsManager client:load />
+</AdminLayout>

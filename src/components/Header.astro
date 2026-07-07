@@ -1,8 +1,10 @@
 ---
-import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import UserMenu from './UserMenu.vue';
 import SearchModal from './SearchModal.vue';
+import { getSiteSettings } from '../lib/site-settings';
+
+const { siteTitle, githubUrl } = await getSiteSettings();
 ---
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -10,11 +12,11 @@ import SearchModal from './SearchModal.vue';
 <!-- MAIN HEADER -->
 <header class="main-header" role="banner">
 	<div class="container">
-		<a href="/" class="header-logo" aria-label={`${SITE_TITLE} - Home`}>
+		<a href="/" class="header-logo" aria-label={`${siteTitle} - Home`}>
 			<div class="header-logo__icon" aria-hidden="true">
 				<i class="bi bi-terminal-fill"></i>
 			</div>
-			<span class="header-logo__text">{SITE_TITLE}</span>
+			<span class="header-logo__text">{siteTitle}</span>
 		</a>
 
 		<button
@@ -34,15 +36,17 @@ import SearchModal from './SearchModal.vue';
 		<div class="header-actions">
 			<SearchModal client:load />
 
-			<a
-				href="https://github.com/yourusername/yourrepo"
-				target="_blank"
-				rel="noopener"
-				class="header-actions__github"
-				aria-label="View on GitHub"
-			>
-				<i class="bi bi-github"></i>
-			</a>
+			{githubUrl && (
+				<a
+					href={githubUrl}
+					target="_blank"
+					rel="noopener"
+					class="header-actions__github"
+					aria-label="View on GitHub"
+				>
+					<i class="bi bi-github"></i>
+				</a>
+			)}
 
 			<button
 				class="theme-toggle-btn"
@@ -101,18 +105,19 @@ import SearchModal from './SearchModal.vue';
 		/* --- Skip Link (WCAG 2.4.1) --- */
 		.skip-link {
 			position: absolute;
-			top: -40px;
+			top: 0;
 			left: 0;
+			transform: translateY(-100%);
 			background: var(--cyber-primary);
 			color: #000;
 			padding: 8px 16px;
 			z-index: 9999;
 			font-weight: 600;
 			text-decoration: none;
-			transition: top var(--motion-duration-fast) var(--motion-ease);
+			transition: transform var(--motion-duration-fast) var(--motion-ease);
 		}
 		.skip-link:focus {
-			top: 0;
+			transform: translateY(0);
 		}
 
 		/* --- Main Header --- */

@@ -1,4 +1,8 @@
 ---
+import { getSiteSettings } from '../lib/site-settings';
+
+const { siteTitle, footerDescription, githubUrl, twitterUrl, linkedinUrl } = await getSiteSettings();
+const hasSocials = githubUrl || twitterUrl || linkedinUrl;
 const today = new Date();
 ---
 
@@ -8,11 +12,30 @@ const today = new Date();
 				<div class="footer-brand">
 					<div class="footer-logo">
 						<i class="bi bi-terminal-fill"></i>
-						<span>{SITE_TITLE}</span>
+						<span>{siteTitle}</span>
 					</div>
 					<p class="footer-description">
-						A modern blog platform sharing insights on AI, coding, frameworks, and the future of technology.
+						{footerDescription}
 					</p>
+					{hasSocials && (
+						<div class="footer-socials">
+							{githubUrl && (
+								<a href={githubUrl} target="_blank" rel="noopener" class="footer-social-link" aria-label="GitHub">
+									<i class="bi bi-github"></i>
+								</a>
+							)}
+							{twitterUrl && (
+								<a href={twitterUrl} target="_blank" rel="noopener" class="footer-social-link" aria-label="Twitter / X">
+									<i class="bi bi-twitter-x"></i>
+								</a>
+							)}
+							{linkedinUrl && (
+								<a href={linkedinUrl} target="_blank" rel="noopener" class="footer-social-link" aria-label="LinkedIn">
+									<i class="bi bi-linkedin"></i>
+								</a>
+							)}
+						</div>
+					)}
 				</div>
 				<div class="footer-links">
 					<div class="footer-section">
@@ -43,7 +66,7 @@ const today = new Date();
 				</div>
 			</div>
 			<div class="footer-bottom">
-				<p class="footer-copyright">&copy; {today.getFullYear()} {SITE_TITLE}. All rights reserved.</p>
+				<p class="footer-copyright">&copy; {today.getFullYear()} {siteTitle}. All rights reserved.</p>
 				<a href="/rss.xml" class="footer-rss">RSS Feed</a>
 			</div>
 		</div>
@@ -120,6 +143,32 @@ const today = new Date();
 			line-height: 1.6;
 			max-width: 400px;
 			margin: 0;
+		}
+
+		.footer-socials {
+			display: flex;
+			gap: 0.75rem;
+			margin-top: 1rem;
+		}
+
+		.footer-social-link {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 36px;
+			height: 36px;
+			border-radius: var(--radius-md);
+			border: 1px solid var(--cyber-border-color);
+			color: var(--cyber-text-secondary);
+			text-decoration: none;
+			font-size: 1.125rem;
+			transition: all var(--motion-duration-normal) var(--motion-ease);
+		}
+
+		.footer-social-link:hover {
+			color: var(--cyber-primary);
+			border-color: var(--cyber-primary);
+			background: var(--cyber-primary-light);
 		}
 
 		.footer-links {
