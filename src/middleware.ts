@@ -19,9 +19,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
     headers: context.request.headers,
   });
 
-  // Generate nonce for inline scripts
-  const nonce = crypto.randomUUID();
-  const csp = `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'`;
+  // Astro island hydration relies on inline scripts that we can't attach a
+  // nonce to, so 'unsafe-inline' is required for script-src.
+  const csp = `default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'`;
 
   // Process the request
   const response = await processRequest(context, next, session, pathname);
