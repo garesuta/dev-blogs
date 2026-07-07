@@ -29,8 +29,8 @@ function getRedirectUrl(): string {
   <button
     type="button"
     class="btn google-btn w-100 d-flex align-items-center justify-content-center gap-2"
-    @click="handleGoogleSignIn"
     :disabled="isLoading"
+    @click="handleGoogleSignIn"
   >
     <svg
       v-if="!isLoading"
@@ -60,7 +60,7 @@ function getRedirectUrl(): string {
       v-if="isLoading"
       class="spinner-border spinner-border-sm"
       role="status"
-    ></span>
+    />
     <span>{{ isLoading ? "Redirecting..." : "Continue with Google" }}</span>
   </button>
 </template>

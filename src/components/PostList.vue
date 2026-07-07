@@ -363,132 +363,234 @@ onMounted(() => {
         <!-- Search -->
         <div class="search-wrapper">
           <input
+            v-model="searchQuery"
             type="search"
             class="form-control"
-            v-model="searchQuery"
             placeholder="Search posts..."
             aria-label="Search posts"
-          />
+          >
         </div>
 
         <!-- Status filter -->
-        <select class="form-select filter-select" v-model="statusFilter" aria-label="Filter by status">
-          <option value="">All statuses</option>
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
-          <option value="scheduled">Scheduled</option>
+        <select
+          v-model="statusFilter"
+          class="form-select filter-select"
+          aria-label="Filter by status"
+        >
+          <option value="">
+            All statuses
+          </option>
+          <option value="draft">
+            Draft
+          </option>
+          <option value="published">
+            Published
+          </option>
+          <option value="scheduled">
+            Scheduled
+          </option>
         </select>
 
         <!-- Category filter -->
-        <select class="form-select filter-select" v-model="categoryFilter" aria-label="Filter by category">
-          <option value="">All categories</option>
-          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+        <select
+          v-model="categoryFilter"
+          class="form-select filter-select"
+          aria-label="Filter by category"
+        >
+          <option value="">
+            All categories
+          </option>
+          <option
+            v-for="cat in categories"
+            :key="cat.id"
+            :value="cat.id"
+          >
             {{ cat.name }}
           </option>
         </select>
 
         <!-- Tag filter -->
-        <select class="form-select filter-select" v-model="tagFilter" aria-label="Filter by tag">
-          <option value="">All tags</option>
-          <option v-for="tag in availableTags" :key="tag.id" :value="tag.id">
+        <select
+          v-model="tagFilter"
+          class="form-select filter-select"
+          aria-label="Filter by tag"
+        >
+          <option value="">
+            All tags
+          </option>
+          <option
+            v-for="tag in availableTags"
+            :key="tag.id"
+            :value="tag.id"
+          >
             {{ tag.name }}
           </option>
         </select>
       </div>
 
       <!-- New post button -->
-      <a href="/editor/posts/new" class="btn btn-primary new-post-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+      <a
+        href="/editor/posts/new"
+        class="btn btn-primary new-post-btn"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="me-1"
+          viewBox="0 0 16 16"
+        >
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
         </svg>
         New Post
       </a>
     </div>
 
     <!-- Error message -->
-    <div v-if="error" class="alert alert-danger" role="alert">
+    <div
+      v-if="error"
+      class="alert alert-danger"
+      role="alert"
+    >
       {{ error }}
-      <button type="button" class="btn btn-sm btn-outline-danger ms-2" @click="fetchPosts">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-danger ms-2"
+        @click="fetchPosts"
+      >
         Retry
       </button>
     </div>
 
     <!-- Loading state -->
-    <div v-if="isLoading" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
+    <div
+      v-if="isLoading"
+      class="text-center py-5"
+    >
+      <div
+        class="spinner-border text-primary"
+        role="status"
+      >
         <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="mt-2 text-muted">Loading posts...</p>
+      <p class="mt-2 text-muted">
+        Loading posts...
+      </p>
     </div>
 
     <!-- Empty state -->
-    <div v-else-if="posts.length === 0" class="text-center py-5">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="text-muted mb-3" viewBox="0 0 16 16">
-        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
-        <path d="M4.5 12.5A.5.5 0 0 1 5 12h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm0-2A.5.5 0 0 1 5 10h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm1.639-3.708 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V8.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V8s1.54-1.274 1.639-1.208zM6.25 6a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5z"/>
+    <div
+      v-else-if="posts.length === 0"
+      class="text-center py-5"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="64"
+        height="64"
+        fill="currentColor"
+        class="text-muted mb-3"
+        viewBox="0 0 16 16"
+      >
+        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+        <path d="M4.5 12.5A.5.5 0 0 1 5 12h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm0-2A.5.5 0 0 1 5 10h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm1.639-3.708 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V8.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V8s1.54-1.274 1.639-1.208zM6.25 6a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5z" />
       </svg>
-      <h5 class="text-muted">No posts found</h5>
-      <p class="text-muted" v-if="searchQuery || statusFilter">
+      <h5 class="text-muted">
+        No posts found
+      </h5>
+      <p
+        v-if="searchQuery || statusFilter"
+        class="text-muted"
+      >
         Try adjusting your filters
       </p>
-      <a v-else href="/editor/posts/new" class="btn btn-primary mt-2">
+      <a
+        v-else
+        href="/editor/posts/new"
+        class="btn btn-primary mt-2"
+      >
         Create your first post
       </a>
     </div>
 
     <!-- Posts table -->
-    <div v-else class="table-responsive">
+    <div
+      v-else
+      class="table-responsive"
+    >
       <table class="table table-hover align-middle">
         <thead class="table-light">
           <tr>
             <th
               class="sortable"
-              @click="toggleSort('title')"
               :aria-sort="sortBy === 'title' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'"
               role="columnheader"
+              @click="toggleSort('title')"
             >
               <span class="sortable-content">
                 Title
-                <span class="sort-indicator" :class="{ active: sortBy === 'title' }">
+                <span
+                  class="sort-indicator"
+                  :class="{ active: sortBy === 'title' }"
+                >
                   {{ getSortIcon('title') || '⇅' }}
                 </span>
               </span>
             </th>
-            <th class="col-status">Status</th>
-            <th class="col-category">Category</th>
-            <th class="col-tags">Tags</th>
-            <th class="col-author">Author</th>
+            <th class="col-status">
+              Status
+            </th>
+            <th class="col-category">
+              Category
+            </th>
+            <th class="col-tags">
+              Tags
+            </th>
+            <th class="col-author">
+              Author
+            </th>
             <th
               class="sortable col-date"
-              @click="toggleSort('createdAt')"
               :aria-sort="sortBy === 'createdAt' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'"
               role="columnheader"
+              @click="toggleSort('createdAt')"
             >
               <span class="sortable-content">
                 Created
-                <span class="sort-indicator" :class="{ active: sortBy === 'createdAt' }">
+                <span
+                  class="sort-indicator"
+                  :class="{ active: sortBy === 'createdAt' }"
+                >
                   {{ getSortIcon('createdAt') || '⇅' }}
                 </span>
               </span>
             </th>
             <th
               class="sortable col-date"
-              @click="toggleSort('updatedAt')"
               :aria-sort="sortBy === 'updatedAt' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'"
               role="columnheader"
+              @click="toggleSort('updatedAt')"
             >
               <span class="sortable-content">
                 Updated
-                <span class="sort-indicator" :class="{ active: sortBy === 'updatedAt' }">
+                <span
+                  class="sort-indicator"
+                  :class="{ active: sortBy === 'updatedAt' }"
+                >
                   {{ getSortIcon('updatedAt') || '⇅' }}
                 </span>
               </span>
             </th>
-            <th class="col-actions">Actions</th>
+            <th class="col-actions">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="post in posts" :key="post.id">
+          <tr
+            v-for="post in posts"
+            :key="post.id"
+          >
             <td class="cell-title">
               <a
                 :href="`/editor/posts/${post.id}`"
@@ -505,10 +607,17 @@ onMounted(() => {
               </div>
             </td>
             <td>
-              <span class="badge" :class="statusBadgeClass(post.status)">
+              <span
+                class="badge"
+                :class="statusBadgeClass(post.status)"
+              >
                 {{ post.status }}
               </span>
-              <div v-if="post.status === 'scheduled' && post.scheduledDate" class="small text-muted" :title="formatFullDate(post.scheduledDate)">
+              <div
+                v-if="post.status === 'scheduled' && post.scheduledDate"
+                class="small text-muted"
+                :title="formatFullDate(post.scheduledDate)"
+              >
                 {{ formatRelativeTime(post.scheduledDate) }}
               </div>
             </td>
@@ -520,10 +629,16 @@ onMounted(() => {
               >
                 {{ post.categoryName }}
               </span>
-              <span v-else class="text-muted small">—</span>
+              <span
+                v-else
+                class="text-muted small"
+              >—</span>
             </td>
             <td>
-              <div v-if="post.tags && post.tags.length > 0" class="d-flex flex-wrap gap-1">
+              <div
+                v-if="post.tags && post.tags.length > 0"
+                class="d-flex flex-wrap gap-1"
+              >
                 <span
                   v-for="tag in post.tags.slice(0, 3)"
                   :key="tag.id"
@@ -531,22 +646,34 @@ onMounted(() => {
                 >
                   {{ tag.name }}
                 </span>
-                <span v-if="post.tags.length > 3" class="badge bg-light text-muted border">
+                <span
+                  v-if="post.tags.length > 3"
+                  class="badge bg-light text-muted border"
+                >
                   +{{ post.tags.length - 3 }}
                 </span>
               </div>
-              <span v-else class="text-muted small">—</span>
+              <span
+                v-else
+                class="text-muted small"
+              >—</span>
             </td>
             <td>
               <span class="small">{{ post.authorName || post.authorEmail || "Unknown" }}</span>
             </td>
             <td>
-              <span class="small date-relative" :title="formatFullDate(post.createdAt)">
+              <span
+                class="small date-relative"
+                :title="formatFullDate(post.createdAt)"
+              >
                 {{ formatRelativeTime(post.createdAt) }}
               </span>
             </td>
             <td>
-              <span class="small date-relative" :title="formatFullDate(post.updatedAt)">
+              <span
+                class="small date-relative"
+                :title="formatFullDate(post.updatedAt)"
+              >
                 {{ formatRelativeTime(post.updatedAt) }}
               </span>
             </td>
@@ -562,31 +689,44 @@ onMounted(() => {
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li>
-                    <a class="dropdown-item" :href="`/editor/posts/${post.id}`">
+                    <a
+                      class="dropdown-item"
+                      :href="`/editor/posts/${post.id}`"
+                    >
                       Edit
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" :href="`/editor/posts/${post.id}/preview`">
+                    <a
+                      class="dropdown-item"
+                      :href="`/editor/posts/${post.id}/preview`"
+                    >
                       Preview
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" :href="`/editor/posts/${post.id}/history`">
+                    <a
+                      class="dropdown-item"
+                      :href="`/editor/posts/${post.id}/history`"
+                    >
                       Version History
                     </a>
                   </li>
                   <li v-if="post.status === 'published'">
-                    <a class="dropdown-item" :href="`/blog/${post.slug}`" target="_blank">
+                    <a
+                      class="dropdown-item"
+                      :href="`/blog/${post.slug}`"
+                      target="_blank"
+                    >
                       View Live
                     </a>
                   </li>
-                  <li><hr class="dropdown-divider" /></li>
+                  <li><hr class="dropdown-divider"></li>
                   <li>
                     <button
                       class="dropdown-item text-danger"
-                      @click="confirmDelete(post)"
                       :aria-label="`Delete post: ${post.title}`"
+                      @click="confirmDelete(post)"
                     >
                       Delete
                     </button>
@@ -601,37 +741,73 @@ onMounted(() => {
 
     <!-- Delete Confirmation Modal -->
     <div
-      class="modal fade"
       id="deleteModal"
+      ref="deleteModalRef"
+      class="modal fade"
       tabindex="-1"
       aria-labelledby="deleteModalLabel"
       aria-hidden="true"
-      ref="deleteModalRef"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title" id="deleteModalLabel">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="text-danger me-2" viewBox="0 0 16 16">
-                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            <h5
+              id="deleteModalLabel"
+              class="modal-title"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                class="text-danger me-2"
+                viewBox="0 0 16 16"
+              >
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
               </svg>
               Delete Post
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            />
           </div>
           <div class="modal-body">
-            <p class="mb-1">Are you sure you want to delete this post?</p>
-            <p class="fw-semibold text-dark mb-0" v-if="postToDelete">
+            <p class="mb-1">
+              Are you sure you want to delete this post?
+            </p>
+            <p
+              v-if="postToDelete"
+              class="fw-semibold text-dark mb-0"
+            >
               "{{ postToDelete.title }}"
             </p>
-            <p class="text-muted small mt-2 mb-0">This action cannot be undone.</p>
+            <p class="text-muted small mt-2 mb-0">
+              This action cannot be undone.
+            </p>
           </div>
           <div class="modal-footer border-0 pt-0">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
               Cancel
             </button>
-            <button type="button" class="btn btn-danger" @click="executeDelete" :disabled="isDeleting">
-              <span v-if="isDeleting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            <button
+              type="button"
+              class="btn btn-danger"
+              :disabled="isDeleting"
+              @click="executeDelete"
+            >
+              <span
+                v-if="isDeleting"
+                class="spinner-border spinner-border-sm me-1"
+                role="status"
+                aria-hidden="true"
+              />
               {{ isDeleting ? 'Deleting...' : 'Delete Post' }}
             </button>
           </div>
@@ -650,14 +826,20 @@ onMounted(() => {
         of {{ pagination.total }} posts
       </small>
 
-      <nav aria-label="Posts pagination" class="order-1 order-sm-2">
+      <nav
+        aria-label="Posts pagination"
+        class="order-1 order-sm-2"
+      >
         <ul class="pagination pagination-sm mb-0">
-          <li class="page-item" :class="{ disabled: pagination.page === 1 }">
+          <li
+            class="page-item"
+            :class="{ disabled: pagination.page === 1 }"
+          >
             <button
               class="page-link"
-              @click="goToPage(pagination.page - 1)"
               :disabled="pagination.page === 1"
               aria-label="Go to previous page"
+              @click="goToPage(pagination.page - 1)"
             >
               <span aria-hidden="true">&laquo;</span>
               <span class="d-none d-md-inline ms-1">Previous</span>
@@ -665,8 +847,14 @@ onMounted(() => {
           </li>
 
           <!-- Truncated pagination -->
-          <template v-for="item in visiblePages" :key="item.key">
-            <li v-if="item.type === 'ellipsis'" class="page-item disabled">
+          <template
+            v-for="item in visiblePages"
+            :key="item.key"
+          >
+            <li
+              v-if="item.type === 'ellipsis'"
+              class="page-item disabled"
+            >
               <span class="page-link">...</span>
             </li>
             <li
@@ -676,9 +864,9 @@ onMounted(() => {
             >
               <button
                 class="page-link"
-                @click="goToPage(item.page)"
                 :aria-label="`Go to page ${item.page}`"
                 :aria-current="item.page === pagination.page ? 'page' : undefined"
+                @click="goToPage(item.page)"
               >
                 {{ item.page }}
               </button>
@@ -691,9 +879,9 @@ onMounted(() => {
           >
             <button
               class="page-link"
-              @click="goToPage(pagination.page + 1)"
               :disabled="pagination.page === pagination.totalPages"
               aria-label="Go to next page"
+              @click="goToPage(pagination.page + 1)"
             >
               <span class="d-none d-md-inline me-1">Next</span>
               <span aria-hidden="true">&raquo;</span>

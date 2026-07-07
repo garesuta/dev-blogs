@@ -97,88 +97,121 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="register-form">
-    <div v-if="error" class="alert alert-danger" role="alert">
+  <form
+    class="register-form"
+    @submit.prevent="handleSubmit"
+  >
+    <div
+      v-if="error"
+      class="alert alert-danger"
+      role="alert"
+    >
       {{ error }}
     </div>
 
     <div class="mb-3">
-      <label for="name" class="form-label">Full Name</label>
+      <label
+        for="name"
+        class="form-label"
+      >Full Name</label>
       <input
+        id="name"
+        v-model="name"
         type="text"
         class="form-control"
         :class="{
           'is-invalid': nameError,
           'is-valid': touched.name && !nameError && name,
         }"
-        id="name"
-        v-model="name"
         autocomplete="name"
         :disabled="isLoading"
         @blur="handleBlur('name')"
-      />
-      <div v-if="nameError" class="invalid-feedback">
+      >
+      <div
+        v-if="nameError"
+        class="invalid-feedback"
+      >
         {{ nameError }}
       </div>
     </div>
 
     <div class="mb-3">
-      <label for="email" class="form-label">Email address</label>
+      <label
+        for="email"
+        class="form-label"
+      >Email address</label>
       <input
+        id="email"
+        v-model="email"
         type="email"
         class="form-control"
         :class="{
           'is-invalid': emailError,
           'is-valid': touched.email && !emailError && email,
         }"
-        id="email"
-        v-model="email"
         autocomplete="email"
         :disabled="isLoading"
         @blur="handleBlur('email')"
-      />
-      <div v-if="emailError" class="invalid-feedback">
+      >
+      <div
+        v-if="emailError"
+        class="invalid-feedback"
+      >
         {{ emailError }}
       </div>
     </div>
 
     <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
+      <label
+        for="password"
+        class="form-label"
+      >Password</label>
       <input
+        id="password"
+        v-model="password"
         type="password"
         class="form-control"
         :class="{
           'is-invalid': passwordError,
           'is-valid': touched.password && !passwordError && password,
         }"
-        id="password"
-        v-model="password"
         autocomplete="new-password"
         :disabled="isLoading"
         @blur="handleBlur('password')"
-      />
-      <div v-if="passwordError" class="invalid-feedback">
+      >
+      <div
+        v-if="passwordError"
+        class="invalid-feedback"
+      >
         {{ passwordError }}
       </div>
-      <div class="form-text">Minimum 8 characters</div>
+      <div class="form-text">
+        Minimum 8 characters
+      </div>
     </div>
 
     <div class="mb-3">
-      <label for="confirmPassword" class="form-label">Confirm Password</label>
+      <label
+        for="confirmPassword"
+        class="form-label"
+      >Confirm Password</label>
       <input
+        id="confirmPassword"
+        v-model="confirmPassword"
         type="password"
         class="form-control"
         :class="{
           'is-invalid': confirmPasswordError,
           'is-valid': touched.confirmPassword && !confirmPasswordError && confirmPassword,
         }"
-        id="confirmPassword"
-        v-model="confirmPassword"
         autocomplete="new-password"
         :disabled="isLoading"
         @blur="handleBlur('confirmPassword')"
-      />
-      <div v-if="confirmPasswordError" class="invalid-feedback">
+      >
+      <div
+        v-if="confirmPasswordError"
+        class="invalid-feedback"
+      >
         {{ confirmPasswordError }}
       </div>
     </div>
@@ -189,7 +222,10 @@ async function handleSubmit() {
       :disabled="!isValid || isLoading"
     >
       <span v-if="isLoading">
-        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+        />
         Creating account...
       </span>
       <span v-else>Create Account</span>

@@ -56,16 +56,29 @@ async function handleRoleChange() {
       :disabled="isLoading"
       @change="handleRoleChange"
     >
-      <option v-for="role in availableRoles" :key="role" :value="role">
+      <option
+        v-for="role in availableRoles"
+        :key="role"
+        :value="role"
+      >
         {{ getRoleDisplayName(role) }}
       </option>
     </select>
 
-    <span v-if="isLoading" class="spinner-border spinner-border-sm"></span>
-    <span v-if="success" class="text-success">
-      <i class="bi bi-check-circle"></i>
+    <span
+      v-if="isLoading"
+      class="spinner-border spinner-border-sm"
+    />
+    <span
+      v-if="success"
+      class="text-success"
+    >
+      <i class="bi bi-check-circle" />
     </span>
-    <span v-if="error" class="text-danger small">{{ error }}</span>
+    <span
+      v-if="error"
+      class="text-danger small"
+    >{{ error }}</span>
   </div>
 </template>
 

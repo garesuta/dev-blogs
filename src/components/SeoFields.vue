@@ -88,32 +88,44 @@ function regenerateSlug() {
   <div class="seo-fields">
     <!-- URL Slug -->
     <div class="mb-3">
-      <label for="slug" class="form-label">
+      <label
+        for="slug"
+        class="form-label"
+      >
         URL Slug
         <small class="text-muted ms-1">(appears in URL)</small>
       </label>
       <div class="input-group">
         <span class="input-group-text">/blog/</span>
         <input
+          id="slug"
           type="text"
           class="form-control"
-          id="slug"
           :value="slug"
-          @input="handleSlugInput"
           :disabled="disabled"
           placeholder="my-post-url"
           pattern="[a-z0-9-]+"
-        />
+          @input="handleSlugInput"
+        >
         <button
           type="button"
           class="btn btn-outline-secondary"
-          @click="regenerateSlug"
           :disabled="disabled || !title"
           title="Regenerate from title"
+          @click="regenerateSlug"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
+            />
+            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
           </svg>
         </button>
       </div>
@@ -129,7 +141,9 @@ function regenerateSlug() {
       </div>
       <div class="card-body py-2">
         <div class="seo-preview">
-          <div class="seo-title text-primary">{{ effectiveMetaTitle || "Post Title" }}</div>
+          <div class="seo-title text-primary">
+            {{ effectiveMetaTitle || "Post Title" }}
+          </div>
           <div class="seo-url text-success small">
             yourdomain.com/blog/{{ slug || "post-url" }}
           </div>
@@ -156,49 +170,65 @@ function regenerateSlug() {
           :class="{ 'rotate-90': showAdvanced }"
           style="transition: transform 0.2s"
         >
-          <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+          <path
+            fill-rule="evenodd"
+            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+          />
         </svg>
         <span class="ms-1">Advanced SEO Options</span>
       </button>
     </div>
 
-    <div v-show="showAdvanced" class="advanced-seo-fields">
+    <div
+      v-show="showAdvanced"
+      class="advanced-seo-fields"
+    >
       <!-- Meta Title -->
       <div class="mb-3">
-        <label for="metaTitle" class="form-label d-flex justify-content-between">
+        <label
+          for="metaTitle"
+          class="form-label d-flex justify-content-between"
+        >
           <span>Meta Title</span>
           <small :class="metaTitleStatus.class">{{ metaTitleStatus.text }}</small>
         </label>
         <input
+          id="metaTitle"
           type="text"
           class="form-control"
-          id="metaTitle"
           :value="metaTitle"
-          @input="emit('update:metaTitle', ($event.target as HTMLInputElement).value || null)"
           :disabled="disabled"
           :placeholder="title || 'Leave blank to use post title'"
           maxlength="70"
-        />
-        <div class="form-text">Override the title shown in search results</div>
+          @input="emit('update:metaTitle', ($event.target as HTMLInputElement).value || null)"
+        >
+        <div class="form-text">
+          Override the title shown in search results
+        </div>
       </div>
 
       <!-- Meta Description -->
       <div class="mb-3">
-        <label for="metaDescription" class="form-label d-flex justify-content-between">
+        <label
+          for="metaDescription"
+          class="form-label d-flex justify-content-between"
+        >
           <span>Meta Description</span>
           <small :class="metaDescriptionStatus.class">{{ metaDescriptionStatus.text }}</small>
         </label>
         <textarea
-          class="form-control"
           id="metaDescription"
+          class="form-control"
           :value="metaDescription"
-          @input="emit('update:metaDescription', ($event.target as HTMLTextAreaElement).value || null)"
           :disabled="disabled"
           :placeholder="description || 'Leave blank to use post description'"
           maxlength="160"
           rows="2"
-        ></textarea>
-        <div class="form-text">Override the description shown in search results</div>
+          @input="emit('update:metaDescription', ($event.target as HTMLTextAreaElement).value || null)"
+        />
+        <div class="form-text">
+          Override the description shown in search results
+        </div>
       </div>
       <!-- Open Graph Preview -->
       <div class="card mb-3">
@@ -211,12 +241,17 @@ function regenerateSlug() {
               v-if="effectiveOgImage"
               class="og-image bg-light"
               :style="{ backgroundImage: `url(${effectiveOgImage})` }"
-            ></div>
-            <div v-else class="og-image-placeholder bg-light d-flex align-items-center justify-content-center text-muted">
+            />
+            <div
+              v-else
+              class="og-image-placeholder bg-light d-flex align-items-center justify-content-center text-muted"
+            >
               No image set
             </div>
             <div class="p-2">
-              <div class="og-title fw-semibold small">{{ effectiveOgTitle || "Post Title" }}</div>
+              <div class="og-title fw-semibold small">
+                {{ effectiveOgTitle || "Post Title" }}
+              </div>
               <div class="og-description text-muted small">
                 {{ effectiveOgDescription || "Post description..." }}
               </div>
@@ -227,66 +262,78 @@ function regenerateSlug() {
 
       <!-- OG Fields -->
       <div class="mb-3">
-        <label for="ogTitle" class="form-label">
+        <label
+          for="ogTitle"
+          class="form-label"
+        >
           Open Graph Title
           <small class="text-muted ms-1">(for social sharing)</small>
         </label>
         <input
+          id="ogTitle"
           type="text"
           class="form-control"
-          id="ogTitle"
           :value="ogTitle"
-          @input="emit('update:ogTitle', ($event.target as HTMLInputElement).value || null)"
           :disabled="disabled"
           :placeholder="effectiveMetaTitle || 'Leave blank to use meta title'"
           maxlength="70"
-        />
+          @input="emit('update:ogTitle', ($event.target as HTMLInputElement).value || null)"
+        >
       </div>
 
       <div class="mb-3">
-        <label for="ogDescription" class="form-label">Open Graph Description</label>
+        <label
+          for="ogDescription"
+          class="form-label"
+        >Open Graph Description</label>
         <textarea
-          class="form-control"
           id="ogDescription"
+          class="form-control"
           :value="ogDescription"
-          @input="emit('update:ogDescription', ($event.target as HTMLTextAreaElement).value || null)"
           :disabled="disabled"
           :placeholder="effectiveMetaDescription || 'Leave blank to use meta description'"
           maxlength="200"
           rows="2"
-        ></textarea>
+          @input="emit('update:ogDescription', ($event.target as HTMLTextAreaElement).value || null)"
+        />
       </div>
 
       <div class="mb-3">
-        <label for="ogImage" class="form-label">
+        <label
+          for="ogImage"
+          class="form-label"
+        >
           Open Graph Image URL
           <small class="text-muted ms-1">(1200x630 recommended)</small>
         </label>
         <input
+          id="ogImage"
           type="url"
           class="form-control"
-          id="ogImage"
           :value="ogImage"
-          @input="emit('update:ogImage', ($event.target as HTMLInputElement).value || null)"
           :disabled="disabled"
           :placeholder="heroImage || 'Leave blank to use hero image'"
-        />
+          @input="emit('update:ogImage', ($event.target as HTMLInputElement).value || null)"
+        >
       </div>
 
       <div class="mb-3">
-        <label for="canonicalUrl" class="form-label">
+        <label
+          for="canonicalUrl"
+          class="form-label"
+        >
           Canonical URL
           <small class="text-muted ms-1">(for duplicate content)</small>
         </label>
         <input
+          id="canonicalUrl"
           type="url"
           class="form-control"
-          id="canonicalUrl"
           :value="canonicalUrl"
-          @input="emit('update:canonicalUrl', ($event.target as HTMLInputElement).value || null)"
           :disabled="disabled"
           placeholder="Leave blank for default URL"
-        />
+          @input="emit('update:canonicalUrl', ($event.target as HTMLInputElement).value || null)"
+        >
       </div>
     </div>
   </div>

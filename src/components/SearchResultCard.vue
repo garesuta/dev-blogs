@@ -66,59 +66,82 @@ const difficultyBadgeClass = computed(() => {
     @keydown.enter="emit('click', document)"
   >
     <!-- Hero image if available -->
-    <div v-if="document.heroImage" class="result-image">
+    <div
+      v-if="document.heroImage"
+      class="result-image"
+    >
       <img
         :src="document.heroImage"
         :alt="document.title"
         loading="lazy"
         class="img-fluid rounded"
-      />
+      >
     </div>
 
     <!-- Content -->
     <div class="result-content">
       <!-- Tags and difficulty -->
       <div class="result-meta mb-2">
-        <span v-if="document.difficulty" class="badge" :class="difficultyBadgeClass">
+        <span
+          v-if="document.difficulty"
+          class="badge"
+          :class="difficultyBadgeClass"
+        >
           {{ document.difficulty }}
         </span>
-        <span v-if="document.category" class="badge bg-info text-dark">
+        <span
+          v-if="document.category"
+          class="badge bg-info text-dark"
+        >
           {{ document.category }}
         </span>
       </div>
 
       <!-- Title with highlighting -->
       <h3 class="result-title">
-        <a :href="articleUrl" class="text-decoration-none text-body">
-          <span v-html="highlightedTitle"></span>
+        <a
+          :href="articleUrl"
+          class="text-decoration-none text-body"
+        >
+          <span v-html="highlightedTitle" />
         </a>
       </h3>
 
       <!-- Description with highlighting -->
       <p class="result-description text-muted">
-        <span v-html="highlightedDescription"></span>
+        <span v-html="highlightedDescription" />
       </p>
 
       <!-- Tags -->
-      <div v-if="document.tags && document.tags.length > 0" class="result-tags mb-3">
-        <span v-for="tag in document.tags" :key="tag" class="badge bg-light text-dark me-1">
-          <i class="bi bi-tag me-1"></i>{{ tag }}
+      <div
+        v-if="document.tags && document.tags.length > 0"
+        class="result-tags mb-3"
+      >
+        <span
+          v-for="tag in document.tags"
+          :key="tag"
+          class="badge bg-light text-dark me-1"
+        >
+          <i class="bi bi-tag me-1" />{{ tag }}
         </span>
       </div>
 
       <!-- Footer -->
       <div class="result-footer">
         <div class="result-footer-item">
-          <i class="bi bi-calendar3 me-2 text-muted"></i>
+          <i class="bi bi-calendar3 me-2 text-muted" />
           <time class="text-muted">{{ displayDate }}</time>
         </div>
-        <div v-if="document.readingTime" class="result-footer-item">
-          <i class="bi bi-clock me-2 text-muted"></i>
+        <div
+          v-if="document.readingTime"
+          class="result-footer-item"
+        >
+          <i class="bi bi-clock me-2 text-muted" />
           <span class="text-muted">{{ readingTimeText }}</span>
         </div>
         <div class="result-footer-item ms-auto">
           <span class="read-more">
-            Read More <i class="bi bi-arrow-right-circle ms-1"></i>
+            Read More <i class="bi bi-arrow-right-circle ms-1" />
           </span>
         </div>
       </div>

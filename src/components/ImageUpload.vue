@@ -149,33 +149,52 @@ function removeImage() {
 
 <template>
   <div class="image-upload">
-    <label v-if="label" class="form-label">{{ label }}</label>
+    <label
+      v-if="label"
+      class="form-label"
+    >{{ label }}</label>
 
     <!-- Error message -->
-    <div v-if="error" class="alert alert-danger py-2 small mb-2">
+    <div
+      v-if="error"
+      class="alert alert-danger py-2 small mb-2"
+    >
       {{ error }}
-      <button type="button" class="btn-close btn-sm float-end" @click="error = ''"></button>
+      <button
+        type="button"
+        class="btn-close btn-sm float-end"
+        @click="error = ''"
+      />
     </div>
 
     <!-- Current image preview (shown when image exists) -->
-    <div v-if="hasImage && !isUploading" class="current-image">
+    <div
+      v-if="hasImage && !isUploading"
+      class="current-image"
+    >
       <div class="position-relative d-inline-block">
         <img
           :src="modelValue!"
           alt="Current image"
           class="img-fluid rounded border"
           style="max-height: 120px;"
-        />
+        >
         <button
           type="button"
           class="btn btn-sm btn-danger remove-btn position-absolute"
-          @click="removeImage"
           title="Remove image to upload a new one"
           data-bs-toggle="tooltip"
           data-bs-placement="top"
+          @click="removeImage"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
           </svg>
         </button>
       </div>
@@ -195,23 +214,42 @@ function removeImage() {
       @click="triggerFileInput"
     >
       <!-- Uploading state -->
-      <div v-if="isUploading" class="py-2">
-        <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+      <div
+        v-if="isUploading"
+        class="py-2"
+      >
+        <div
+          class="spinner-border spinner-border-sm text-primary me-2"
+          role="status"
+        />
         <span class="text-muted">Uploading... {{ uploadProgress }}%</span>
-        <div class="progress mt-2" style="height: 4px;">
+        <div
+          class="progress mt-2"
+          style="height: 4px;"
+        >
           <div
             class="progress-bar"
             role="progressbar"
             :style="{ width: uploadProgress + '%' }"
-          ></div>
+          />
         </div>
       </div>
 
       <!-- Default state -->
-      <div v-else class="py-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="text-muted mb-2" viewBox="0 0 16 16">
-          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+      <div
+        v-else
+        class="py-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          fill="currentColor"
+          class="text-muted mb-2"
+          viewBox="0 0 16 16"
+        >
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
         </svg>
         <div class="text-muted small">
           {{ placeholder || "Drag & drop an image here, or click to browse" }}
@@ -228,7 +266,7 @@ function removeImage() {
         class="d-none"
         accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
         @change="handleFileSelect"
-      />
+      >
     </div>
   </div>
 </template>

@@ -259,7 +259,10 @@ defineExpose({
 </script>
 
 <template>
-  <div class="notion-editor" :class="{ disabled: disabled }">
+  <div
+    class="notion-editor"
+    :class="{ disabled: disabled }"
+  >
     <!-- Save status bar -->
     <SaveStatusBar
       :save-status="editorState.saveStatus"
@@ -333,34 +336,63 @@ defineExpose({
       accept="image/*"
       style="display: none"
       @change="imageUpload.handleFileInputChange"
-    />
+    >
 
     <!-- Link Modal -->
-    <div v-if="linkModal.show" class="modal-backdrop fade show"></div>
-    <div v-if="linkModal.show" class="modal fade show d-block" tabindex="-1" @click.self="linkModal.close">
+    <div
+      v-if="linkModal.show"
+      class="modal-backdrop fade show"
+    />
+    <div
+      v-if="linkModal.show"
+      class="modal fade show d-block"
+      tabindex="-1"
+      @click.self="linkModal.close"
+    >
       <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
           <div class="modal-header py-2">
-            <h6 class="modal-title">Insert Link</h6>
-            <button type="button" class="btn-close btn-close-sm" @click="linkModal.close"></button>
+            <h6 class="modal-title">
+              Insert Link
+            </h6>
+            <button
+              type="button"
+              class="btn-close btn-close-sm"
+              @click="linkModal.close"
+            />
           </div>
           <div class="modal-body py-2">
             <input
               type="url"
               class="form-control form-control-sm"
               :value="linkModal.url.value"
-              @input="linkModal.url.value = ($event.target as HTMLInputElement).value"
               placeholder="https://example.com"
-              @keydown.enter="linkModal.setLink(linkModal.url.value)"
               autofocus
-            />
+              @input="linkModal.url.value = ($event.target as HTMLInputElement).value"
+              @keydown.enter="linkModal.setLink(linkModal.url.value)"
+            >
           </div>
           <div class="modal-footer py-2">
-            <button v-if="editor?.isActive('link')" type="button" class="btn btn-sm btn-outline-danger me-auto" @click="linkModal.removeLink">
+            <button
+              v-if="editor?.isActive('link')"
+              type="button"
+              class="btn btn-sm btn-outline-danger me-auto"
+              @click="linkModal.removeLink"
+            >
               Remove
             </button>
-            <button type="button" class="btn btn-sm btn-secondary" @click="linkModal.close">Cancel</button>
-            <button type="button" class="btn btn-sm btn-primary" @click="linkModal.setLink(linkModal.url.value)">
+            <button
+              type="button"
+              class="btn btn-sm btn-secondary"
+              @click="linkModal.close"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              @click="linkModal.setLink(linkModal.url.value)"
+            >
               {{ editor?.isActive('link') ? 'Update' : 'Insert' }}
             </button>
           </div>

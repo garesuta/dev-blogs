@@ -150,10 +150,14 @@ defineExpose({
 </script>
 
 <template>
-  <div class="search-container" ref="dropdownRef" @blur="handleBlur">
+  <div
+    ref="dropdownRef"
+    class="search-container"
+    @blur="handleBlur"
+  >
     <div class="search-input-wrapper">
       <div class="search-icon">
-        <i class="bi bi-search"></i>
+        <i class="bi bi-search" />
       </div>
       <input
         ref="inputRef"
@@ -162,26 +166,32 @@ defineExpose({
         :placeholder="placeholder"
         type="search"
         class="form-control search-input"
-        @input="handleInput"
-        @keydown="handleKeydown"
         aria-label="Search articles"
         aria-autocomplete="list"
         aria-controls="search-results"
         aria-expanded="isDropdownOpen"
-      />
+        @input="handleInput"
+        @keydown="handleKeydown"
+      >
       <button
         v-if="query"
         class="btn-clear"
-        @click="() => { clear(); clearValidationError() }"
         aria-label="Clear search"
+        @click="() => { clear(); clearValidationError() }"
       >
-        <i class="bi bi-x-lg"></i>
+        <i class="bi bi-x-lg" />
       </button>
     </div>
 
     <!-- Loading indicator -->
-    <div v-if="isSearching" class="search-loading">
-      <div class="spinner-border spinner-border-sm" role="status">
+    <div
+      v-if="isSearching"
+      class="search-loading"
+    >
+      <div
+        class="spinner-border spinner-border-sm"
+        role="status"
+      >
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
@@ -193,37 +203,56 @@ defineExpose({
       role="listbox"
     >
       <!-- Search history -->
-      <div v-if="hasHistory" class="search-section">
-        <h6 class="search-section-title">Recent Searches</h6>
+      <div
+        v-if="hasHistory"
+        class="search-section"
+      >
+        <h6 class="search-section-title">
+          Recent Searches
+        </h6>
         <button
           v-for="(item, index) in searchHistoryEntries"
           :key="index"
           class="search-history-item"
-          @click="() => selectItem(item)"
           :aria-selected="focusedIndex === index"
           role="option"
+          @click="() => selectItem(item)"
         >
-          <i class="bi bi-clock-history me-2"></i>
+          <i class="bi bi-clock-history me-2" />
           {{ item.query }}
         </button>
       </div>
 
       <!-- Search results -->
-      <div v-if="results.length > 0" class="search-section">
-        <h6 class="search-section-title">Results ({{ results.length }})</h6>
+      <div
+        v-if="results.length > 0"
+        class="search-section"
+      >
+        <h6 class="search-section-title">
+          Results ({{ results.length }})
+        </h6>
         <button
           v-for="(result, index) in results"
           :key="result.id"
           class="search-result-item"
           :class="{ 'focused': focusedIndex === searchHistoryCache.size + index }"
-          @click="() => selectItem(result)"
           role="option"
+          @click="() => selectItem(result)"
         >
-          <div class="result-title" v-html="highlightText(result.title, query)"></div>
+          <div
+            class="result-title"
+            v-html="highlightText(result.title, query)"
+          />
           <div class="result-meta">
-            <span v-if="result.category" class="badge bg-secondary">{{ result.category }}</span>
-            <span v-if="result.readingTime" class="read-time">
-              <i class="bi bi-clock me-1"></i>
+            <span
+              v-if="result.category"
+              class="badge bg-secondary"
+            >{{ result.category }}</span>
+            <span
+              v-if="result.readingTime"
+              class="read-time"
+            >
+              <i class="bi bi-clock me-1" />
               {{ result.readingTime }} min
             </span>
           </div>
@@ -231,17 +260,26 @@ defineExpose({
       </div>
 
       <!-- No results -->
-      <div v-if="results.length === 0 && !hasHistory" class="search-section">
+      <div
+        v-if="results.length === 0 && !hasHistory"
+        class="search-section"
+      >
         <div class="search-empty-state">
-          <i class="bi bi-search fs-1 text-muted mb-2"></i>
-          <p class="text-muted">No results found. Try different keywords.</p>
+          <i class="bi bi-search fs-1 text-muted mb-2" />
+          <p class="text-muted">
+            No results found. Try different keywords.
+          </p>
         </div>
       </div>
     </div>
 
     <!-- Error message -->
-    <div v-if="searchError" class="search-error" role="alert">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div
+      v-if="searchError"
+      class="search-error"
+      role="alert"
+    >
+      <i class="bi bi-exclamation-triangle-fill me-2" />
       {{ searchError }}
     </div>
   </div>

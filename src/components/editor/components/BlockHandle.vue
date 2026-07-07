@@ -31,19 +31,19 @@ const emit = defineEmits<{
         <button
           type="button"
           class="block-handle-button block-handle-add"
-          @click="emit('addBlock')"
           title="Add block"
+          @click="emit('addBlock')"
         >
-          <span class="bi-plus-lg"></span>
+          <span class="bi-plus-lg" />
         </button>
 
         <button
           type="button"
           class="block-handle-button block-handle-dots"
-          @click="emit('toggleOptions')"
           title="Block options"
+          @click="emit('toggleOptions')"
         >
-          <span class="bi-three-dots-vertical"></span>
+          <span class="bi-three-dots-vertical" />
         </button>
       </div>
     </div>

@@ -46,27 +46,27 @@ const canToggleColumn = computed(() => props.editor.value?.can().toggleHeaderCol
         <div class="toolbar-buttons">
           <button
             type="button"
-            @click="props.editor?.chain().focus().addRowBefore().run()"
             :disabled="!canAddRowBefore"
             title="Add row before"
+            @click="props.editor?.chain().focus().addRowBefore().run()"
           >
-            <span class="bi-arrow-up-short"></span>
+            <span class="bi-arrow-up-short" />
           </button>
           <button
             type="button"
-            @click="props.editor?.chain().focus().addRowAfter().run()"
             :disabled="!canAddRowAfter"
             title="Add row after"
+            @click="props.editor?.chain().focus().addRowAfter().run()"
           >
-            <span class="bi-arrow-down-short"></span>
+            <span class="bi-arrow-down-short" />
           </button>
           <button
             type="button"
-            @click="props.editor?.chain().focus().deleteRow().run()"
             :disabled="!canDeleteRow"
             title="Delete row"
+            @click="props.editor?.chain().focus().deleteRow().run()"
           >
-            <span class="bi-trash"></span>
+            <span class="bi-trash" />
           </button>
         </div>
       </div>
@@ -77,27 +77,27 @@ const canToggleColumn = computed(() => props.editor.value?.can().toggleHeaderCol
         <div class="toolbar-buttons">
           <button
             type="button"
-            @click="props.editor?.chain().focus().addColumnBefore().run()"
             :disabled="!canAddColBefore"
             title="Add column before"
+            @click="props.editor?.chain().focus().addColumnBefore().run()"
           >
-            <span class="bi-arrow-left-short"></span>
+            <span class="bi-arrow-left-short" />
           </button>
           <button
             type="button"
-            @click="props.editor?.chain().focus().addColumnAfter().run()"
             :disabled="!canAddColAfter"
             title="Add column after"
+            @click="props.editor?.chain().focus().addColumnAfter().run()"
           >
-            <span class="bi-arrow-right-short"></span>
+            <span class="bi-arrow-right-short" />
           </button>
           <button
             type="button"
-            @click="props.editor?.chain().focus().deleteColumn().run()"
             :disabled="!canDeleteCol"
             title="Delete column"
+            @click="props.editor?.chain().focus().deleteColumn().run()"
           >
-            <span class="bi-trash"></span>
+            <span class="bi-trash" />
           </button>
         </div>
       </div>
@@ -108,19 +108,19 @@ const canToggleColumn = computed(() => props.editor.value?.can().toggleHeaderCol
         <div class="toolbar-buttons">
           <button
             type="button"
-            @click="props.editor?.chain().focus().mergeCells().run()"
             :disabled="!canMergeCells"
             title="Merge cells"
+            @click="props.editor?.chain().focus().mergeCells().run()"
           >
-            <span class="bi-table"></span>
+            <span class="bi-table" />
           </button>
           <button
             type="button"
-            @click="props.editor?.chain().focus().splitCell().run()"
             :disabled="!canSplitCell"
             title="Split cell"
+            @click="props.editor?.chain().focus().splitCell().run()"
           >
-            <span class="bi-table"></span>
+            <span class="bi-table" />
           </button>
         </div>
       </div>
@@ -131,19 +131,19 @@ const canToggleColumn = computed(() => props.editor.value?.can().toggleHeaderCol
         <div class="toolbar-buttons">
           <button
             type="button"
-            @click="props.editor?.chain().focus().toggleHeaderRow().run()"
             :disabled="!canToggleHeader"
             title="Toggle header row"
+            @click="props.editor?.chain().focus().toggleHeaderRow().run()"
           >
-            <span class="bi-table"></span>
+            <span class="bi-table" />
           </button>
           <button
             type="button"
-            @click="props.editor?.chain().focus().toggleHeaderColumn().run()"
             :disabled="!canToggleColumn"
             title="Toggle header column"
+            @click="props.editor?.chain().focus().toggleHeaderColumn().run()"
           >
-            <span class="bi-table"></span>
+            <span class="bi-table" />
           </button>
         </div>
       </div>
@@ -152,10 +152,10 @@ const canToggleColumn = computed(() => props.editor.value?.can().toggleHeaderCol
       <div class="toolbar-section">
         <button
           type="button"
-          @click="props.editor?.chain().focus().deleteTable().run()"
           title="Delete table"
+          @click="props.editor?.chain().focus().deleteTable().run()"
         >
-          <span class="bi-trash"></span>
+          <span class="bi-trash" />
         </button>
       </div>
     </div>

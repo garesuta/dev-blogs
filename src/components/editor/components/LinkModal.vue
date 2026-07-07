@@ -62,17 +62,29 @@ function handleRemove(): void {
         class="link-modal-backdrop"
         @click.self="emit('close')"
       >
-        <div class="link-modal" @click.stop>
+        <div
+          class="link-modal"
+          @click.stop
+        >
           <div class="link-modal-header">
-            <h3 class="link-modal-title">Insert Link</h3>
-            <button type="button" class="link-modal-close" @click="emit('close')">
-              <span class="bi-x-lg"></span>
+            <h3 class="link-modal-title">
+              Insert Link
+            </h3>
+            <button
+              type="button"
+              class="link-modal-close"
+              @click="emit('close')"
+            >
+              <span class="bi-x-lg" />
             </button>
           </div>
 
           <div class="link-modal-body">
             <div class="mb-3">
-              <label for="link-url" class="form-label">URL</label>
+              <label
+                for="link-url"
+                class="form-label"
+              >URL</label>
               <input
                 id="link-url"
                 ref="urlInput"
@@ -81,7 +93,7 @@ function handleRemove(): void {
                 class="form-input"
                 placeholder="https://example.com"
                 @keydown="handleKeydown"
-              />
+              >
             </div>
 
             <div class="link-modal-actions">

@@ -17,17 +17,21 @@ const props = defineProps<SaveStatusBarProps>();
 
 <template>
   <div class="notion-status-bar">
-    <small :class="[
-      'spinner-border',
-      'spinner-border-sm',
-      'me-1',
-      { 'd-none': props.saveStatus !== 'saving' }
-    ]"></small>
+    <small
+      :class="[
+        'spinner-border',
+        'spinner-border-sm',
+        'me-1',
+        { 'd-none': props.saveStatus !== 'saving' }
+      ]"
+    />
 
-    <span :class="[
-      'text-muted',
-      props.saveStatusClass
-    ]">
+    <span
+      :class="[
+        'text-muted',
+        props.saveStatusClass
+      ]"
+    >
       {{ props.saveStatusText }}
     </span>
 

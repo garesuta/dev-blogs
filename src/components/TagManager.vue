@@ -135,46 +135,81 @@ onMounted(() => {
   <div class="tag-manager">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Tags</h5>
-      <button class="btn btn-primary btn-sm" @click="openNewForm" :disabled="showForm">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+      <h5 class="mb-0">
+        Tags
+      </h5>
+      <button
+        class="btn btn-primary btn-sm"
+        :disabled="showForm"
+        @click="openNewForm"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="me-1"
+          viewBox="0 0 16 16"
+        >
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
         </svg>
         Add Tag
       </button>
     </div>
 
     <!-- Messages -->
-    <div v-if="error" class="alert alert-danger py-2 small">
+    <div
+      v-if="error"
+      class="alert alert-danger py-2 small"
+    >
       {{ error }}
-      <button type="button" class="btn-close btn-sm float-end" @click="error = ''"></button>
+      <button
+        type="button"
+        class="btn-close btn-sm float-end"
+        @click="error = ''"
+      />
     </div>
 
-    <div v-if="successMessage" class="alert alert-success py-2 small">
+    <div
+      v-if="successMessage"
+      class="alert alert-success py-2 small"
+    >
       {{ successMessage }}
     </div>
 
     <!-- Form -->
-    <div v-if="showForm" class="card mb-3">
+    <div
+      v-if="showForm"
+      class="card mb-3"
+    >
       <div class="card-body">
-        <h6 class="card-title">{{ isEditing ? "Edit Tag" : "New Tag" }}</h6>
+        <h6 class="card-title">
+          {{ isEditing ? "Edit Tag" : "New Tag" }}
+        </h6>
 
         <div class="mb-3">
           <label class="form-label">Name *</label>
           <input
+            v-model="formName"
             type="text"
             class="form-control"
-            v-model="formName"
             placeholder="Tag name"
             @keydown.enter="saveTag"
-          />
+          >
         </div>
 
         <div class="d-flex gap-2">
-          <button class="btn btn-primary btn-sm" @click="saveTag" :disabled="isSaving">
+          <button
+            class="btn btn-primary btn-sm"
+            :disabled="isSaving"
+            @click="saveTag"
+          >
             {{ isSaving ? "Saving..." : isEditing ? "Update" : "Create" }}
           </button>
-          <button class="btn btn-outline-secondary btn-sm" @click="resetForm">
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            @click="resetForm"
+          >
             Cancel
           </button>
         </div>
@@ -182,45 +217,75 @@ onMounted(() => {
     </div>
 
     <!-- Loading -->
-    <div v-if="isLoading" class="text-center py-4">
-      <div class="spinner-border spinner-border-sm text-primary"></div>
+    <div
+      v-if="isLoading"
+      class="text-center py-4"
+    >
+      <div class="spinner-border spinner-border-sm text-primary" />
       <span class="ms-2 text-muted">Loading...</span>
     </div>
 
     <!-- Empty state -->
-    <div v-else-if="tags.length === 0" class="text-center py-4 text-muted">
-      <p class="mb-0">No tags yet</p>
+    <div
+      v-else-if="tags.length === 0"
+      class="text-center py-4 text-muted"
+    >
+      <p class="mb-0">
+        No tags yet
+      </p>
       <small>Create your first tag to label your posts</small>
     </div>
 
     <!-- Tags list -->
-    <div v-else class="tags-container">
+    <div
+      v-else
+      class="tags-container"
+    >
       <div
         v-for="tag in tags"
         :key="tag.id"
         class="tag-chip"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="tag-icon" viewBox="0 0 16 16">
-          <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          fill="currentColor"
+          class="tag-icon"
+          viewBox="0 0 16 16"
+        >
+          <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
         </svg>
         <span class="tag-name">{{ tag.name }}</span>
         <div class="tag-actions">
           <button
             class="tag-action-btn edit"
-            @click="openEditForm(tag)"
             title="Edit tag"
+            @click="openEditForm(tag)"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="11"
+              height="11"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
             </svg>
           </button>
           <button
             class="tag-action-btn delete"
-            @click="deleteTag(tag)"
             title="Delete tag"
+            @click="deleteTag(tag)"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="11"
+              height="11"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
             </svg>
           </button>
         </div>
@@ -228,7 +293,10 @@ onMounted(() => {
     </div>
 
     <!-- Tag count -->
-    <div v-if="tags.length > 0" class="mt-3 text-muted small">
+    <div
+      v-if="tags.length > 0"
+      class="mt-3 text-muted small"
+    >
       {{ tags.length }} tag{{ tags.length === 1 ? '' : 's' }} total
     </div>
   </div>

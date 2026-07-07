@@ -430,52 +430,69 @@ onMounted(() => {
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h5 class="mb-0">
-        <i class="bi bi-folder me-2"></i>
+        <i class="bi bi-folder me-2" />
         Categories
       </h5>
-      <button class="btn btn-primary btn-sm" @click="openNewForm" :disabled="showForm">
-        <i class="bi bi-plus-lg me-1"></i>
+      <button
+        class="btn btn-primary btn-sm"
+        :disabled="showForm"
+        @click="openNewForm"
+      >
+        <i class="bi bi-plus-lg me-1" />
         Add Category
       </button>
     </div>
 
     <!-- Messages -->
-    <div v-if="error" class="alert alert-danger py-2 small">
+    <div
+      v-if="error"
+      class="alert alert-danger py-2 small"
+    >
       {{ error }}
-      <button type="button" class="btn-close btn-sm float-end" @click="error = ''"></button>
+      <button
+        type="button"
+        class="btn-close btn-sm float-end"
+        @click="error = ''"
+      />
     </div>
 
-    <div v-if="successMessage" class="alert alert-success py-2 small">
-      <i class="bi bi-check-circle me-1"></i>
+    <div
+      v-if="successMessage"
+      class="alert alert-success py-2 small"
+    >
+      <i class="bi bi-check-circle me-1" />
       {{ successMessage }}
     </div>
 
     <!-- Form -->
-    <div v-if="showForm" class="card mb-3">
+    <div
+      v-if="showForm"
+      class="card mb-3"
+    >
       <div class="card-body">
         <h6 class="card-title">
-          <i :class="['bi', 'me-1', isEditing ? 'bi-pencil' : 'bi-plus-circle']"></i>
+          <i :class="['bi', 'me-1', isEditing ? 'bi-pencil' : 'bi-plus-circle']" />
           {{ isEditing ? "Edit Category" : "New Category" }}
         </h6>
 
         <div class="mb-3">
           <label class="form-label">Name *</label>
           <input
+            v-model="formData.name"
             type="text"
             class="form-control"
-            v-model="formData.name"
             placeholder="Category name"
-          />
+          >
         </div>
 
         <div class="mb-3">
           <label class="form-label">Description</label>
           <textarea
-            class="form-control"
             v-model="formData.description"
+            class="form-control"
             rows="2"
             placeholder="Optional description"
-          ></textarea>
+          />
         </div>
 
         <div class="mb-3">
@@ -484,25 +501,25 @@ onMounted(() => {
             <!-- Custom color picker -->
             <div class="color-picker-wrapper">
               <input
+                v-model="formData.color"
                 type="color"
                 class="color-picker-input"
-                v-model="formData.color"
                 :title="formData.color"
-              />
+              >
               <div
                 class="color-picker-preview"
                 :style="{ backgroundColor: formData.color }"
-              ></div>
+              />
             </div>
             <!-- Hex input -->
             <div class="flex-grow-1">
               <input
+                v-model="formData.color"
                 type="text"
                 class="form-control form-control-sm"
-                v-model="formData.color"
                 placeholder="#000000"
                 maxlength="7"
-              />
+              >
             </div>
           </div>
           <!-- Quick color presets -->
@@ -514,9 +531,9 @@ onMounted(() => {
               class="color-preset"
               :class="{ active: formData.color === color }"
               :style="{ backgroundColor: color }"
-              @click="formData.color = color"
               :title="color"
-            ></button>
+              @click="formData.color = color"
+            />
           </div>
           <small class="text-muted">Click the color box or use presets below</small>
         </div>
@@ -531,57 +548,73 @@ onMounted(() => {
               class="icon-preview d-flex align-items-center justify-content-center"
               :style="{ borderColor: formData.color }"
             >
-              <i v-if="formData.icon" :class="`bi ${formData.icon}`" :style="{ color: formData.color }"></i>
-              <i v-else class="bi bi-image text-muted"></i>
+              <i
+                v-if="formData.icon"
+                :class="`bi ${formData.icon}`"
+                :style="{ color: formData.color }"
+              />
+              <i
+                v-else
+                class="bi bi-image text-muted"
+              />
             </div>
             <div class="flex-grow-1">
               <input
+                v-model="formData.icon"
                 type="text"
                 class="form-control form-control-sm"
-                v-model="formData.icon"
                 placeholder="e.g., bi-rocket-takeoff"
-              />
+              >
             </div>
             <button
               v-if="formData.icon"
               type="button"
               class="btn btn-outline-secondary btn-sm"
-              @click="clearIcon"
               title="Clear icon"
+              @click="clearIcon"
             >
-              <i class="bi bi-x-lg"></i>
+              <i class="bi bi-x-lg" />
             </button>
             <button
               type="button"
               class="btn btn-outline-primary btn-sm"
               @click="showIconPicker = !showIconPicker"
             >
-              <i class="bi bi-grid-3x3-gap me-1"></i>
+              <i class="bi bi-grid-3x3-gap me-1" />
               {{ showIconPicker ? 'Close' : 'Browse' }}
             </button>
           </div>
 
           <!-- Icon picker dropdown -->
-          <div v-if="showIconPicker" class="icon-picker-panel">
+          <div
+            v-if="showIconPicker"
+            class="icon-picker-panel"
+          >
             <!-- Search -->
             <div class="mb-3">
               <div class="input-group input-group-sm">
                 <span class="input-group-text">
-                  <i class="bi bi-search"></i>
+                  <i class="bi bi-search" />
                 </span>
                 <input
+                  v-model="iconSearch"
                   type="text"
                   class="form-control"
-                  v-model="iconSearch"
                   placeholder="Search icons..."
-                />
+                >
               </div>
             </div>
 
             <!-- Icon categories -->
             <div class="icon-categories">
-              <div v-for="(icons, category) in filteredIcons" :key="category" class="mb-3">
-                <div class="small text-muted mb-2 fw-semibold">{{ category }}</div>
+              <div
+                v-for="(icons, category) in filteredIcons"
+                :key="category"
+                class="mb-3"
+              >
+                <div class="small text-muted mb-2 fw-semibold">
+                  {{ category }}
+                </div>
                 <div class="d-flex flex-wrap gap-1">
                   <button
                     v-for="iconItem in icons"
@@ -593,13 +626,19 @@ onMounted(() => {
                     @mouseleave="hideTooltip"
                     @click="selectIcon(iconItem.icon)"
                   >
-                    <i :class="`bi ${iconItem.icon}`" :style="{ color: iconItem.color }"></i>
+                    <i
+                      :class="`bi ${iconItem.icon}`"
+                      :style="{ color: iconItem.color }"
+                    />
                   </button>
                 </div>
               </div>
 
-              <div v-if="Object.keys(filteredIcons).length === 0" class="text-muted text-center py-3">
-                <i class="bi bi-search me-1"></i>
+              <div
+                v-if="Object.keys(filteredIcons).length === 0"
+                class="text-muted text-center py-3"
+              >
+                <i class="bi bi-search me-1" />
                 No icons found for "{{ iconSearch }}"
               </div>
             </div>
@@ -617,19 +656,30 @@ onMounted(() => {
 
             <!-- Help text -->
             <div class="small text-muted mt-2 pt-2 border-top">
-              <i class="bi bi-info-circle me-1"></i>
-              Browse all icons at <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener">icons.getbootstrap.com</a>
+              <i class="bi bi-info-circle me-1" />
+              Browse all icons at <a
+                href="https://icons.getbootstrap.com/"
+                target="_blank"
+                rel="noopener"
+              >icons.getbootstrap.com</a>
             </div>
           </div>
         </div>
 
         <div class="d-flex gap-2">
-          <button class="btn btn-primary btn-sm" @click="saveCategory" :disabled="isSaving">
-            <i :class="['bi', 'me-1', isSaving ? 'bi-hourglass-split' : 'bi-check-lg']"></i>
+          <button
+            class="btn btn-primary btn-sm"
+            :disabled="isSaving"
+            @click="saveCategory"
+          >
+            <i :class="['bi', 'me-1', isSaving ? 'bi-hourglass-split' : 'bi-check-lg']" />
             {{ isSaving ? "Saving..." : isEditing ? "Update" : "Create" }}
           </button>
-          <button class="btn btn-outline-secondary btn-sm" @click="resetForm">
-            <i class="bi bi-x-lg me-1"></i>
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            @click="resetForm"
+          >
+            <i class="bi bi-x-lg me-1" />
             Cancel
           </button>
         </div>
@@ -637,20 +687,31 @@ onMounted(() => {
     </div>
 
     <!-- Loading -->
-    <div v-if="isLoading" class="text-center py-4">
-      <div class="spinner-border spinner-border-sm text-primary"></div>
+    <div
+      v-if="isLoading"
+      class="text-center py-4"
+    >
+      <div class="spinner-border spinner-border-sm text-primary" />
       <span class="ms-2 text-muted">Loading...</span>
     </div>
 
     <!-- Empty state -->
-    <div v-else-if="categories.length === 0" class="text-center py-4 text-muted">
-      <i class="bi bi-folder-x fs-1 d-block mb-2"></i>
-      <p class="mb-0">No categories yet</p>
+    <div
+      v-else-if="categories.length === 0"
+      class="text-center py-4 text-muted"
+    >
+      <i class="bi bi-folder-x fs-1 d-block mb-2" />
+      <p class="mb-0">
+        No categories yet
+      </p>
       <small>Create your first category to organize your posts</small>
     </div>
 
     <!-- Categories list -->
-    <div v-else class="list-group">
+    <div
+      v-else
+      class="list-group"
+    >
       <div
         v-for="category in categories"
         :key="category.id"
@@ -663,7 +724,7 @@ onMounted(() => {
             class="category-icon"
             :style="{ color: category.color || '#6c757d' }"
           >
-            <i :class="`bi ${category.icon}`"></i>
+            <i :class="`bi ${category.icon}`" />
           </span>
           <!-- Badge with name -->
           <span
@@ -672,16 +733,25 @@ onMounted(() => {
           >
             {{ category.name }}
           </span>
-          <small v-if="category.description" class="text-muted">
+          <small
+            v-if="category.description"
+            class="text-muted"
+          >
             {{ category.description }}
           </small>
         </div>
         <div class="btn-group btn-group-sm">
-          <button class="btn btn-outline-secondary" @click="openEditForm(category)">
-            <i class="bi bi-pencil"></i>
+          <button
+            class="btn btn-outline-secondary"
+            @click="openEditForm(category)"
+          >
+            <i class="bi bi-pencil" />
           </button>
-          <button class="btn btn-outline-danger" @click="deleteCategory(category)">
-            <i class="bi bi-trash"></i>
+          <button
+            class="btn btn-outline-danger"
+            @click="deleteCategory(category)"
+          >
+            <i class="bi bi-trash" />
           </button>
         </div>
       </div>

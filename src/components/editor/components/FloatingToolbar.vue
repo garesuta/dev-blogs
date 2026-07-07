@@ -54,26 +54,26 @@ const isLink = computed(() => props.editor.value?.isActive('link') ?? false);
         <button
           type="button"
           :class="{ 'is-active': isBold }"
-          @click="props.editor?.chain().focus().toggleBold().run()"
           title="Bold (Ctrl+B)"
+          @click="props.editor?.chain().focus().toggleBold().run()"
         >
-          <span class="bi-type-bold"></span>
+          <span class="bi-type-bold" />
         </button>
         <button
           type="button"
           :class="{ 'is-active': isItalic }"
-          @click="props.editor?.chain().focus().toggleItalic().run()"
           title="Italic (Ctrl+I)"
+          @click="props.editor?.chain().focus().toggleItalic().run()"
         >
-          <span class="bi-type-italic"></span>
+          <span class="bi-type-italic" />
         </button>
         <button
           type="button"
           :class="{ 'is-active': isStrike }"
-          @click="props.editor?.chain().focus().toggleStrike().run()"
           title="Strikethrough (Ctrl+Shift+S)"
+          @click="props.editor?.chain().focus().toggleStrike().run()"
         >
-          <span class="bi-type-strikethrough"></span>
+          <span class="bi-type-strikethrough" />
         </button>
       </div>
 
@@ -82,26 +82,26 @@ const isLink = computed(() => props.editor.value?.isActive('link') ?? false);
         <button
           type="button"
           :class="{ 'is-active': isHeading1 }"
-          @click="props.editor?.chain().focus().toggleHeading({ level: 1 }).run()"
           title="Heading 1 (Ctrl+Alt+1)"
+          @click="props.editor?.chain().focus().toggleHeading({ level: 1 }).run()"
         >
-          <span class="bi-type-h1"></span>
+          <span class="bi-type-h1" />
         </button>
         <button
           type="button"
           :class="{ 'is-active': isHeading2 }"
-          @click="props.editor?.chain().focus().toggleHeading({ level: 2 }).run()"
           title="Heading 2 (Ctrl+Alt+2)"
+          @click="props.editor?.chain().focus().toggleHeading({ level: 2 }).run()"
         >
-          <span class="bi-type-h2"></span>
+          <span class="bi-type-h2" />
         </button>
         <button
           type="button"
           :class="{ 'is-active': isHeading3 }"
-          @click="props.editor?.chain().focus().toggleHeading({ level: 3 }).run()"
           title="Heading 3 (Ctrl+Alt+3)"
+          @click="props.editor?.chain().focus().toggleHeading({ level: 3 }).run()"
         >
-          <span class="bi-type-h3"></span>
+          <span class="bi-type-h3" />
         </button>
       </div>
 
@@ -110,26 +110,26 @@ const isLink = computed(() => props.editor.value?.isActive('link') ?? false);
         <button
           type="button"
           :class="{ 'is-active': isBulletList }"
-          @click="props.editor?.chain().focus().toggleBulletList().run()"
           title="Bullet List (Ctrl+Shift+8)"
+          @click="props.editor?.chain().focus().toggleBulletList().run()"
         >
-          <span class="bi-list-ul"></span>
+          <span class="bi-list-ul" />
         </button>
         <button
           type="button"
           :class="{ 'is-active': isOrderedList }"
-          @click="props.editor?.chain().focus().toggleOrderedList().run()"
           title="Numbered List (Ctrl+Shift+7)"
+          @click="props.editor?.chain().focus().toggleOrderedList().run()"
         >
-          <span class="bi-list-ol"></span>
+          <span class="bi-list-ol" />
         </button>
         <button
           type="button"
           :class="{ 'is-active': isBlockquote }"
-          @click="props.editor?.chain().focus().toggleBlockquote().run()"
           title="Quote (Ctrl+Shift+9)"
+          @click="props.editor?.chain().focus().toggleBlockquote().run()"
         >
-          <span class="bi-quote"></span>
+          <span class="bi-quote" />
         </button>
       </div>
 
@@ -138,17 +138,17 @@ const isLink = computed(() => props.editor.value?.isActive('link') ?? false);
         <button
           type="button"
           :class="{ 'is-active': isCode }"
-          @click="props.editor?.chain().focus().toggleCodeBlock().run()"
           title="Code Block (Ctrl+Shift+C)"
+          @click="props.editor?.chain().focus().toggleCodeBlock().run()"
         >
-          <span class="bi-code-square"></span>
+          <span class="bi-code-square" />
         </button>
         <button
           type="button"
-          @click="props.editor?.chain().focus().setHorizontalRule().run()"
           title="Horizontal Rule (Ctrl+Shift+H)"
+          @click="props.editor?.chain().focus().setHorizontalRule().run()"
         >
-          <span class="bi-hr"></span>
+          <span class="bi-hr" />
         </button>
       </div>
 
@@ -157,10 +157,10 @@ const isLink = computed(() => props.editor.value?.isActive('link') ?? false);
         <button
           type="button"
           :class="{ 'is-active': isLink }"
-          @click="props.editor?.chain().focus().unsetLink().run()"
           title="Remove Link"
+          @click="props.editor?.chain().focus().unsetLink().run()"
         >
-          <span class="bi-link-break"></span>
+          <span class="bi-link-break" />
         </button>
       </div>
     </div>

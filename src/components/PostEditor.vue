@@ -512,26 +512,43 @@ onMounted(async () => {
 <template>
   <div class="post-editor">
     <!-- Loading state -->
-    <div v-if="isLoading" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
+    <div
+      v-if="isLoading"
+      class="text-center py-5"
+    >
+      <div
+        class="spinner-border text-primary"
+        role="status"
+      >
         <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="mt-2 text-muted">Loading post...</p>
+      <p class="mt-2 text-muted">
+        Loading post...
+      </p>
     </div>
 
     <template v-else>
       <!-- Header with title and Preview button -->
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0">{{ isNewPost ? 'New Post' : 'Edit Post' }}</h4>
+        <h4 class="mb-0">
+          {{ isNewPost ? 'New Post' : 'Edit Post' }}
+        </h4>
         <div class="d-flex gap-2">
           <button
             type="button"
             class="btn btn-outline-primary"
             @click="openPreview"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
-              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="me-1"
+              viewBox="0 0 16 16"
+            >
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
             </svg>
             Preview
           </button>
@@ -539,15 +556,31 @@ onMounted(async () => {
       </div>
 
       <!-- Error message -->
-      <div v-if="error" class="alert alert-danger alert-dismissible" role="alert">
+      <div
+        v-if="error"
+        class="alert alert-danger alert-dismissible"
+        role="alert"
+      >
         {{ error }}
-        <button type="button" class="btn-close" @click="error = ''"></button>
+        <button
+          type="button"
+          class="btn-close"
+          @click="error = ''"
+        />
       </div>
 
       <!-- Success message -->
-      <div v-if="successMessage" class="alert alert-success alert-dismissible" role="alert">
+      <div
+        v-if="successMessage"
+        class="alert alert-success alert-dismissible"
+        role="alert"
+      >
         {{ successMessage }}
-        <button type="button" class="btn-close" @click="successMessage = ''"></button>
+        <button
+          type="button"
+          class="btn-close"
+          @click="successMessage = ''"
+        />
       </div>
 
       <div class="row">
@@ -558,11 +591,11 @@ onMounted(async () => {
             <TiptapEditor
               ref="editorRef"
               :model-value="post.content || ''"
-              @update:model-value="handleContentChange"
-              @save="handleEditorSave"
               :post-id="postId"
               :auto-save-interval="30"
               height="500px"
+              @update:model-value="handleContentChange"
+              @save="handleEditorSave"
             />
           </div>
         </div>
@@ -572,39 +605,50 @@ onMounted(async () => {
           <!-- Post settings card -->
           <div class="card mb-3">
             <div class="card-header">
-              <h6 class="mb-0">Post Settings</h6>
+              <h6 class="mb-0">
+                Post Settings
+              </h6>
             </div>
             <div class="card-body">
               <!-- Title -->
               <div class="mb-3">
-                <label for="postTitle" class="form-label">Title</label>
+                <label
+                  for="postTitle"
+                  class="form-label"
+                >Title</label>
                 <input
+                  id="postTitle"
                   type="text"
                   class="form-control"
-                  id="postTitle"
                   :value="post.title"
-                  @input="handleTitleInput"
                   placeholder="Post title"
-                />
+                  @input="handleTitleInput"
+                >
               </div>
 
               <!-- Description -->
               <div class="mb-3">
-                <label for="postDescription" class="form-label">Description</label>
+                <label
+                  for="postDescription"
+                  class="form-label"
+                >Description</label>
                 <textarea
-                  class="form-control"
                   id="postDescription"
                   v-model="post.description"
+                  class="form-control"
                   placeholder="Brief description..."
                   rows="2"
-                ></textarea>
+                />
               </div>
 
               <!-- Status -->
               <div class="mb-3">
                 <label class="form-label">Status</label>
                 <div>
-                  <span class="badge" :class="statusBadgeClass">
+                  <span
+                    class="badge"
+                    :class="statusBadgeClass"
+                  >
                     {{ post.status || "draft" }}
                   </span>
                 </div>
@@ -621,14 +665,19 @@ onMounted(async () => {
 
               <!-- Category -->
               <div class="mb-3">
-                <label for="category" class="form-label">Category</label>
+                <label
+                  for="category"
+                  class="form-label"
+                >Category</label>
                 <select
-                  class="form-select"
                   id="category"
                   v-model="post.categoryId"
+                  class="form-select"
                   :disabled="isLoadingCategories"
                 >
-                  <option :value="null">No category</option>
+                  <option :value="null">
+                    No category
+                  </option>
                   <option
                     v-for="category in allCategories"
                     :key="category.id"
@@ -643,7 +692,10 @@ onMounted(async () => {
               <div class="mb-3">
                 <label class="form-label">Tags</label>
                 <!-- Selected tags -->
-                <div v-if="selectedTags.length > 0" class="mb-2">
+                <div
+                  v-if="selectedTags.length > 0"
+                  class="mb-2"
+                >
                   <span
                     v-for="tag in selectedTags"
                     :key="tag.id"
@@ -655,44 +707,58 @@ onMounted(async () => {
                       class="btn-close btn-close-white ms-1"
                       style="font-size: 0.6em;"
                       @click="removeTag(tag.id)"
-                    ></button>
+                    />
                   </span>
                 </div>
                 <!-- Add tag dropdown -->
                 <div class="input-group input-group-sm">
                   <input
+                    v-model="newTagInput"
                     type="text"
                     class="form-control"
-                    v-model="newTagInput"
                     placeholder="Add tag..."
                     list="available-tags"
                     @keydown.enter.prevent="createAndAddTag"
-                  />
+                  >
                   <button
                     type="button"
                     class="btn btn-outline-secondary"
-                    @click="createAndAddTag"
                     :disabled="!newTagInput.trim()"
+                    @click="createAndAddTag"
                   >
                     Add
                   </button>
                 </div>
                 <datalist id="available-tags">
-                  <option v-for="tag in availableTags" :key="tag.id" :value="tag.name" />
+                  <option
+                    v-for="tag in availableTags"
+                    :key="tag.id"
+                    :value="tag.name"
+                  />
                 </datalist>
-                <div class="form-text">Press Enter or click Add to create a new tag</div>
+                <div class="form-text">
+                  Press Enter or click Add to create a new tag
+                </div>
               </div>
 
               <!-- Schedule date (for scheduled posts) -->
-              <div v-if="post.status !== 'published'" class="mb-3">
-                <label for="scheduledDate" class="form-label">Schedule For</label>
+              <div
+                v-if="post.status !== 'published'"
+                class="mb-3"
+              >
+                <label
+                  for="scheduledDate"
+                  class="form-label"
+                >Schedule For</label>
                 <input
-                  type="datetime-local"
-                  class="form-control"
                   id="scheduledDate"
                   v-model="post.scheduledDate"
-                />
-                <div class="form-text">Leave empty to publish immediately</div>
+                  type="datetime-local"
+                  class="form-control"
+                >
+                <div class="form-text">
+                  Leave empty to publish immediately
+                </div>
               </div>
 
               <!-- Action buttons -->
@@ -700,10 +766,13 @@ onMounted(async () => {
                 <button
                   type="button"
                   class="btn btn-outline-primary"
-                  @click="savePost(true)"
                   :disabled="isSaving"
+                  @click="savePost(true)"
                 >
-                  <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+                  <span
+                    v-if="isSaving"
+                    class="spinner-border spinner-border-sm me-1"
+                  />
                   {{ isSaving ? "Saving..." : "Save Draft" }}
                 </button>
 
@@ -711,10 +780,13 @@ onMounted(async () => {
                   v-if="post.status !== 'published'"
                   type="button"
                   class="btn btn-success"
-                  @click="publishPost"
                   :disabled="!canPublish || isPublishing"
+                  @click="publishPost"
                 >
-                  <span v-if="isPublishing" class="spinner-border spinner-border-sm me-1"></span>
+                  <span
+                    v-if="isPublishing"
+                    class="spinner-border spinner-border-sm me-1"
+                  />
                   {{ post.scheduledDate ? "Schedule" : "Publish" }}
                 </button>
 
@@ -722,16 +794,22 @@ onMounted(async () => {
                   v-else
                   type="button"
                   class="btn btn-warning"
-                  @click="unpublishPost"
                   :disabled="isPublishing"
+                  @click="unpublishPost"
                 >
-                  <span v-if="isPublishing" class="spinner-border spinner-border-sm me-1"></span>
+                  <span
+                    v-if="isPublishing"
+                    class="spinner-border spinner-border-sm me-1"
+                  />
                   Unpublish
                 </button>
               </div>
 
               <!-- Last saved info -->
-              <div v-if="lastSavedAt" class="mt-3 text-center">
+              <div
+                v-if="lastSavedAt"
+                class="mt-3 text-center"
+              >
                 <small class="text-muted">
                   Last saved: {{ lastSavedAt.toLocaleTimeString() }}
                 </small>
@@ -742,7 +820,9 @@ onMounted(async () => {
           <!-- SEO card -->
           <div class="card">
             <div class="card-header">
-              <h6 class="mb-0">SEO Settings</h6>
+              <h6 class="mb-0">
+                SEO Settings
+              </h6>
             </div>
             <div class="card-body">
               <SeoFields
@@ -768,9 +848,14 @@ onMounted(async () => {
           </div>
 
           <!-- Links card (for existing posts) -->
-          <div v-if="!isNewPost" class="card mt-3">
+          <div
+            v-if="!isNewPost"
+            class="card mt-3"
+          >
             <div class="card-header">
-              <h6 class="mb-0">Quick Links</h6>
+              <h6 class="mb-0">
+                Quick Links
+              </h6>
             </div>
             <div class="list-group list-group-flush">
               <button
@@ -802,7 +887,11 @@ onMounted(async () => {
 
     <!-- Preview Modal -->
     <Teleport to="body">
-      <div v-if="showPreviewModal" class="preview-modal-overlay" @click.self="closePreview">
+      <div
+        v-if="showPreviewModal"
+        class="preview-modal-overlay"
+        @click.self="closePreview"
+      >
         <div class="preview-modal">
           <!-- Preview Banner -->
           <div class="preview-banner">
@@ -815,19 +904,33 @@ onMounted(async () => {
               </span>
             </div>
             <div class="preview-banner-right">
-              <button type="button" class="btn btn-light btn-sm" @click="closePreview">
-                <i class="bi bi-x-lg me-1"></i>
+              <button
+                type="button"
+                class="btn btn-light btn-sm"
+                @click="closePreview"
+              >
+                <i class="bi bi-x-lg me-1" />
                 Close Preview
               </button>
             </div>
           </div>
 
           <!-- Preview Content -->
-          <div class="preview-content" ref="previewContentRef" @click="handlePreviewTocClick">
+          <div
+            ref="previewContentRef"
+            class="preview-content"
+            @click="handlePreviewTocClick"
+          >
             <article class="preview-article">
               <!-- Hero Image -->
-              <div v-if="post.heroImage" class="preview-hero">
-                <img :src="post.heroImage" :alt="post.title" />
+              <div
+                v-if="post.heroImage"
+                class="preview-hero"
+              >
+                <img
+                  :src="post.heroImage"
+                  :alt="post.title"
+                >
               </div>
 
               <div class="preview-prose">
@@ -855,16 +958,22 @@ onMounted(async () => {
                     </span>
                   </div>
 
-                  <hr />
+                  <hr>
                 </div>
 
                 <!-- Description -->
-                <p v-if="post.description" class="preview-description">
+                <p
+                  v-if="post.description"
+                  class="preview-description"
+                >
                   {{ post.description }}
                 </p>
 
                 <!-- Content -->
-                <div class="post-content" v-html="previewHtml"></div>
+                <div
+                  class="post-content"
+                  v-html="previewHtml"
+                />
               </div>
             </article>
           </div>

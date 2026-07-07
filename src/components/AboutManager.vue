@@ -101,27 +101,45 @@ onMounted(() => {
 <template>
   <div class="about-manager">
     <!-- Messages -->
-    <div v-if="error" class="alert alert-danger py-2">
+    <div
+      v-if="error"
+      class="alert alert-danger py-2"
+    >
       {{ error }}
-      <button type="button" class="btn-close btn-sm float-end" @click="error = ''"></button>
+      <button
+        type="button"
+        class="btn-close btn-sm float-end"
+        @click="error = ''"
+      />
     </div>
 
-    <div v-if="successMessage" class="alert alert-success py-2">
-      <i class="bi bi-check-circle me-1"></i>
+    <div
+      v-if="successMessage"
+      class="alert alert-success py-2"
+    >
+      <i class="bi bi-check-circle me-1" />
       {{ successMessage }}
     </div>
 
     <!-- Loading -->
-    <div v-if="isLoading" class="text-center py-5">
-      <div class="spinner-border text-primary"></div>
-      <p class="mt-2 text-muted">Loading settings...</p>
+    <div
+      v-if="isLoading"
+      class="text-center py-5"
+    >
+      <div class="spinner-border text-primary" />
+      <p class="mt-2 text-muted">
+        Loading settings...
+      </p>
     </div>
 
     <!-- Form -->
-    <div v-else class="card">
+    <div
+      v-else
+      class="card"
+    >
       <div class="card-header">
         <h5 class="mb-0">
-          <i class="bi bi-person-circle me-2"></i>
+          <i class="bi bi-person-circle me-2" />
           About Page Content
         </h5>
       </div>
@@ -129,55 +147,58 @@ onMounted(() => {
         <div class="mb-3">
           <label class="form-label">Page Title *</label>
           <input
+            v-model="formData.title"
             type="text"
             class="form-control"
-            v-model="formData.title"
             placeholder="About Me"
-          />
+          >
           <small class="text-muted">The main heading displayed on the about page</small>
         </div>
 
         <div class="mb-3">
           <label class="form-label">Meta Description</label>
           <input
+            v-model="formData.description"
             type="text"
             class="form-control"
-            v-model="formData.description"
             placeholder="A brief description for SEO"
             maxlength="160"
-          />
+          >
           <small class="text-muted">{{ formData.description.length }}/160 characters - Used for SEO and social sharing</small>
         </div>
 
         <div class="mb-3">
           <label class="form-label">Hero Image URL</label>
           <input
+            v-model="formData.heroImage"
             type="text"
             class="form-control"
-            v-model="formData.heroImage"
             placeholder="https://example.com/image.jpg or /images/about.jpg"
-          />
+          >
           <small class="text-muted">URL to the hero image displayed at the top of the page</small>
 
           <!-- Image preview -->
-          <div v-if="formData.heroImage" class="mt-2">
+          <div
+            v-if="formData.heroImage"
+            class="mt-2"
+          >
             <img
               :src="formData.heroImage"
               alt="Hero preview"
               class="hero-preview"
               @error="($event.target as HTMLImageElement).style.display = 'none'"
-            />
+            >
           </div>
         </div>
 
         <div class="mb-4">
           <label class="form-label">Content * <span class="badge bg-secondary">HTML Supported</span></label>
           <textarea
-            class="form-control font-monospace"
             v-model="formData.content"
+            class="form-control font-monospace"
             rows="15"
             placeholder="Write your about page content here. HTML tags are supported for formatting."
-          ></textarea>
+          />
           <small class="text-muted">
             You can use HTML tags for formatting:
             <code>&lt;p&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>,
@@ -191,21 +212,33 @@ onMounted(() => {
             <label class="form-label mb-0">Content Preview</label>
           </div>
           <div class="preview-container p-3 border rounded bg-light">
-            <div v-html="sanitizedContent"></div>
+            <div v-html="sanitizedContent" />
           </div>
         </div>
 
         <div class="d-flex gap-2">
-          <button class="btn btn-primary" @click="saveSettings" :disabled="isSaving">
-            <i :class="['bi', 'me-1', isSaving ? 'bi-hourglass-split' : 'bi-check-lg']"></i>
+          <button
+            class="btn btn-primary"
+            :disabled="isSaving"
+            @click="saveSettings"
+          >
+            <i :class="['bi', 'me-1', isSaving ? 'bi-hourglass-split' : 'bi-check-lg']" />
             {{ isSaving ? "Saving..." : "Save Changes" }}
           </button>
-          <button class="btn btn-outline-secondary" @click="resetForm" :disabled="isSaving">
-            <i class="bi bi-arrow-counterclockwise me-1"></i>
+          <button
+            class="btn btn-outline-secondary"
+            :disabled="isSaving"
+            @click="resetForm"
+          >
+            <i class="bi bi-arrow-counterclockwise me-1" />
             Reset
           </button>
-          <a href="/about" target="_blank" class="btn btn-outline-info ms-auto">
-            <i class="bi bi-eye me-1"></i>
+          <a
+            href="/about"
+            target="_blank"
+            class="btn btn-outline-info ms-auto"
+          >
+            <i class="bi bi-eye me-1" />
             View Page
           </a>
         </div>

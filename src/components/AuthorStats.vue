@@ -19,25 +19,34 @@ const memberDate = computed(() => {
 <template>
   <div class="author-stats-card">
     <h5 class="stats-title">
-      <i class="bi bi-bar-chart-line me-2"></i>
+      <i class="bi bi-bar-chart-line me-2" />
       Your Stats
     </h5>
 
     <div class="stats-grid">
       <div class="stat-item">
-        <div class="stat-value">{{ postCount }}</div>
-        <div class="stat-label">Posts</div>
+        <div class="stat-value">
+          {{ postCount }}
+        </div>
+        <div class="stat-label">
+          Posts
+        </div>
       </div>
       <div class="stat-item">
         <div class="stat-value">
-          <i class="bi" :class="isPublic ? 'bi-globe' : 'bi-lock'"></i>
+          <i
+            class="bi"
+            :class="isPublic ? 'bi-globe' : 'bi-lock'"
+          />
         </div>
-        <div class="stat-label">{{ isPublic ? 'Public' : 'Private' }}</div>
+        <div class="stat-label">
+          {{ isPublic ? 'Public' : 'Private' }}
+        </div>
       </div>
     </div>
 
     <div class="member-since">
-      <i class="bi bi-calendar-heart me-1"></i>
+      <i class="bi bi-calendar-heart me-1" />
       Member since {{ memberDate }}
     </div>
   </div>

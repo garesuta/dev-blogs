@@ -31,20 +31,29 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
 <template>
   <div class="recent-posts">
     <h5 class="posts-title">
-      <i class="bi bi-file-earmark-text me-2"></i>
+      <i class="bi bi-file-earmark-text me-2" />
       Your Recent Posts
     </h5>
 
-    <div v-if="posts.length === 0" class="empty-state">
-      <i class="bi bi-journal-x"></i>
+    <div
+      v-if="posts.length === 0"
+      class="empty-state"
+    >
+      <i class="bi bi-journal-x" />
       <p>No published posts yet</p>
-      <a href="/editor/posts/new" class="create-btn">
-        <i class="bi bi-plus-lg me-1"></i>
+      <a
+        href="/editor/posts/new"
+        class="create-btn"
+      >
+        <i class="bi bi-plus-lg me-1" />
         Create Your First Post
       </a>
     </div>
 
-    <div v-else class="posts-list">
+    <div
+      v-else
+      class="posts-list"
+    >
       <a
         v-for="post in posts"
         :key="post.id"
@@ -54,12 +63,15 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
         <div class="post-info">
           <h6 class="post-title">{{ post.title }}</h6>
           <div class="post-meta">
-            <span v-if="post.status === 'published'" class="post-status status-published">
-              <i class="bi bi-check-circle-fill me-1"></i>
+            <span
+              v-if="post.status === 'published'"
+              class="post-status status-published"
+            >
+              <i class="bi bi-check-circle-fill me-1" />
               Published
             </span>
             <span class="post-date">
-              <i class="bi bi-calendar3 me-1"></i>
+              <i class="bi bi-calendar3 me-1" />
               {{ formatDate(post.publishedAt) }}
             </span>
           </div>
@@ -71,15 +83,21 @@ const hasMorePosts = computed(() => props.totalCount > props.posts.length);
             title="Edit"
             @click.stop
           >
-            <i class="bi bi-pencil"></i>
+            <i class="bi bi-pencil" />
           </a>
         </div>
       </a>
 
-      <div class="posts-footer" style="display: flex; justify-content: flex-end;">
-        <a href="/editor/posts" class="see-all-btn">
+      <div
+        class="posts-footer"
+        style="display: flex; justify-content: flex-end;"
+      >
+        <a
+          href="/editor/posts"
+          class="see-all-btn"
+        >
           View All Posts
-          <i class="bi bi-arrow-right"></i>
+          <i class="bi bi-arrow-right" />
         </a>
       </div>
     </div>

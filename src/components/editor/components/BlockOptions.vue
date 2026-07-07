@@ -39,8 +39,13 @@ const blockTypes = [
         class="block-options-backdrop"
         @click.self="emit('close')"
       >
-        <div class="block-options" @click.stop>
-          <div class="block-options-header">Turn into</div>
+        <div
+          class="block-options"
+          @click.stop
+        >
+          <div class="block-options-header">
+            Turn into
+          </div>
 
           <div class="block-options-grid">
             <button
@@ -50,12 +55,14 @@ const blockTypes = [
               class="block-option"
               @click="emit('turnInto', type.id)"
             >
-              <span :class="type.icon"></span>
+              <span :class="type.icon" />
               <span>{{ type.label }}</span>
             </button>
           </div>
 
-          <div class="block-options-header">Insert</div>
+          <div class="block-options-header">
+            Insert
+          </div>
 
           <div class="block-options-grid">
             <button
@@ -63,7 +70,7 @@ const blockTypes = [
               class="block-option"
               @click="emit('insertImage')"
             >
-              <span class="bi-image"></span>
+              <span class="bi-image" />
               <span>Image</span>
             </button>
             <button
@@ -71,7 +78,7 @@ const blockTypes = [
               class="block-option"
               @click="emit('insertTable')"
             >
-              <span class="bi-table"></span>
+              <span class="bi-table" />
               <span>Table</span>
             </button>
             <button
@@ -79,7 +86,7 @@ const blockTypes = [
               class="block-option"
               @click="emit('insertDivider')"
             >
-              <span class="bi-hr"></span>
+              <span class="bi-hr" />
               <span>Divider</span>
             </button>
             <button
@@ -87,12 +94,14 @@ const blockTypes = [
               class="block-option"
               @click="emit('insertToc')"
             >
-              <span class="bi-list-nested"></span>
+              <span class="bi-list-nested" />
               <span>Table of Contents</span>
             </button>
           </div>
 
-          <div class="block-options-header">Actions</div>
+          <div class="block-options-header">
+            Actions
+          </div>
 
           <div class="block-options-grid">
             <button
@@ -100,7 +109,7 @@ const blockTypes = [
               class="block-option block-option-danger"
               @click="emit('delete')"
             >
-              <span class="bi-trash"></span>
+              <span class="bi-trash" />
               <span>Delete Block</span>
             </button>
             <button
@@ -108,7 +117,7 @@ const blockTypes = [
               class="block-option"
               @click="emit('duplicate')"
             >
-              <span class="bi-copy"></span>
+              <span class="bi-copy" />
               <span>Duplicate</span>
             </button>
           </div>

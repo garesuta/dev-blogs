@@ -88,50 +88,71 @@ function getRedirectUrl(): string {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="login-form">
-    <div v-if="error" class="alert alert-danger" role="alert">
+  <form
+    class="login-form"
+    @submit.prevent="handleSubmit"
+  >
+    <div
+      v-if="error"
+      class="alert alert-danger"
+      role="alert"
+    >
       {{ error }}
     </div>
 
     <div class="mb-3">
-      <label for="email" class="form-label">Email address</label>
+      <label
+        for="email"
+        class="form-label"
+      >Email address</label>
       <input
+        id="email"
+        v-model="email"
         type="email"
         class="form-control"
         :class="{
           'is-invalid': emailError,
           'is-valid': touched.email && !emailError && email,
         }"
-        id="email"
-        v-model="email"
         autocomplete="email"
         :disabled="isLoading"
         @blur="handleBlur('email')"
-      />
-      <div v-if="emailError" class="invalid-feedback">
+      >
+      <div
+        v-if="emailError"
+        class="invalid-feedback"
+      >
         {{ emailError }}
       </div>
     </div>
 
     <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
+      <label
+        for="password"
+        class="form-label"
+      >Password</label>
       <input
+        id="password"
+        v-model="password"
         type="password"
         class="form-control"
         :class="{
           'is-invalid': passwordError,
           'is-valid': touched.password && !passwordError && password,
         }"
-        id="password"
-        v-model="password"
         autocomplete="current-password"
         :disabled="isLoading"
         @blur="handleBlur('password')"
-      />
-      <div v-if="passwordError" class="invalid-feedback">
+      >
+      <div
+        v-if="passwordError"
+        class="invalid-feedback"
+      >
         {{ passwordError }}
       </div>
-      <div class="form-text">Minimum 8 characters</div>
+      <div class="form-text">
+        Minimum 8 characters
+      </div>
     </div>
 
     <button
@@ -140,7 +161,10 @@ function getRedirectUrl(): string {
       :disabled="!isValid || isLoading"
     >
       <span v-if="isLoading">
-        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+        />
         Signing in...
       </span>
       <span v-else>Sign In</span>

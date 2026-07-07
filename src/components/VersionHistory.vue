@@ -146,28 +146,57 @@ onMounted(() => {
 <template>
   <div class="version-history">
     <!-- Error message -->
-    <div v-if="error" class="alert alert-danger alert-dismissible" role="alert">
+    <div
+      v-if="error"
+      class="alert alert-danger alert-dismissible"
+      role="alert"
+    >
       {{ error }}
-      <button type="button" class="btn-close" @click="error = ''"></button>
+      <button
+        type="button"
+        class="btn-close"
+        @click="error = ''"
+      />
     </div>
 
     <!-- Success message -->
-    <div v-if="successMessage" class="alert alert-success alert-dismissible" role="alert">
+    <div
+      v-if="successMessage"
+      class="alert alert-success alert-dismissible"
+      role="alert"
+    >
       {{ successMessage }}
-      <button type="button" class="btn-close" @click="successMessage = ''"></button>
+      <button
+        type="button"
+        class="btn-close"
+        @click="successMessage = ''"
+      />
     </div>
 
     <!-- Loading state -->
-    <div v-if="isLoading" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
+    <div
+      v-if="isLoading"
+      class="text-center py-5"
+    >
+      <div
+        class="spinner-border text-primary"
+        role="status"
+      >
         <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="mt-2 text-muted">Loading version history...</p>
+      <p class="mt-2 text-muted">
+        Loading version history...
+      </p>
     </div>
 
     <!-- Empty state -->
-    <div v-else-if="versions.length === 0" class="text-center py-5">
-      <p class="text-muted">No version history found</p>
+    <div
+      v-else-if="versions.length === 0"
+      class="text-center py-5"
+    >
+      <p class="text-muted">
+        No version history found
+      </p>
     </div>
 
     <template v-else>
@@ -186,7 +215,9 @@ onMounted(() => {
               <div class="d-flex justify-content-between align-items-start">
                 <div>
                   <strong>Version {{ version.versionNumber }}</strong>
-                  <div class="small">{{ formatDate(version.createdAt) }}</div>
+                  <div class="small">
+                    {{ formatDate(version.createdAt) }}
+                  </div>
                   <div class="small text-muted">
                     by {{ version.creatorName || version.creatorEmail || "Unknown" }}
                   </div>
@@ -198,7 +229,10 @@ onMounted(() => {
                   Current
                 </span>
               </div>
-              <div v-if="version.changeSummary" class="small mt-1 fst-italic">
+              <div
+                v-if="version.changeSummary"
+                class="small mt-1 fst-italic"
+              >
                 {{ version.changeSummary }}
               </div>
             </button>
@@ -207,21 +241,35 @@ onMounted(() => {
 
         <!-- Version detail -->
         <div class="col-md-8">
-          <div v-if="isLoadingDetail" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status"></div>
+          <div
+            v-if="isLoadingDetail"
+            class="text-center py-5"
+          >
+            <div
+              class="spinner-border text-primary"
+              role="status"
+            />
           </div>
 
-          <div v-else-if="selectedVersion" class="card">
+          <div
+            v-else-if="selectedVersion"
+            class="card"
+          >
             <div class="card-header d-flex justify-content-between align-items-center">
-              <h6 class="mb-0">Version {{ selectedVersion.versionNumber }}</h6>
+              <h6 class="mb-0">
+                Version {{ selectedVersion.versionNumber }}
+              </h6>
               <button
                 v-if="selectedVersion.versionNumber !== versions[0]?.versionNumber"
                 type="button"
                 class="btn btn-sm btn-outline-primary"
-                @click="restoreVersion(selectedVersion)"
                 :disabled="isRestoring"
+                @click="restoreVersion(selectedVersion)"
               >
-                <span v-if="isRestoring" class="spinner-border spinner-border-sm me-1"></span>
+                <span
+                  v-if="isRestoring"
+                  class="spinner-border spinner-border-sm me-1"
+                />
                 Restore This Version
               </button>
             </div>
@@ -243,7 +291,9 @@ onMounted(() => {
               <!-- Title -->
               <div class="mb-3">
                 <small class="text-muted">Title</small>
-                <div class="fw-semibold">{{ selectedVersion.title }}</div>
+                <div class="fw-semibold">
+                  {{ selectedVersion.title }}
+                </div>
               </div>
 
               <!-- Description -->
@@ -253,31 +303,51 @@ onMounted(() => {
               </div>
 
               <!-- Change summary -->
-              <div v-if="selectedVersion.changeSummary" class="mb-3">
+              <div
+                v-if="selectedVersion.changeSummary"
+                class="mb-3"
+              >
                 <small class="text-muted">Change Summary</small>
-                <div class="fst-italic">{{ selectedVersion.changeSummary }}</div>
+                <div class="fst-italic">
+                  {{ selectedVersion.changeSummary }}
+                </div>
               </div>
 
               <!-- Content preview -->
               <div class="mb-3">
                 <small class="text-muted">Content Preview</small>
-                <pre class="bg-light p-3 rounded small" style="max-height: 300px; overflow: auto;">{{ selectedVersion.content }}</pre>
+                <pre
+                  class="bg-light p-3 rounded small"
+                  style="max-height: 300px; overflow: auto;"
+                >{{ selectedVersion.content }}</pre>
               </div>
 
               <!-- SEO fields -->
-              <div v-if="selectedVersion.metaTitle || selectedVersion.metaDescription" class="mb-3">
+              <div
+                v-if="selectedVersion.metaTitle || selectedVersion.metaDescription"
+                class="mb-3"
+              >
                 <small class="text-muted">SEO</small>
-                <div v-if="selectedVersion.metaTitle" class="small">
+                <div
+                  v-if="selectedVersion.metaTitle"
+                  class="small"
+                >
                   <strong>Meta Title:</strong> {{ selectedVersion.metaTitle }}
                 </div>
-                <div v-if="selectedVersion.metaDescription" class="small">
+                <div
+                  v-if="selectedVersion.metaDescription"
+                  class="small"
+                >
                   <strong>Meta Description:</strong> {{ selectedVersion.metaDescription }}
                 </div>
               </div>
             </div>
           </div>
 
-          <div v-else class="text-center py-5 text-muted">
+          <div
+            v-else
+            class="text-center py-5 text-muted"
+          >
             <p>Select a version to view details</p>
           </div>
         </div>

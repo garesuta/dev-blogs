@@ -180,14 +180,17 @@ async function saveProfile() {
 <template>
   <div class="profile-editor">
     <h5 class="editor-title">
-      <i class="bi bi-pencil-square me-2"></i>
+      <i class="bi bi-pencil-square me-2" />
       Edit Profile
     </h5>
 
     <!-- Success/Error Toast -->
     <transition name="slide-fade">
-      <div v-if="message" :class="['toast-message', message.type]">
-        <i :class="message.type === 'success' ? 'bi bi-check-circle-fill' : 'bi bi-exclamation-circle-fill'"></i>
+      <div
+        v-if="message"
+        :class="['toast-message', message.type]"
+      >
+        <i :class="message.type === 'success' ? 'bi bi-check-circle-fill' : 'bi bi-exclamation-circle-fill'" />
         {{ message.text }}
       </div>
     </transition>
@@ -195,8 +198,11 @@ async function saveProfile() {
     <form @submit.prevent="saveProfile">
       <!-- Display Name -->
       <div class="form-group">
-        <label for="nickname" class="form-label-custom">
-          <i class="bi bi-person-badge me-1"></i>
+        <label
+          for="nickname"
+          class="form-label-custom"
+        >
+          <i class="bi bi-person-badge me-1" />
           Display Name
         </label>
         <p class="form-description">
@@ -211,25 +217,37 @@ async function saveProfile() {
             :class="{ 'input-error': nicknameError }"
             placeholder="Enter a display name..."
             maxlength="50"
-          />
-          <span class="char-counter" :class="{ 'near-limit': nickname.length > 40 }">
+          >
+          <span
+            class="char-counter"
+            :class="{ 'near-limit': nickname.length > 40 }"
+          >
             {{ nickname.length }}/50
           </span>
         </div>
-        <p v-if="nicknameError" class="form-error">
-          <i class="bi bi-exclamation-triangle me-1"></i>
+        <p
+          v-if="nicknameError"
+          class="form-error"
+        >
+          <i class="bi bi-exclamation-triangle me-1" />
           {{ nicknameError }}
         </p>
-        <p v-else class="form-hint">
-          <i class="bi bi-info-circle me-1"></i>
+        <p
+          v-else
+          class="form-hint"
+        >
+          <i class="bi bi-info-circle me-1" />
           Leave empty to use your account name instead.
         </p>
       </div>
 
       <!-- Bio -->
       <div class="form-group">
-        <label for="bio" class="form-label-custom">
-          <i class="bi bi-file-text me-1"></i>
+        <label
+          for="bio"
+          class="form-label-custom"
+        >
+          <i class="bi bi-file-text me-1" />
           Bio
         </label>
         <p class="form-description">
@@ -244,13 +262,19 @@ async function saveProfile() {
             placeholder="Write a short bio about yourself..."
             maxlength="500"
             rows="4"
-          ></textarea>
-          <span class="char-counter textarea-counter" :class="{ 'near-limit': bio.length > 450 }">
+          />
+          <span
+            class="char-counter textarea-counter"
+            :class="{ 'near-limit': bio.length > 450 }"
+          >
             {{ bio.length }}/500
           </span>
         </div>
-        <p v-if="bioError" class="form-error">
-          <i class="bi bi-exclamation-triangle me-1"></i>
+        <p
+          v-if="bioError"
+          class="form-error"
+        >
+          <i class="bi bi-exclamation-triangle me-1" />
           {{ bioError }}
         </p>
       </div>
@@ -258,7 +282,7 @@ async function saveProfile() {
       <!-- Social Links Section -->
       <div class="form-section">
         <h6 class="section-title">
-          <i class="bi bi-share me-2"></i>
+          <i class="bi bi-share me-2" />
           Social Links
         </h6>
         <p class="section-description">
@@ -267,8 +291,11 @@ async function saveProfile() {
 
         <!-- Website -->
         <div class="form-group">
-          <label for="website" class="form-label-custom form-label-small">
-            <i class="bi bi-globe me-1"></i>
+          <label
+            for="website"
+            class="form-label-custom form-label-small"
+          >
+            <i class="bi bi-globe me-1" />
             Website
           </label>
           <div class="input-wrapper">
@@ -279,18 +306,24 @@ async function saveProfile() {
               class="form-input"
               :class="{ 'input-error': websiteError }"
               placeholder="https://yourwebsite.com"
-            />
+            >
           </div>
-          <p v-if="websiteError" class="form-error">
-            <i class="bi bi-exclamation-triangle me-1"></i>
+          <p
+            v-if="websiteError"
+            class="form-error"
+          >
+            <i class="bi bi-exclamation-triangle me-1" />
             {{ websiteError }}
           </p>
         </div>
 
         <!-- Twitter -->
         <div class="form-group">
-          <label for="twitter" class="form-label-custom form-label-small">
-            <i class="bi bi-twitter-x me-1"></i>
+          <label
+            for="twitter"
+            class="form-label-custom form-label-small"
+          >
+            <i class="bi bi-twitter-x me-1" />
             Twitter / X
           </label>
           <div class="input-wrapper input-with-prefix">
@@ -302,18 +335,24 @@ async function saveProfile() {
               class="form-input with-prefix"
               :class="{ 'input-error': twitterError }"
               placeholder="username"
-            />
+            >
           </div>
-          <p v-if="twitterError" class="form-error">
-            <i class="bi bi-exclamation-triangle me-1"></i>
+          <p
+            v-if="twitterError"
+            class="form-error"
+          >
+            <i class="bi bi-exclamation-triangle me-1" />
             {{ twitterError }}
           </p>
         </div>
 
         <!-- GitHub -->
         <div class="form-group">
-          <label for="github" class="form-label-custom form-label-small">
-            <i class="bi bi-github me-1"></i>
+          <label
+            for="github"
+            class="form-label-custom form-label-small"
+          >
+            <i class="bi bi-github me-1" />
             GitHub
           </label>
           <div class="input-wrapper input-with-prefix">
@@ -325,18 +364,24 @@ async function saveProfile() {
               class="form-input with-prefix"
               :class="{ 'input-error': githubError }"
               placeholder="username"
-            />
+            >
           </div>
-          <p v-if="githubError" class="form-error">
-            <i class="bi bi-exclamation-triangle me-1"></i>
+          <p
+            v-if="githubError"
+            class="form-error"
+          >
+            <i class="bi bi-exclamation-triangle me-1" />
             {{ githubError }}
           </p>
         </div>
 
         <!-- LinkedIn -->
         <div class="form-group">
-          <label for="linkedin" class="form-label-custom form-label-small">
-            <i class="bi bi-linkedin me-1"></i>
+          <label
+            for="linkedin"
+            class="form-label-custom form-label-small"
+          >
+            <i class="bi bi-linkedin me-1" />
             LinkedIn
           </label>
           <div class="input-wrapper input-with-prefix">
@@ -348,10 +393,13 @@ async function saveProfile() {
               class="form-input with-prefix"
               :class="{ 'input-error': linkedinError }"
               placeholder="username"
-            />
+            >
           </div>
-          <p v-if="linkedinError" class="form-error">
-            <i class="bi bi-exclamation-triangle me-1"></i>
+          <p
+            v-if="linkedinError"
+            class="form-error"
+          >
+            <i class="bi bi-exclamation-triangle me-1" />
             {{ linkedinError }}
           </p>
         </div>
@@ -360,7 +408,7 @@ async function saveProfile() {
       <!-- Privacy Section -->
       <div class="form-section">
         <h6 class="section-title">
-          <i class="bi bi-shield-lock me-2"></i>
+          <i class="bi bi-shield-lock me-2" />
           Privacy
         </h6>
 
@@ -373,10 +421,10 @@ async function saveProfile() {
           </div>
           <label class="toggle-switch">
             <input
-              type="checkbox"
               v-model="isPublic"
-            />
-            <span class="toggle-slider"></span>
+              type="checkbox"
+            >
+            <span class="toggle-slider" />
           </label>
         </div>
       </div>
@@ -387,12 +435,18 @@ async function saveProfile() {
           class="save-btn"
           :disabled="isSaving || hasValidationErrors"
         >
-          <span v-if="isSaving" class="btn-content">
-            <span class="spinner"></span>
+          <span
+            v-if="isSaving"
+            class="btn-content"
+          >
+            <span class="spinner" />
             Saving...
           </span>
-          <span v-else class="btn-content">
-            <i class="bi bi-check-lg"></i>
+          <span
+            v-else
+            class="btn-content"
+          >
+            <i class="bi bi-check-lg" />
             Save Changes
           </span>
         </button>

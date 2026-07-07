@@ -78,7 +78,7 @@ function handleKeydown(event: KeyboardEvent): void {
             @mouseenter="emit('hover', index)"
           >
             <span class="slash-menu-icon">
-              <span :class="item.icon"></span>
+              <span :class="item.icon" />
             </span>
             <div class="slash-menu-info">
               <span class="slash-menu-title">{{ item.title }}</span>

@@ -71,11 +71,20 @@ function getRoleBadgeClass(role: string): string {
 </script>
 
 <template>
-  <div v-if="isLoading" class="user-menu-loading">
-    <span class="spinner-border spinner-border-sm" role="status"></span>
+  <div
+    v-if="isLoading"
+    class="user-menu-loading"
+  >
+    <span
+      class="spinner-border spinner-border-sm"
+      role="status"
+    />
   </div>
 
-  <div v-else-if="user" class="user-menu-container">
+  <div
+    v-else-if="user"
+    class="user-menu-container"
+  >
     <!-- CMS Button for Admin/Editor (hidden when already in editor) -->
     <a
       v-if="isAdminOrEditor && !isInEditorArea"
@@ -83,7 +92,7 @@ function getRoleBadgeClass(role: string): string {
       class="btn-cms"
       title="Open Content Management"
     >
-      <i class="bi bi-pencil-square"></i>
+      <i class="bi bi-pencil-square" />
       <span>CMS</span>
     </a>
 
@@ -97,53 +106,88 @@ function getRoleBadgeClass(role: string): string {
         aria-expanded="false"
       >
         <span class="user-trigger__name d-none d-md-inline">{{ user.name }}</span>
-        <div v-if="user.image" class="user-trigger__avatar">
-          <img :src="user.image" :alt="user.name" />
+        <div
+          v-if="user.image"
+          class="user-trigger__avatar"
+        >
+          <img
+            :src="user.image"
+            :alt="user.name"
+          >
         </div>
-        <div v-else class="user-trigger__avatar">
+        <div
+          v-else
+          class="user-trigger__avatar"
+        >
           {{ getInitials(user.name) }}
         </div>
       </button>
 
       <ul class="dropdown-menu dropdown-menu-end">
         <li class="dropdown-header">
-          <div class="fw-bold">{{ user.name }}</div>
+          <div class="fw-bold">
+            {{ user.name }}
+          </div>
           <small class="text-muted">{{ user.email }}</small>
           <div class="mt-1">
-            <span class="badge" :class="getRoleBadgeClass(user.role)">
+            <span
+              class="badge"
+              :class="getRoleBadgeClass(user.role)"
+            >
               {{ user.role }}
             </span>
           </div>
         </li>
-        <li><hr class="dropdown-divider" /></li>
+        <li><hr class="dropdown-divider"></li>
         <li>
-          <a class="dropdown-item" href="/profile">
-            <i class="bi bi-person me-2"></i>Profile
+          <a
+            class="dropdown-item"
+            href="/profile"
+          >
+            <i class="bi bi-person me-2" />Profile
           </a>
         </li>
         <li v-if="isAdminOrEditor">
-          <a class="dropdown-item" href="/editor">
-            <i class="bi bi-pencil me-2"></i>Editor
+          <a
+            class="dropdown-item"
+            href="/editor"
+          >
+            <i class="bi bi-pencil me-2" />Editor
           </a>
         </li>
         <li v-if="isAdmin">
-          <a class="dropdown-item" href="/admin">
-            <i class="bi bi-gear me-2"></i>Admin
+          <a
+            class="dropdown-item"
+            href="/admin"
+          >
+            <i class="bi bi-gear me-2" />Admin
           </a>
         </li>
-        <li><hr class="dropdown-divider" /></li>
+        <li><hr class="dropdown-divider"></li>
         <li>
-          <button class="dropdown-item text-danger" @click="handleSignOut">
-            <i class="bi bi-box-arrow-right me-2"></i>Sign Out
+          <button
+            class="dropdown-item text-danger"
+            @click="handleSignOut"
+          >
+            <i class="bi bi-box-arrow-right me-2" />Sign Out
           </button>
         </li>
       </ul>
     </div>
   </div>
 
-  <div v-else class="auth-buttons">
-    <a href="/login" class="btn-auth-signin">Sign In</a>
-    <a href="/register" class="btn-auth-signup">Sign Up</a>
+  <div
+    v-else
+    class="auth-buttons"
+  >
+    <a
+      href="/login"
+      class="btn-auth-signin"
+    >Sign In</a>
+    <a
+      href="/register"
+      class="btn-auth-signup"
+    >Sign Up</a>
   </div>
 </template>
 

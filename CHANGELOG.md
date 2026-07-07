@@ -5,11 +5,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver
 ## [Unreleased]
 
 ### Added
+- **admin**: Site settings page (`/admin/settings`) for site title, description, social links, and footer text — stored in `site_settings`, served to header/footer via cached helper with GitHub icon hidden when URL unset
 - **homepage**: "What You'll Find Here" value pillar cards (Web Dev Deep Dives, Dev Career & Business, Lessons from Work, Full-Stack Craft)
 - **homepage**: Staggered fade-slide-up entrance animations and hover effects for pillar cards with prefers-reduced-motion support
 - **editor**: Add integration tests for TiptapEditor component and API endpoints (components, extensions, composables)
 
 ### Fixed
+- **security**: CSP nonce was never attached to script tags, blocking all inline scripts and killing Astro island hydration site-wide — replaced with `unsafe-inline` for script-src
+- **blog**: Homepage post links pointed to `/blog/undefined/` — posts now sourced from database (matching blog routes) instead of the markdown content collection
+- **ui**: Skip-link bottom edge peeking into view at the top of every page — hidden via `translateY(-100%)` instead of fixed offset
+- **search**: `v-memo` ignored inside `v-for` child, computed ref checked without `.value`, composable default imports mismatching named exports
+- **lint**: ESLint flat config crashed on every run (invalid `extraFileExtensions` placement, string parser reference)
 - **auth**: Google login button invisible on dark theme — replaced `btn-outline-dark` with theme-aware `.google-btn`
 - **auth**: Login and register card containers using hardcoded white background — replaced with `.login-card` using CSS variables
 - **editor**: Image upload XSS vulnerability — added client-side file validation (size/MIME whitelist) and postId enforcement
